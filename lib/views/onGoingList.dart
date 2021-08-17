@@ -56,9 +56,17 @@ class OnGoingLists extends StatelessWidget {
                                   borderRadius: BorderRadius.all(Radius.circular(10)),
                                   side: BorderSide(color:ColorsOf().primaryBackGround() ,width: 1,style: BorderStyle.solid)
                                 ),
-                                title: Text(
-                                  "Name : ",
-                                  style: TextStyle(fontSize: 14.0,color:ColorsOf().containerThings()),
+                                title:  RichText(
+                                    text: TextSpan(children: [
+
+                                      TextSpan(text:"Name : ",
+                                        style: TextStyle(color : ColorsOf().profilField() ,fontSize: 16 ,fontWeight: FontWeight.bold),
+                                      ),
+                                      TextSpan(text:"100",
+                                        style: TextStyle(color : ColorsOf().backGround() ,fontSize: 16 ,fontWeight: FontWeight.bold),
+                                      ),
+
+                                    ])
                                 ),
                                 tileColor:ColorsOf().primaryBackGround(),
                                 onTap: (){},

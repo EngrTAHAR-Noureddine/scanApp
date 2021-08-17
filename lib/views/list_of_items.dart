@@ -98,7 +98,6 @@ class ListItems extends StatelessWidget {
                       child: ListView.builder(
                           scrollDirection: Axis.vertical,
                           itemCount: 10,
-                          itemExtent: 100,
                           padding: EdgeInsets.all(5),
                           itemBuilder: (BuildContext context, int index){
 
@@ -126,29 +125,53 @@ class ListItems extends StatelessWidget {
                                     onPressed: (){},
 
                                   ),),
-                                  title: Text(
-                                    "Code à Barre : ",
-                                    style: TextStyle(fontSize: 16.0,color:ColorsOf().containerThings(),fontWeight: FontWeight.bold),
+                                  title: RichText(
+                                      text: TextSpan(children: [
+
+                                        TextSpan(text:"Code à Barre : ",
+                                          style: TextStyle(color : ColorsOf().profilField() ,fontSize: 14 ,fontWeight: FontWeight.bold),
+                                        ),
+                                        TextSpan(text:"100000",
+                                          style: TextStyle(color : ColorsOf().backGround() ,fontSize: 14 ,fontWeight: FontWeight.bold),
+                                        ),
+
+                                      ])
                                   ),
                                   subtitle:Container(
                                     alignment: Alignment.centerLeft,
-                                    margin: EdgeInsets.only(top: 5),
+                                    margin: EdgeInsets.only(top: 10),
                                     child:Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Container(
                                         alignment: Alignment.topLeft,
-                                        child: Text(
-                                          "ID de Produit : ",
-                                          style: TextStyle(fontSize: 14.0,color:ColorsOf().containerThings()),
+                                        child: RichText(
+                                            text: TextSpan(children: [
+
+                                              TextSpan(text:"ID de Produit : ",
+                                                style: TextStyle(color : ColorsOf().profilField() ,fontSize: 12 ,fontWeight: FontWeight.bold),
+                                              ),
+                                              TextSpan(text:"10",
+                                                style: TextStyle(color : ColorsOf().backGround() ,fontSize: 12 ,fontWeight: FontWeight.normal),
+                                              ),
+
+                                            ])
                                         ),
                                       ),
-                                      SizedBox(height: 5,),
+                                      SizedBox(height: 10,),
                                       Container(
                                         alignment: Alignment.topLeft,
-                                        child: Text(
-                                          "Quantité : ",
-                                          style: TextStyle(fontSize: 14.0,color:ColorsOf().containerThings()),
+                                        child: RichText(
+                                            text: TextSpan(children: [
+
+                                              TextSpan(text:"Quantité : ",
+                                                style: TextStyle(color : ColorsOf().profilField() ,fontSize: 12 ,fontWeight: FontWeight.bold),
+                                              ),
+                                              TextSpan(text:"10",
+                                                style: TextStyle(color : ColorsOf().backGround() ,fontSize: 12 ,fontWeight: FontWeight.normal),
+                                              ),
+
+                                            ])
                                         ),
                                       ),
                                     ],

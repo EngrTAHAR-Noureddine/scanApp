@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:scanapp/models/variables_define/colors.dart';
+import 'package:scanapp/view_models/providers/exports_list.dart';
 import 'package:scanapp/view_models/providers/home.dart';
 import 'package:scanapp/view_models/providers/inventories_list.dart';
 import 'package:scanapp/view_models/providers/list_of_items.dart';
@@ -44,6 +45,8 @@ class MyApp extends StatelessWidget {
             create: (context) => ListItemsProvider(), ),
           ChangeNotifierProvider<RepportProvider>(
             create: (context) => RepportProvider(), ),
+          ChangeNotifierProvider<ExportProvider>(
+            create: (context) => ExportProvider(), ),
         ],
         child: Builder(
           builder: (context) {

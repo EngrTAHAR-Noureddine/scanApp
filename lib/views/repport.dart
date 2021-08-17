@@ -97,7 +97,6 @@ class Repport extends StatelessWidget {
                       child: ListView.builder(
                           scrollDirection: Axis.vertical,
                           itemCount: 10,
-                          itemExtent: 100,
                           padding: EdgeInsets.all(5),
                           itemBuilder: (BuildContext context, int index){
 

@@ -55,9 +55,17 @@ class InventoryList extends StatelessWidget {
 
                             leading: value.iconLoeading("ongoing"),
 
-                            title: Text(
-                              "Inventory 001",
-                              style: TextStyle(fontSize: 18.0,color:ColorsOf().containerThings(),),
+                            title:  RichText(
+                                text: TextSpan(children: [
+
+                                  TextSpan(text:"Inventory : ",
+                                    style: TextStyle(color : ColorsOf().profilField() ,fontSize: 18 ,fontWeight: FontWeight.bold),
+                                  ),
+                                  TextSpan(text:"10",
+                                    style: TextStyle(color : ColorsOf().backGround() ,fontSize: 18 ,fontWeight: FontWeight.bold),
+                                  ),
+
+                                ])
                             ),
                             children: <Widget>[
 
