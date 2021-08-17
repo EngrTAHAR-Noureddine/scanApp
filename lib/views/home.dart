@@ -115,7 +115,117 @@ class Home extends StatelessWidget {
               ],
             ),
             drawer: Drawer(
-              child: Container(color: Colors.red,),
+              child: Container(
+                color: ColorsOf().primaryBackGround(),
+                child: ListView(
+                  children: <Widget>[
+                    UserAccountsDrawerHeader(
+                      decoration: BoxDecoration(color: ColorsOf().containerThings()),
+                      accountName: Text("Abass Makinde" , style: TextStyle(color: ColorsOf().primaryForGround()),),
+                      accountEmail: Text("abs@gmail.com",style: TextStyle(color: ColorsOf().primaryForGround()),),
+                      currentAccountPicture: GestureDetector(
+                        child: CircleAvatar(
+                          child: Text(
+                            "AM",
+                            style: TextStyle(
+                                color: Colors.pink,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          backgroundColor: Colors.white,
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: (){},
+
+                      child: Container(
+                        color: Colors.blue,
+                        child: ListTile(
+
+                          onTap: (){Navigator.popAndPushNamed(context, "/home");},
+                          leading: Icon(Icons.home, color: ColorsOf().containerThings(),size: 25,),
+                          title: Align(
+                              alignment: Alignment(-1.2, 0),
+                              child: Text("Home" , style: TextStyle(color: ColorsOf().containerThings(),fontSize: 16 ),)
+                          ),
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: null,
+                      child: Container(
+                        child: ListTile(
+                          onTap: (){Navigator.popAndPushNamed(context, "/profile");},
+                          leading: SvgPicture.asset("assets/images/qr_code.svg", semanticsLabel: 'scanner',height: 25,width: 25,color: ColorsOf().containerThings(),),
+                          title: Align(alignment: Alignment(-1.2, 0),child: Text("Scanner", style: TextStyle(color: ColorsOf().containerThings(),fontSize: 16 ),)),
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: null,
+                      child: Container(child : ListTile(
+                        onTap: (){Navigator.pushNamed(context, "/news");},
+                        leading: Icon(Icons.add, color: ColorsOf().containerThings() ,size: 25,),
+                        title: Align(alignment: Alignment(-1.2, 0),child: Text("Importer fichier", style: TextStyle(color: ColorsOf().containerThings(),fontSize: 16 ),)),
+                      ),),
+                    ),
+                    InkWell(
+                      onTap: null,
+                      child: Container(
+                        child: ListTile(
+                          onTap: (){Navigator.pushNamed(context, "/news");},
+                          leading: Icon(Icons.add, color: ColorsOf().containerThings() ,size: 25,),
+                          title: Align(alignment: Alignment(-1.2, 0),child: Text("Mettre à jour fichier", style: TextStyle(color: ColorsOf().containerThings(),fontSize: 16 ),)),
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: null,
+                      child: Container(
+                        child: ListTile(
+                          onTap: (){Navigator.pushNamed(context, "/news");},
+                          leading: Icon(Icons.add, color: ColorsOf().containerThings(),size: 25,),
+                          title: Align(alignment: Alignment(-1.2, 0),child: Text("Rapport", style: TextStyle(color: ColorsOf().containerThings(),fontSize: 16 ),)),
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: null,
+                      child: Container(
+                        child: ListTile(
+                          onTap: (){Navigator.pushNamed(context, "/news");},
+                          leading: Icon(Icons.add, color: ColorsOf().containerThings(),size: 25,),
+                          title: Align(alignment: Alignment(-1.2, 0),child: Text("Exporter fichier", style: TextStyle(color: ColorsOf().containerThings(),fontSize: 16 ),)),
+                        ),
+                      ),
+                    ),
+                    Divider(),
+                    InkWell(
+                      onTap: null,
+                      child: Container(
+                        child: ListTile(
+                          leading: Icon(Icons.settings, color: ColorsOf().containerThings(),size: 25,),
+                          title: Align(alignment: Alignment(-1.2, 0),child: Text("Paramètres", style: TextStyle(color: ColorsOf().containerThings(),fontSize: 16 ),)),
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: null,
+                      child: Container(
+                        child: ListTile(
+                          leading: Icon(
+                            Icons.add,
+                            color: ColorsOf().containerThings(),
+                            size: 25,
+                          ),
+                          title: Align(alignment: Alignment(-1.2, 0),child: Text("Se déconnecter",style: TextStyle(color: ColorsOf().containerThings(),fontSize: 16 ),)),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ),
             body: Container(
               color: ColorsOf().backGround(),

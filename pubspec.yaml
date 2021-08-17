@@ -58,6 +58,14 @@ flutter:
     - assets/images/logo_light.svg
     - assets/images/logo_dark.svg
     - assets/images/qr_code.svg
+    - assets/images/delete.svg
+    - assets/images/exit.svg
+    - assets/images/export.svg
+    - assets/images/import.svg
+    - assets/images/import_second.svg
+    - assets/images/repport.svg
+    - assets/images/reset_second.svg
+    - assets/images/update.svg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
