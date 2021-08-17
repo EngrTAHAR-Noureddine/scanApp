@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:scanapp/models/variables_define/colors.dart';
+import 'package:scanapp/views/home.dart';
 
 class LogInProvider extends ChangeNotifier{
 
@@ -140,7 +141,7 @@ class LogInProvider extends ChangeNotifier{
     );
   }
 
-  buttonLogIn(){
+  buttonLogIn(context){
     return  Container(
       color:Colors.transparent,
       alignment: Alignment.centerRight,
@@ -156,7 +157,7 @@ class LogInProvider extends ChangeNotifier{
         height: 50,
         child: Text("Connecter" ,style: TextStyle(color: ColorsOf().primaryBackGround() ,fontSize: 20),),
         onPressed: (){
-        /* if (this.formKey.currentState.validate()) {
+        // if (this.formKey.currentState.validate()) {
             Navigator.pop(context);
             Navigator.push(
               context,
@@ -166,7 +167,7 @@ class LogInProvider extends ChangeNotifier{
               ),
             );
 
-          }*/
+         // }*/
         },
       ),
     );

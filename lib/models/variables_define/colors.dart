@@ -46,6 +46,8 @@ class ColorsOf{
 
 
 
+
+
   Widget logoLogIn(){
     return (darkMode)?SvgPicture.asset("assets/images/logo_dark.svg", semanticsLabel: 'Logo'):SvgPicture.asset("assets/images/logo_light.svg", semanticsLabel: 'Logo',);
   }

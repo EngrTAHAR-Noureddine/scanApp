@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:scanapp/models/variables_define/colors.dart';
+import 'package:scanapp/view_models/providers/home.dart';
 import 'package:scanapp/view_models/providers/login.dart';
 import 'package:scanapp/view_models/providers/main.dart';
 import 'package:scanapp/views/log_in.dart';
@@ -12,12 +15,20 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness:Theme.of(context).primaryColorBrightness,
+    )
+    );
     return MultiProvider(
         providers: [ //NewTaskProvider
           ChangeNotifierProvider<MainProvider>(
             create: (context) => MainProvider(), ),
           ChangeNotifierProvider<LogInProvider>(
             create: (context) => LogInProvider(), ),
+          ChangeNotifierProvider<HomeProvider>(
+            create: (context) => HomeProvider(), ),
         ],
         child: Builder(
           builder: (context) {
@@ -27,7 +38,9 @@ class MyApp extends StatelessWidget {
                                               title: 'Flutter Demo',
                                               debugShowCheckedModeBanner: false,
                                               theme: ThemeData(
-                                                primaryColorBrightness: Brightness.light,
+                                                primaryColorBrightness: Brightness.dark,
+                                                brightness: Brightness.dark,
+                                                accentColorBrightness:Brightness.dark,
                                                 primarySwatch:MaterialColor(0xFFFF9500,const <int, Color>{
                                                   50: const Color(0xFFFF9500 ),//10%
                                                   100: const Color(0xFFFF9500),//20%
@@ -42,7 +55,9 @@ class MyApp extends StatelessWidget {
                                                 }, )
                                               ),
                                               darkTheme: ThemeData(
-
+                                                primaryColorBrightness: Brightness.light,
+                                                brightness: Brightness.light,
+                                                accentColorBrightness:Brightness.light,
                                                 primarySwatch:MaterialColor(0xFF242426,const <int, Color>{
                                                   50: const Color(0xFF242426 ),//10%
                                                   100: const Color(0xFF242426),//20%
@@ -55,7 +70,7 @@ class MyApp extends StatelessWidget {
                                                   800: const Color(0xFF242426),//90%
                                                   900: const Color(0xFF242426),//100%
                                                 }, ),
-                                                primaryColorBrightness: Brightness.dark,
+
                                               ),
                                               themeMode: ThemeMode.system,
                                               home: LogIn(),

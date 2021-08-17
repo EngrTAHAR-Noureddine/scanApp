@@ -17,7 +17,11 @@ class LogIn extends StatelessWidget {
     WidgetsFlutterBinding.ensureInitialized();
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness:Theme.of(context).primaryColorBrightness,
+    )
+    );
     ColorsOf().mode(context);
     return Consumer<LogInProvider>(
         builder: (context, value, child) {
@@ -25,8 +29,21 @@ class LogIn extends StatelessWidget {
             //  builder: (context, orientation) {
                // isPortrait =  (orientation == Orientation.portrait);
                 return Scaffold(
+               /* appBar: AppBar(
+                  backwardsCompatibility: false,
+                  systemOverlayStyle: SystemUiOverlayStyle(
+                      statusBarColor: ColorsOf().backGround()
+
+                  ),
+                    elevation: 0,
+                  //brightness: Theme.of(context).primaryColorBrightness,
+                ),*/
+
+
                   resizeToAvoidBottomInset: false,
                   backgroundColor: ColorsOf().backGround(),
+
+
                   body: Container(
                     height: MediaQuery.of(context).size.height,
                     width: MediaQuery.of(context).size.width,
@@ -61,7 +78,7 @@ class LogIn extends StatelessWidget {
                                     SizedBox(height: 10),
                                     LogInProvider().asAdminField(),
                                     SizedBox(height: 10),
-                                    LogInProvider().buttonLogIn()
+                                    LogInProvider().buttonLogIn(context),
                                   ],
                                 ),
                               ),
