@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:scanapp/models/variables_define/colors.dart';
 import 'package:scanapp/view_models/providers/home.dart';
 import 'package:scanapp/views/import_new_file.dart';
+import 'package:scanapp/views/inventories_list.dart';
 
 class Home extends StatelessWidget {
 
@@ -268,7 +269,7 @@ class Home extends StatelessWidget {
                 ),
               ),
             ),
-            body: ImportNewerFile(),
+            body:InventoryList(), //ImportNewerFile(),
             floatingActionButton: FloatingActionButton(
                     backgroundColor: ColorsOf().primaryBackGround(),
                     child: SvgPicture.asset("assets/images/qr_code.svg", semanticsLabel: 'scanner',height: 25,width: 25,color: ColorsOf().containerThings(),),
