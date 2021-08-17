@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:scanapp/models/variables_define/colors.dart';
 import 'package:scanapp/view_models/providers/home.dart';
+import 'package:scanapp/views/import_new_file.dart';
 
 class Home extends StatelessWidget {
 
@@ -11,6 +12,13 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    WidgetsFlutterBinding.ensureInitialized();
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown,DeviceOrientation.landscapeRight, DeviceOrientation.landscapeLeft]
+    );
+
+
     ColorsOf().mode(context);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -118,6 +126,7 @@ class Home extends StatelessWidget {
               child: Container(
                 color: ColorsOf().primaryBackGround(),
                 child: ListView(
+
                   children: <Widget>[
                     UserAccountsDrawerHeader(
                       decoration: BoxDecoration(color: ColorsOf().containerThings()),
@@ -141,6 +150,8 @@ class Home extends StatelessWidget {
 
                       child: Container(
                         color: value.colorBox(0),
+                        alignment: Alignment.center,
+                        height: 50,
                         child: ListTile(
 
                           onTap:()=>value.changeSelecter(0), //(){Navigator.popAndPushNamed(context, "/home");},
@@ -155,7 +166,20 @@ class Home extends StatelessWidget {
                     InkWell(
                       onTap: null,
                       child: Container(
+                        color: value.colorBox(8),
+                        height: 50,
+                        child: ListTile(
+                          onTap:()=>value.changeSelecter(8), //(){ /*Navigator.popAndPushNamed(context, "/profile"); */},
+                          leading: Icon(Icons.format_list_bulleted_rounded, size: 25,color: value.colorText(8),),
+                          title: Align(alignment: Alignment(-1.2, 0),child: Text("Afficher List", style: TextStyle(color:value.colorText(8),fontSize: 16 ),)),
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: null,
+                      child: Container(
                         color: value.colorBox(1),
+                        height: 50,
                         child: ListTile(
                           onTap:()=>value.changeSelecter(1), //(){ /*Navigator.popAndPushNamed(context, "/profile"); */},
                           leading: SvgPicture.asset("assets/images/qr_code.svg", semanticsLabel: 'scanner',height: 25,width: 25,color: value.colorText(1),),
@@ -167,6 +191,7 @@ class Home extends StatelessWidget {
                       onTap: null,
                       child: Container(
                         color: value.colorBox(2),
+                        height: 50,
                         child : ListTile(
                         onTap:()=>value.changeSelecter(2), //(){ /*Navigator.pushNamed(context, "/news"); */},
                         leading: SvgPicture.asset("assets/images/import.svg", semanticsLabel: 'scanner',height: 25,width: 25,color: value.colorText(2),),
@@ -177,6 +202,7 @@ class Home extends StatelessWidget {
                       onTap: null,
                       child: Container(
                         color: value.colorBox(3),
+                        height: 50,
                         child: ListTile(
                           onTap:()=>value.changeSelecter(3),// (){ /*Navigator.pushNamed(context, "/news"); */},
                           leading: SvgPicture.asset("assets/images/update.svg", semanticsLabel: 'scanner',height: 25,width: 25,color: value.colorText(3),),
@@ -188,6 +214,7 @@ class Home extends StatelessWidget {
                       onTap: null,
                       child: Container(
                          color: value.colorBox(4),
+                        height: 50,
                         child: ListTile(
                           onTap: ()=>value.changeSelecter(4),//(){ /* Navigator.pushNamed(context, "/news"); */},
                           leading: SvgPicture.asset("assets/images/repport.svg", semanticsLabel: 'scanner',height: 25,width: 25,color: value.colorText(4),),
@@ -199,6 +226,7 @@ class Home extends StatelessWidget {
                       onTap:null,
                       child: Container(
                         color: value.colorBox(5),
+                        height: 50,
                         child: ListTile(
                           onTap: ()=>value.changeSelecter(5),// (){ /*Navigator.pushNamed(context, "/news"); */ },
                           leading: SvgPicture.asset("assets/images/export.svg", semanticsLabel: 'scanner',height: 25,width: 25,color:value.colorText(5),),
@@ -206,11 +234,17 @@ class Home extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Divider(),
+                    Divider(
+                      color: ColorsOf().containerThings(),
+
+
+                    ),
+
                     InkWell(
                       onTap: null,
                       child: Container(
                         color: value.colorBox(6),
+                        height: 50,
                         child: ListTile(
                           onTap: ()=>value.changeSelecter(6),
                           leading: Icon(Icons.settings, color: value.colorText(6),size: 25,),
@@ -222,6 +256,7 @@ class Home extends StatelessWidget {
                       onTap:null,
                       child: Container(
                         color: value.colorBox(7),
+                        height: 50,
                         child: ListTile(
                           onTap:  ()=>value.changeSelecter(7),
                           leading: SvgPicture.asset("assets/images/exit.svg", semanticsLabel: 'scanner',height: 25,width: 25,color: value.colorText(7),),
@@ -233,9 +268,7 @@ class Home extends StatelessWidget {
                 ),
               ),
             ),
-            body: Container(
-              color: ColorsOf().backGround(),
-            ),
+            body: ImportNewerFile(),
             floatingActionButton: FloatingActionButton(
                     backgroundColor: ColorsOf().primaryBackGround(),
                     child: SvgPicture.asset("assets/images/qr_code.svg", semanticsLabel: 'scanner',height: 25,width: 25,color: ColorsOf().containerThings(),),
