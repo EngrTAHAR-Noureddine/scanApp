@@ -4,10 +4,12 @@ import 'package:provider/provider.dart';
 import 'package:scanapp/models/variables_define/colors.dart';
 import 'package:scanapp/view_models/providers/home.dart';
 import 'package:scanapp/view_models/providers/inventories_list.dart';
+import 'package:scanapp/view_models/providers/list_of_items.dart';
 import 'package:scanapp/view_models/providers/login.dart';
 import 'package:scanapp/view_models/providers/main.dart';
 import 'package:scanapp/view_models/providers/onGoing_list.dart';
 import 'package:scanapp/views/home.dart';
+import 'package:scanapp/views/list_of_items.dart';
 import 'package:scanapp/views/log_in.dart';
 import 'package:scanapp/views/onGoingList.dart';
 
@@ -37,6 +39,8 @@ class MyApp extends StatelessWidget {
             create: (context) => InventoryListProvider(), ),
           ChangeNotifierProvider<OnGoingListProvider>(
             create: (context) => OnGoingListProvider(), ),
+          ChangeNotifierProvider<ListItemsProvider>(
+            create: (context) => ListItemsProvider(), ),
         ],
         child: Builder(
           builder: (context) {
@@ -84,8 +88,8 @@ class MyApp extends StatelessWidget {
                                               home: LogIn(),
                                               routes: {
                                                 "/home": (context) => Home(),
-                                                "/profile": (context) => LogIn(),
                                                 "/onGoingList": (context) => OnGoingLists(),
+                                                "/listItems": (context) => ListItems(),
                                               },
                                                          );
                         }
