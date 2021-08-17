@@ -20,203 +20,206 @@ class InventoryList extends StatelessWidget {
             body: Container(
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
-              padding: EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 10),
-              child: ListView.builder(
 
-                  scrollDirection: Axis.vertical,
-                  itemCount: 10,
-                  padding: EdgeInsets.all(5),
-                  itemBuilder: (BuildContext context, int index){
+              child: Container(
+                padding: EdgeInsets.only(top:0, left: 10, right: 10, bottom: 10),
+                child: ListView.builder(
 
-                    return Container(
-                      margin: EdgeInsets.all(5),
-                      child:Slidable(
-                        actionPane: SlidableScrollActionPane(),
-                        actionExtentRatio: 0.3,
+                    scrollDirection: Axis.vertical,
+                    itemCount: 10,
+                    padding: EdgeInsets.all(5),
+                    itemBuilder: (BuildContext context, int index){
 
-                        actions: [
-                          /*left*/
+                      return Container(
+                        margin: EdgeInsets.all(5),
+                        child:Slidable(
+                          actionPane: SlidableScrollActionPane(),
+                          actionExtentRatio: 0.3,
 
-                        ],
+                          actions: [
+                            /*left*/
 
-
-
-                        secondaryActions: [ /* right */
+                          ],
 
 
-                        ],
-                        child: custom.ExpansionTile(
 
-                          iconColor: ColorsOf().containerThings(),
-                          backgroundColor: ColorsOf().backGround(),
-                          headerBackgroundColor:ColorsOf().primaryBackGround(),
+                          secondaryActions: [ /* right */
 
-                          leading: value.iconLoeading("ongoing"),
 
-                          title: Text(
-                            "Inventory 001",
-                            style: TextStyle(fontSize: 18.0,color:ColorsOf().containerThings(),),
-                          ),
-                          children: <Widget>[
+                          ],
+                          child: custom.ExpansionTile(
 
-                            Container(
-                              margin: EdgeInsets.only(bottom: 2),
-                              padding: EdgeInsets.all(10),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    height: 40,
-                                    width: 40,
-                                    color: Colors.transparent,
-                                    alignment: Alignment.center,
-                                    child: MaterialButton(
-                                        splashColor: Colors.transparent,
-                                        focusColor: Colors.transparent,
-                                        hoverColor: Colors.transparent,
-                                        highlightColor: Colors.transparent,
-                                        highlightElevation: 0,
-                                        elevation: 0,
-                                        focusElevation: 0,
-                                        hoverElevation: 0,
+                            iconColor: ColorsOf().containerThings(),
+                            backgroundColor: ColorsOf().backGround(),
+                            headerBackgroundColor:ColorsOf().primaryBackGround(),
 
-                                        child: Icon(
+                            leading: value.iconLoeading("ongoing"),
 
-                                          MyFlutterApp.import_second,
-                                          color:ColorsOf().borderContainer(),
-                                          size: 20,
-                                        ),
+                            title: Text(
+                              "Inventory 001",
+                              style: TextStyle(fontSize: 18.0,color:ColorsOf().containerThings(),),
+                            ),
+                            children: <Widget>[
 
-                                      onPressed: (){},
+                              Container(
+                                margin: EdgeInsets.only(bottom: 2),
+                                padding: EdgeInsets.all(10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      height: 40,
+                                      width: 40,
+                                      color: Colors.transparent,
+                                      alignment: Alignment.center,
+                                      child: MaterialButton(
+                                          splashColor: Colors.transparent,
+                                          focusColor: Colors.transparent,
+                                          hoverColor: Colors.transparent,
+                                          highlightColor: Colors.transparent,
+                                          highlightElevation: 0,
+                                          elevation: 0,
+                                          focusElevation: 0,
+                                          hoverElevation: 0,
 
-                                    )             ),
-                                  Container(
-                                    height: 40,
-                                    width: 40,
-                                    color: Colors.transparent,
-                                    child:MaterialButton(
-                                        splashColor: Colors.transparent,
-                                        focusColor: Colors.transparent,
-                                        hoverColor: Colors.transparent,
-                                        highlightColor: Colors.transparent,
-                                        highlightElevation: 0,
-                                        elevation: 0,
-                                        focusElevation: 0,
-                                        hoverElevation: 0,
-                                        child: Icon(
-                                          MyFlutterApp.update,
-                                          color:ColorsOf().borderContainer(),
-                                          size: 20,
-                                        ),
+                                          child: Icon(
 
+                                            MyFlutterApp.import_second,
+                                            color:ColorsOf().borderContainer(),
+                                            size: 20,
+                                          ),
 
                                         onPressed: (){},
 
-                                    )
-                                  ),
-                                  Container(
-                                    height: 40,
-                                    width: 40,
-                                    color: Colors.transparent,
-                                    child: MaterialButton(
-                                      splashColor: Colors.transparent,
-                                      focusColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      highlightElevation: 0,
-                                      elevation: 0,
-                                      focusElevation: 0,
-                                      hoverElevation: 0,
-                                        child: Icon(
-                                          MyFlutterApp.reset_second,
-                                          color:ColorsOf().borderContainer(),
-                                          size: 20,
-                                        ),
+                                      )             ),
+                                    Container(
+                                      height: 40,
+                                      width: 40,
+                                      color: Colors.transparent,
+                                      child:MaterialButton(
+                                          splashColor: Colors.transparent,
+                                          focusColor: Colors.transparent,
+                                          hoverColor: Colors.transparent,
+                                          highlightColor: Colors.transparent,
+                                          highlightElevation: 0,
+                                          elevation: 0,
+                                          focusElevation: 0,
+                                          hoverElevation: 0,
+                                          child: Icon(
+                                            MyFlutterApp.update,
+                                            color:ColorsOf().borderContainer(),
+                                            size: 20,
+                                          ),
 
-                                      onPressed: (){},
-                                    )
-                                  ),
-                                  Container(
-                                    height: 40,
-                                    width: 40,
-                                    color: Colors.transparent,
-                                    child: MaterialButton(
-                                      splashColor: Colors.transparent,
-                                      focusColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      highlightElevation: 0,
-                                      elevation: 0,
-                                      focusElevation: 0,
-                                      hoverElevation: 0,
-                                        child: Icon(
-                                          MyFlutterApp.delete,
-                                          color:ColorsOf().borderContainer(),
-                                          size: 20,
-                                        ),
 
-                                      onPressed: (){},
-                                    )
-                                  ),
-                                  Container(
-                                    height: 40,
-                                    width: 40,
-                                    color: Colors.transparent,
-                                    child: MaterialButton(
-                                      splashColor: Colors.transparent,
-                                      focusColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      highlightElevation: 0,
-                                      elevation: 0,
-                                      focusElevation: 0,
-                                      hoverElevation: 0,
-                                        child: Icon(
-                                          MyFlutterApp.export_icon,
-                                          color:ColorsOf().borderContainer(),
-                                          size: 20,
-                                        ),
+                                          onPressed: (){},
 
-                                      onPressed: (){},
-                                    )
-                                  ),
-                                  
-                                ],
-                              ),
-                            ),
-                            Container(
-                              alignment: Alignment.center,
-                              height: 50,
-                              child: Container(
-                                height: 30,
-                                width: 200,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(Radius.circular(100)),
-                                  color: ColorsOf().primaryBackGround()
+                                      )
+                                    ),
+                                    Container(
+                                      height: 40,
+                                      width: 40,
+                                      color: Colors.transparent,
+                                      child: MaterialButton(
+                                        splashColor: Colors.transparent,
+                                        focusColor: Colors.transparent,
+                                        hoverColor: Colors.transparent,
+                                        highlightColor: Colors.transparent,
+                                        highlightElevation: 0,
+                                        elevation: 0,
+                                        focusElevation: 0,
+                                        hoverElevation: 0,
+                                          child: Icon(
+                                            MyFlutterApp.reset_second,
+                                            color:ColorsOf().borderContainer(),
+                                            size: 20,
+                                          ),
+
+                                        onPressed: (){},
+                                      )
+                                    ),
+                                    Container(
+                                      height: 40,
+                                      width: 40,
+                                      color: Colors.transparent,
+                                      child: MaterialButton(
+                                        splashColor: Colors.transparent,
+                                        focusColor: Colors.transparent,
+                                        hoverColor: Colors.transparent,
+                                        highlightColor: Colors.transparent,
+                                        highlightElevation: 0,
+                                        elevation: 0,
+                                        focusElevation: 0,
+                                        hoverElevation: 0,
+                                          child: Icon(
+                                            MyFlutterApp.delete,
+                                            color:ColorsOf().borderContainer(),
+                                            size: 20,
+                                          ),
+
+                                        onPressed: (){},
+                                      )
+                                    ),
+                                    Container(
+                                      height: 40,
+                                      width: 40,
+                                      color: Colors.transparent,
+                                      child: MaterialButton(
+                                        splashColor: Colors.transparent,
+                                        focusColor: Colors.transparent,
+                                        hoverColor: Colors.transparent,
+                                        highlightColor: Colors.transparent,
+                                        highlightElevation: 0,
+                                        elevation: 0,
+                                        focusElevation: 0,
+                                        hoverElevation: 0,
+                                          child: Icon(
+                                            MyFlutterApp.export_icon,
+                                            color:ColorsOf().borderContainer(),
+                                            size: 20,
+                                          ),
+
+                                        onPressed: (){},
+                                      )
+                                    ),
+
+                                  ],
                                 ),
-                                child: MaterialButton(
-                                  splashColor: Colors.transparent,
-                                  focusColor: Colors.transparent,
-                                  hoverColor: Colors.transparent,
-                                  highlightColor: Colors.transparent,
-                                  highlightElevation: 0,
-                                  elevation: 0,
-                                  focusElevation: 0,
-                                  hoverElevation: 0,
-                                  child: Text("Parcours" , style: TextStyle(fontSize: 20, color:ColorsOf().containerThings()),),
-
-                                  onPressed: (){},
-                                ),
                               ),
-                            )
+                              Container(
+                                alignment: Alignment.center,
+                                height: 50,
+                                child: Container(
+                                  height: 30,
+                                  width: 200,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(Radius.circular(100)),
+                                    color: ColorsOf().primaryBackGround()
+                                  ),
+                                  child: MaterialButton(
+                                    splashColor: Colors.transparent,
+                                    focusColor: Colors.transparent,
+                                    hoverColor: Colors.transparent,
+                                    highlightColor: Colors.transparent,
+                                    highlightElevation: 0,
+                                    elevation: 0,
+                                    focusElevation: 0,
+                                    hoverElevation: 0,
+                                    child: Text("Parcours" , style: TextStyle(fontSize: 20, color:ColorsOf().containerThings()),),
 
-                          ],
+                                    onPressed: (){},
+                                  ),
+                                ),
+                              )
+
+                            ],
+                          ),
+
                         ),
-
-                      ),
-                    );
-                  }),
+                      );
+                    }),
+              ),
             ),
           );
 
