@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:scanapp/models/variables_define/colors.dart';
+import 'package:scanapp/models/variables_define/my_flutter_app_icons.dart';
 import 'package:scanapp/views/home.dart';
 
 class LogInProvider extends ChangeNotifier{
@@ -179,7 +180,12 @@ Widget logoWidget(){
   return Container(
     height: 100,
     width: 100,
-    child: ColorsOf().logoLogIn(),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.all(Radius.circular(10)),
+      border: Border.all(color: ColorsOf().borderContainer(),width: 1,style:BorderStyle.solid),
+      color: ColorsOf().containerThings(),
+    ),
+    child: Icon(MyFlutterApp.qr_code,size: 60,color: ColorsOf().primaryBackGround(),),
   );
 }
 

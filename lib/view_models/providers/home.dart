@@ -15,6 +15,7 @@ class HomeProvider extends ChangeNotifier{
 
   void onPressedButton(){
     bigger = !bigger;
+
     notifyListeners();
   }
 
@@ -27,8 +28,9 @@ class HomeProvider extends ChangeNotifier{
     return (num == numOfSelecter)?ColorsOf().primaryBackGround():ColorsOf().containerThings();
   }
 
-  void changeSelecter(int num){
+  void changeSelecter(int num, context, path){
     this.numOfSelecter = num;
+    Navigator.popAndPushNamed(context, path);
     notifyListeners();
   }
 
