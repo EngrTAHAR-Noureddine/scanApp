@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:scanapp/view_models/providers/home.dart';
 
 class ColorsOf{
   static final ColorsOf _singleton = ColorsOf._internal();
@@ -12,6 +13,7 @@ class ColorsOf{
   void mode(context){
     var brightness = MediaQuery.of(context).platformBrightness;
     darkMode = brightness == Brightness.dark;
+
   }
   // FF9500 ==> FF9F0A
   Color primaryForGround(){

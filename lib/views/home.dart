@@ -121,8 +121,8 @@ class Home extends StatelessWidget {
                   children: <Widget>[
                     UserAccountsDrawerHeader(
                       decoration: BoxDecoration(color: ColorsOf().containerThings()),
-                      accountName: Text("Abass Makinde" , style: TextStyle(color: ColorsOf().primaryForGround()),),
-                      accountEmail: Text("abs@gmail.com",style: TextStyle(color: ColorsOf().primaryForGround()),),
+                      accountName: Text("Abass Makinde" , style: TextStyle(color: ColorsOf().primaryBackGround()),),
+                      accountEmail: Text("abs@gmail.com",style: TextStyle(color: ColorsOf().primaryBackGround()),),
                       currentAccountPicture: GestureDetector(
                         child: CircleAvatar(
                           child: Text(
@@ -137,17 +137,17 @@ class Home extends StatelessWidget {
                       ),
                     ),
                     InkWell(
-                      onTap: (){},
+                      onTap: null,
 
                       child: Container(
-                        color: Colors.blue,
+                        color: value.colorBox(0),
                         child: ListTile(
 
-                          onTap: (){Navigator.popAndPushNamed(context, "/home");},
-                          leading: Icon(Icons.home, color: ColorsOf().containerThings(),size: 25,),
+                          onTap:()=>value.changeSelecter(0), //(){Navigator.popAndPushNamed(context, "/home");},
+                          leading: Icon(Icons.home, color: value.colorText(0),size: 25,),
                           title: Align(
                               alignment: Alignment(-1.2, 0),
-                              child: Text("Home" , style: TextStyle(color: ColorsOf().containerThings(),fontSize: 16 ),)
+                              child: Text("Home" , style: TextStyle(color: value.colorText(0),fontSize: 16 ),)
                           ),
                         ),
                       ),
@@ -155,48 +155,54 @@ class Home extends StatelessWidget {
                     InkWell(
                       onTap: null,
                       child: Container(
+                        color: value.colorBox(1),
                         child: ListTile(
-                          onTap: (){Navigator.popAndPushNamed(context, "/profile");},
-                          leading: SvgPicture.asset("assets/images/qr_code.svg", semanticsLabel: 'scanner',height: 25,width: 25,color: ColorsOf().containerThings(),),
-                          title: Align(alignment: Alignment(-1.2, 0),child: Text("Scanner", style: TextStyle(color: ColorsOf().containerThings(),fontSize: 16 ),)),
+                          onTap:()=>value.changeSelecter(1), //(){ /*Navigator.popAndPushNamed(context, "/profile"); */},
+                          leading: SvgPicture.asset("assets/images/qr_code.svg", semanticsLabel: 'scanner',height: 25,width: 25,color: value.colorText(1),),
+                          title: Align(alignment: Alignment(-1.2, 0),child: Text("Scanner", style: TextStyle(color:value.colorText(1),fontSize: 16 ),)),
                         ),
                       ),
                     ),
                     InkWell(
                       onTap: null,
-                      child: Container(child : ListTile(
-                        onTap: (){Navigator.pushNamed(context, "/news");},
-                        leading: Icon(Icons.add, color: ColorsOf().containerThings() ,size: 25,),
-                        title: Align(alignment: Alignment(-1.2, 0),child: Text("Importer fichier", style: TextStyle(color: ColorsOf().containerThings(),fontSize: 16 ),)),
+                      child: Container(
+                        color: value.colorBox(2),
+                        child : ListTile(
+                        onTap:()=>value.changeSelecter(2), //(){ /*Navigator.pushNamed(context, "/news"); */},
+                        leading: SvgPicture.asset("assets/images/import.svg", semanticsLabel: 'scanner',height: 25,width: 25,color: value.colorText(2),),
+                        title: Align(alignment: Alignment(-1.2, 0),child: Text("Importer fichier", style: TextStyle(color: value.colorText(2),fontSize: 16 ),)),
                       ),),
                     ),
                     InkWell(
                       onTap: null,
                       child: Container(
+                        color: value.colorBox(3),
                         child: ListTile(
-                          onTap: (){Navigator.pushNamed(context, "/news");},
-                          leading: Icon(Icons.add, color: ColorsOf().containerThings() ,size: 25,),
-                          title: Align(alignment: Alignment(-1.2, 0),child: Text("Mettre à jour fichier", style: TextStyle(color: ColorsOf().containerThings(),fontSize: 16 ),)),
+                          onTap:()=>value.changeSelecter(3),// (){ /*Navigator.pushNamed(context, "/news"); */},
+                          leading: SvgPicture.asset("assets/images/update.svg", semanticsLabel: 'scanner',height: 25,width: 25,color: value.colorText(3),),
+                          title: Align(alignment: Alignment(-1.2, 0),child: Text("Mettre à jour fichier", style: TextStyle(color: value.colorText(3),fontSize: 16 ),)),
                         ),
                       ),
                     ),
                     InkWell(
                       onTap: null,
                       child: Container(
+                         color: value.colorBox(4),
                         child: ListTile(
-                          onTap: (){Navigator.pushNamed(context, "/news");},
-                          leading: Icon(Icons.add, color: ColorsOf().containerThings(),size: 25,),
-                          title: Align(alignment: Alignment(-1.2, 0),child: Text("Rapport", style: TextStyle(color: ColorsOf().containerThings(),fontSize: 16 ),)),
+                          onTap: ()=>value.changeSelecter(4),//(){ /* Navigator.pushNamed(context, "/news"); */},
+                          leading: SvgPicture.asset("assets/images/repport.svg", semanticsLabel: 'scanner',height: 25,width: 25,color: value.colorText(4),),
+                          title: Align(alignment: Alignment(-1.2, 0),child: Text("Rapport", style: TextStyle(color: value.colorText(4),fontSize: 16 ),)),
                         ),
                       ),
                     ),
                     InkWell(
-                      onTap: null,
+                      onTap:null,
                       child: Container(
+                        color: value.colorBox(5),
                         child: ListTile(
-                          onTap: (){Navigator.pushNamed(context, "/news");},
-                          leading: Icon(Icons.add, color: ColorsOf().containerThings(),size: 25,),
-                          title: Align(alignment: Alignment(-1.2, 0),child: Text("Exporter fichier", style: TextStyle(color: ColorsOf().containerThings(),fontSize: 16 ),)),
+                          onTap: ()=>value.changeSelecter(5),// (){ /*Navigator.pushNamed(context, "/news"); */ },
+                          leading: SvgPicture.asset("assets/images/export.svg", semanticsLabel: 'scanner',height: 25,width: 25,color:value.colorText(5),),
+                          title: Align(alignment: Alignment(-1.2, 0),child: Text("Exporter fichier", style: TextStyle(color:value.colorText(5),fontSize: 16 ),)),
                         ),
                       ),
                     ),
@@ -204,22 +210,22 @@ class Home extends StatelessWidget {
                     InkWell(
                       onTap: null,
                       child: Container(
+                        color: value.colorBox(6),
                         child: ListTile(
-                          leading: Icon(Icons.settings, color: ColorsOf().containerThings(),size: 25,),
-                          title: Align(alignment: Alignment(-1.2, 0),child: Text("Paramètres", style: TextStyle(color: ColorsOf().containerThings(),fontSize: 16 ),)),
+                          onTap: ()=>value.changeSelecter(6),
+                          leading: Icon(Icons.settings, color: value.colorText(6),size: 25,),
+                          title: Align(alignment: Alignment(-1.2, 0),child: Text("Paramètres", style: TextStyle(color:value.colorText(6),fontSize: 16 ),)),
                         ),
                       ),
                     ),
                     InkWell(
-                      onTap: null,
+                      onTap:null,
                       child: Container(
+                        color: value.colorBox(7),
                         child: ListTile(
-                          leading: Icon(
-                            Icons.add,
-                            color: ColorsOf().containerThings(),
-                            size: 25,
-                          ),
-                          title: Align(alignment: Alignment(-1.2, 0),child: Text("Se déconnecter",style: TextStyle(color: ColorsOf().containerThings(),fontSize: 16 ),)),
+                          onTap:  ()=>value.changeSelecter(7),
+                          leading: SvgPicture.asset("assets/images/exit.svg", semanticsLabel: 'scanner',height: 25,width: 25,color: value.colorText(7),),
+                          title: Align(alignment: Alignment(-1.2, 0),child: Text("Se déconnecter",style: TextStyle(color:value.colorText(7),fontSize: 16 ),)),
                         ),
                       ),
                     )
