@@ -21,12 +21,13 @@ class ListItems extends StatelessWidget {
                 children: [
                   Container(
                     height: 100,
+                    color: ColorsOf().backGround(),
                     child:Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
                           alignment: Alignment.topLeft,
-                          padding: EdgeInsets.only(top:5),
+                          padding: EdgeInsets.only(top:5,bottom: 5),
                           child: Row(
                             children: [
                               Expanded(
@@ -54,10 +55,10 @@ class ListItems extends StatelessWidget {
                                         text: TextSpan(children: [
 
                                           TextSpan(text:"Total : ",
-                                            style: TextStyle(color : ColorsOf().primaryBackGround() ,fontSize: 14 ,fontWeight: FontWeight.bold),
+                                            style: TextStyle(color : ColorsOf().borderContainer() ,fontSize: 14 ,fontWeight: FontWeight.bold),
                                           ),
                                           TextSpan(text:"100",
-                                            style: TextStyle(color : ColorsOf().containerThings() ,fontSize: 14 ,fontWeight: FontWeight.bold),
+                                            style: TextStyle(color : ColorsOf().primaryForGround() ,fontSize: 14 ,fontWeight: FontWeight.bold),
                                           ),
 
                                         ])
@@ -74,10 +75,10 @@ class ListItems extends StatelessWidget {
                                         text: TextSpan(children: [
 
                                           TextSpan(text:"Scan : ",
-                                            style: TextStyle(color : ColorsOf().primaryBackGround() ,fontSize: 14 ,fontWeight: FontWeight.bold),
+                                            style: TextStyle(color : ColorsOf().borderContainer() ,fontSize: 14 ,fontWeight: FontWeight.bold),
                                           ),
                                           TextSpan(text:"23",
-                                            style: TextStyle(color : ColorsOf().containerThings() ,fontSize: 14 ,fontWeight: FontWeight.bold),
+                                            style: TextStyle(color : ColorsOf().primaryForGround() ,fontSize: 14 ,fontWeight: FontWeight.bold),
                                           ),
 
                                         ])

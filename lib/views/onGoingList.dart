@@ -24,7 +24,7 @@ class OnGoingLists extends StatelessWidget {
                    color: ColorsOf().backGround(),
                    child:Container(
                      alignment: Alignment.topLeft,
-                     padding: EdgeInsets.only(top:5),
+                     padding: EdgeInsets.only(top:5,bottom: 5),
                      child: Row(
                        children: [
                          Expanded(

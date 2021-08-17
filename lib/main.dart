@@ -8,6 +8,7 @@ import 'package:scanapp/view_models/providers/list_of_items.dart';
 import 'package:scanapp/view_models/providers/login.dart';
 import 'package:scanapp/view_models/providers/main.dart';
 import 'package:scanapp/view_models/providers/onGoing_list.dart';
+import 'package:scanapp/view_models/providers/repport.dart';
 import 'package:scanapp/views/home.dart';
 import 'package:scanapp/views/list_of_items.dart';
 import 'package:scanapp/views/log_in.dart';
@@ -41,6 +42,8 @@ class MyApp extends StatelessWidget {
             create: (context) => OnGoingListProvider(), ),
           ChangeNotifierProvider<ListItemsProvider>(
             create: (context) => ListItemsProvider(), ),
+          ChangeNotifierProvider<RepportProvider>(
+            create: (context) => RepportProvider(), ),
         ],
         child: Builder(
           builder: (context) {

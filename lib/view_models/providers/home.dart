@@ -4,6 +4,7 @@ import 'package:scanapp/views/import_new_file.dart';
 import 'package:scanapp/views/inventories_list.dart';
 import 'package:scanapp/views/list_of_items.dart';
 import 'package:scanapp/views/onGoingList.dart';
+import 'package:scanapp/views/repport.dart';
 
 class HomeProvider extends ChangeNotifier{
 
@@ -40,7 +41,7 @@ class HomeProvider extends ChangeNotifier{
 
   Widget changeSelecterActivity(int num){
     // put numselected
-    List<dynamic> listWidgets = [InventoryList(),ImportNewerFile(),OnGoingLists(),ListItems()];
+    List<dynamic> listWidgets = [InventoryList(),ImportNewerFile(),OnGoingLists(),ListItems(),Repport()];
     return listWidgets[num];
   }
 
