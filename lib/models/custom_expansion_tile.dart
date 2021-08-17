@@ -33,6 +33,7 @@ class ExpansionTile extends StatefulWidget {
     @required this.title,
     this.backgroundColor,
     this.iconColor,
+    this.isElevation,
     this.onExpansionChanged,
     this.children = const <Widget>[],
     this.trailing,
@@ -70,7 +71,7 @@ class ExpansionTile extends StatefulWidget {
 
   /// The color to display the icon of the header.
   final Color iconColor;
-
+  final bool isElevation;
   /// A widget to display instead of a rotating arrow icon.
   final Widget trailing;
 
@@ -98,11 +99,11 @@ class _ExpansionTileState extends State<ExpansionTile>
   AnimationController _controller;
   Animation<double> _iconTurns;
   Animation<double> _heightFactor;
-  Animation<Color> _borderColor;
+
   Animation<Color> _headerColor;
   Animation<Color> _iconColor;
   Animation<Color> _backgroundColor;
-
+  bool isElevation =true;
   bool _isExpanded = false;
 
   @override
@@ -111,7 +112,7 @@ class _ExpansionTileState extends State<ExpansionTile>
     _controller = AnimationController(duration: _kExpand, vsync: this);
     _heightFactor = _controller.drive(_easeInTween);
     _iconTurns = _controller.drive(_halfTween.chain(_easeInTween));
-    _borderColor = _controller.drive(_borderColorTween.chain(_easeOutTween));
+    isElevation = widget.isElevation ?? true;
     _headerColor = _controller.drive(_headerColorTween.chain(_easeInTween));
     _iconColor = _controller.drive(_iconColorTween.chain(_easeInTween));
     _backgroundColor =
@@ -168,7 +169,7 @@ class _ExpansionTileState extends State<ExpansionTile>
                 color: widget.headerBackgroundColor ?? Colors.black,
                 borderRadius: BorderRadius.all(Radius.circular(10)),
                 border: Border.all(color: Colors.black, width: 0,style: BorderStyle.solid),
-                boxShadow: [
+                boxShadow: (isElevation)?[
 
                   BoxShadow(
                     color: Color(0x40000000),//.withOpacity(0.5),
@@ -176,7 +177,7 @@ class _ExpansionTileState extends State<ExpansionTile>
                     blurRadius: 4,
                     offset: Offset(0, 4), // changes position of shadow
                   ),
-                ],
+                ]:[],
               ),
               child: ListTile(
                 onTap: _handleTap,

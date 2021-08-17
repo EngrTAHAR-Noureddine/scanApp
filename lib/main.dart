@@ -10,6 +10,7 @@ import 'package:scanapp/view_models/providers/login.dart';
 import 'package:scanapp/view_models/providers/main.dart';
 import 'package:scanapp/view_models/providers/onGoing_list.dart';
 import 'package:scanapp/view_models/providers/repport.dart';
+import 'package:scanapp/view_models/providers/settings.dart';
 import 'package:scanapp/views/home.dart';
 import 'package:scanapp/views/list_of_items.dart';
 import 'package:scanapp/views/log_in.dart';
@@ -47,6 +48,8 @@ class MyApp extends StatelessWidget {
             create: (context) => RepportProvider(), ),
           ChangeNotifierProvider<ExportProvider>(
             create: (context) => ExportProvider(), ),
+          ChangeNotifierProvider<SettingsProvider>(
+            create: (context) => SettingsProvider(), ),
         ],
         child: Builder(
           builder: (context) {
