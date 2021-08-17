@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:scanapp/models/variables_define/colors.dart';
 import 'package:scanapp/models/variables_define/my_flutter_app_icons.dart';
 import 'package:scanapp/view_models/providers/home.dart';
-import 'package:scanapp/views/import_new_file.dart';
 import 'package:scanapp/views/inventories_list.dart';
 
 class Home extends StatelessWidget {
@@ -165,7 +163,7 @@ class Home extends StatelessWidget {
                       color: value.colorBox(8),
                       height: 50,
                       child: ListTile(
-                        onTap:()=>value.changeSelecter(8,context, "/home"), //(){ /*Navigator.popAndPushNamed(context, "/profile"); */},
+                        onTap:()=>value.changeSelecter(8,context, "/onGoingList"), //(){ /*Navigator.popAndPushNamed(context, "/profile"); */},
                         leading: Icon(Icons.format_list_bulleted_rounded, size: 20,color: value.colorText(8),),
                         title: Align(
                             alignment: Alignment(-1.2, -0.1),
@@ -251,7 +249,7 @@ class Home extends StatelessWidget {
                 ),
               ),
             ),
-            body:InventoryList(), //ImportNewerFile(),
+            body:value.changeSelecterActivity(2),
             floatingActionButton: FloatingActionButton(
                     backgroundColor: ColorsOf().containerThings(),
                     elevation: 2,

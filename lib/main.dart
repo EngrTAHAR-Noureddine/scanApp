@@ -6,8 +6,10 @@ import 'package:scanapp/view_models/providers/home.dart';
 import 'package:scanapp/view_models/providers/inventories_list.dart';
 import 'package:scanapp/view_models/providers/login.dart';
 import 'package:scanapp/view_models/providers/main.dart';
+import 'package:scanapp/view_models/providers/onGoing_list.dart';
 import 'package:scanapp/views/home.dart';
 import 'package:scanapp/views/log_in.dart';
+import 'package:scanapp/views/onGoingList.dart';
 
 void main() {
   runApp(MyApp());
@@ -33,6 +35,8 @@ class MyApp extends StatelessWidget {
             create: (context) => HomeProvider(), ),
           ChangeNotifierProvider<InventoryListProvider>(
             create: (context) => InventoryListProvider(), ),
+          ChangeNotifierProvider<OnGoingListProvider>(
+            create: (context) => OnGoingListProvider(), ),
         ],
         child: Builder(
           builder: (context) {
@@ -81,7 +85,7 @@ class MyApp extends StatelessWidget {
                                               routes: {
                                                 "/home": (context) => Home(),
                                                 "/profile": (context) => LogIn(),
-                                                "/news": (context) => LogIn(),
+                                                "/onGoingList": (context) => OnGoingLists(),
                                               },
                                                          );
                         }

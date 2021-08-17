@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:scanapp/view_models/providers/home.dart';
 
 class ColorsOf{
   static final ColorsOf _singleton = ColorsOf._internal();
@@ -56,12 +54,5 @@ class ColorsOf{
     return (darkMode)?Color(0xFFEBEBF0):Color(0xFF242426);
   }
 
-
-
-
-
-  Widget logoLogIn(){
-    return (darkMode)?SvgPicture.asset("assets/images/logo_dark.svg", semanticsLabel: 'Logo'):SvgPicture.asset("assets/images/logo_light.svg", semanticsLabel: 'Logo',);
-  }
 
 }
