@@ -26,19 +26,9 @@ class LogIn extends StatelessWidget {
     ColorsOf().mode(context);
     return Consumer<LogInProvider>(
         builder: (context, value, child) {
-          //return OrientationBuilder(
-            //  builder: (context, orientation) {
-               // isPortrait =  (orientation == Orientation.portrait);
-                return Scaffold(
-               /* appBar: AppBar(
-                  backwardsCompatibility: false,
-                  systemOverlayStyle: SystemUiOverlayStyle(
-                      statusBarColor: ColorsOf().backGround()
 
-                  ),
-                    elevation: 0,
-                  //brightness: Theme.of(context).primaryColorBrightness,
-                ),*/
+                return Scaffold(
+
 
 
                   resizeToAvoidBottomInset: false,
