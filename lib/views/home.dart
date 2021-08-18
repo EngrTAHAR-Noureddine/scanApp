@@ -30,9 +30,9 @@ class Home extends StatelessWidget {
         builder: (context, value, child) {
           return Scaffold(
             key: _scaffoldKey,
-            body:value.changeSelecterActivity(8),
+            body:value.changeSelecterActivity(1),
 
-/*
+
             appBar: AppBar(
              backwardsCompatibility: false,
               systemOverlayStyle: SystemUiOverlayStyle(
@@ -137,7 +137,6 @@ class Home extends StatelessWidget {
               onPressed: (){},
             ),
 
-*/
 
 
 
