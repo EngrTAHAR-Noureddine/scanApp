@@ -11,11 +11,11 @@ String productCategoryToJson(ProductCategory data) {
 }
 
 class ProductCategory {
-  int id;
-  String categoryName;
-  String categoryCode;
-  int parentId;
-  String parentPath;
+  int? id;
+  String? categoryName;
+  String? categoryCode;
+  int? parentId;
+  String? parentPath;
 
   ProductCategory({
     this.id,

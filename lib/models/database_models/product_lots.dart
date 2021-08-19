@@ -11,11 +11,11 @@ String productLotToJson(ProductLot data) {
 }
 
 class ProductLot {
-  int id;
-  int productId;
-  String numLot;
-  String numSerie;
-  String immatriculation;
+  int? id;
+  int? productId;
+  String? numLot;
+  String? numSerie;
+  String? immatriculation;
 
   ProductLot({
     this.id,

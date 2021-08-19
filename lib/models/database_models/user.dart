@@ -11,29 +11,28 @@ String userToJson(User data) {
 }
 
 class User {
-  int id;
-  int allStocks;
-  String logoName;
-  String logoImage;
+  int? id;
+  int? allStocks;
+  String? logoName;
+  String? logoImage;
 
-  String phoneEnterprise;
-  String addressEnterprise;
-  String checkingFile;
-  String adminPassword;
+  String? phoneEnterprise;
+  String? addressEnterprise;
+  String? adminPassword;
 
-  String userPasswordReset;
-  String userPasswordActually;
-  String stateUser;
-  String sitesTable;
+  String? userPasswordReset;
+  String? userPasswordActually;
+  String? stateUser;
+  String? sitesTable;
 
-  String companyTable;
-  String stockEnterpriseTable;
-  String stockSystemTable;
-  String bureauxTable;
+  String? companyTable;
+  String? stockEnterpriseTable;
+  String? stockSystemTable;
+  String? bureauxTable;
 
-  String produitsTable;
-  String categoriesTable;
-  String productLotsTable;
+  String? produitsTable;
+  String? categoriesTable;
+  String? productLotsTable;
 
   User({
     this.id,
@@ -42,7 +41,6 @@ class User {
     this.phoneEnterprise,
 
     this.addressEnterprise,
-    this.checkingFile,
     this.adminPassword,
     this.userPasswordReset,
 
@@ -68,7 +66,6 @@ class User {
       phoneEnterprise: json["phoneEnterprise"],
 
       addressEnterprise: json["addressEnterprise"],
-      checkingFile: json["checkingFile"],
       adminPassword: json["adminPassword"],
       userPasswordReset: json["userPasswordReset"],
 
@@ -95,7 +92,6 @@ class User {
     "phoneEnterprise": phoneEnterprise,
 
     "addressEnterprise": addressEnterprise,
-    "checkingFile": checkingFile,
     "adminPassword": adminPassword,
     "userPasswordReset": userPasswordReset,
 

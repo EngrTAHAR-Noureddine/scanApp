@@ -11,11 +11,11 @@ String stockEntrepotToJson(StockEntrepot data) {
 }
 
 class StockEntrepot {
-  int id;
-  String nom;
-  int companyId;
-  String directionType;
-  int directionId;
+  int? id;
+  String? nom;
+  int? companyId;
+  String? directionType;
+  int? directionId;
 
 
   StockEntrepot({

@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 
 class ListItemsProvider extends ChangeNotifier{
 
-  static final ListItemsProvider _singleton = ListItemsProvider._internal();
-  factory ListItemsProvider() {
-    return _singleton;
-  }
-  ListItemsProvider._internal();
+  static ListItemsProvider? _instance;
+  ListItemsProvider._();
+  factory ListItemsProvider() => _instance ??=ListItemsProvider._();
 
 
 

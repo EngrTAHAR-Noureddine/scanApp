@@ -11,9 +11,9 @@ String inventoryToJson(Inventory data) {
 }
 
 class Inventory {
-  int id;
-  String openingDate;
-  String closeDate;
+  int? id;
+  String? openingDate;
+  String? closeDate;
 
 
   Inventory({

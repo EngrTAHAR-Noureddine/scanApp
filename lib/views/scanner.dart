@@ -38,7 +38,7 @@ class Scanner extends StatelessWidget {
 
              backgroundColor: ColorsOf().backGround(),
              leading: IconButton(
-               onPressed: () => _scaffoldKey.currentState.openDrawer(),
+               onPressed: () => _scaffoldKey.currentState!.openDrawer(),
                icon: Icon(Icons.menu , color: ColorsOf().primaryBackGround(),),
              ),
              elevation: 0,

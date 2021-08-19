@@ -30,7 +30,7 @@ class Home extends StatelessWidget {
         builder: (context, value, child) {
           return Scaffold(
             key: _scaffoldKey,
-            body:value.changeSelecterActivity(1),
+            body:HomeProvider().changeSelecterActivity(0),
 
 
             appBar: AppBar(
@@ -44,7 +44,7 @@ class Home extends StatelessWidget {
 
               backgroundColor: ColorsOf().backGround(),
               leading: IconButton(
-                onPressed: () => _scaffoldKey.currentState.openDrawer(),
+                onPressed: () => _scaffoldKey.currentState!.openDrawer(),
                 icon: Icon(Icons.menu , color: ColorsOf().primaryBackGround(),),
               ),
               elevation: 0,
@@ -57,8 +57,8 @@ class Home extends StatelessWidget {
                   onPressed: () => value.onPressedButton(),
                 ),
                AnimatedContainer(
-                  width: !value.bigger ? 0 : MediaQuery.of(context).size.width * 0.70,
-                  margin: EdgeInsets.only(right: !value.bigger ? 10 : 10),
+                  width: !HomeProvider().bigger ? 0 : MediaQuery.of(context).size.width * 0.70,
+                  margin: EdgeInsets.only(right: !HomeProvider().bigger ? 10 : 10),
                   color: Colors.transparent,
                   child: TextField(
                     textAlign: TextAlign.left,
@@ -125,7 +125,7 @@ class Home extends StatelessWidget {
                 ) ,
               ],
             ),
-            drawer: value.drawerApp(context),
+            drawer: HomeProvider().drawerApp(context),
             floatingActionButton: FloatingActionButton(
               backgroundColor: ColorsOf().containerThings(),
               elevation: 2,

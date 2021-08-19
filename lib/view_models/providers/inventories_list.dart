@@ -3,11 +3,9 @@ import 'package:scanapp/models/variables_define/colors.dart';
 
 class InventoryListProvider extends ChangeNotifier{
 
-  static final InventoryListProvider _singleton = InventoryListProvider._internal();
-  factory InventoryListProvider() {
-    return _singleton;
-  }
-  InventoryListProvider._internal();
+  static InventoryListProvider? _instance;
+  InventoryListProvider._();
+  factory InventoryListProvider() => _instance ??=InventoryListProvider._();
 
 
   Widget iconLoeading(String state){

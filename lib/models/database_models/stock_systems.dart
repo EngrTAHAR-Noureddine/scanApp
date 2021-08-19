@@ -11,11 +11,11 @@ String stockSystemToJson(StockSystem data) {
 }
 
 class StockSystem {
-  int id;
-  int productId;
-  int productLotId;
-  int emplacementId;
-  int quantity;
+  int? id;
+  int? productId;
+  int? productLotId;
+  int? emplacementId;
+  int? quantity;
 
 
   StockSystem({

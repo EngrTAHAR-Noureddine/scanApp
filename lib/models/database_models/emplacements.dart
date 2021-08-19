@@ -11,10 +11,10 @@ String emplacementToJson(Emplacement data) {
 }
 
 class Emplacement {
-  int id;
-  String nom;
-  int entrepotId;
-  String barCodeEmp;
+  int? id;
+  String? nom;
+  int? entrepotId;
+  String? barCodeEmp;
 
 
   Emplacement({

@@ -11,12 +11,12 @@ String productToJson(Product data) {
 }
 
 class Product {
-  int id;
-  String nom;
-  String productCode;
-  int categoryId;
-  String gestionLot;
-  String productType;
+  int? id;
+  String? nom;
+  String? productCode;
+  int? categoryId;
+  String? gestionLot;
+  String? productType;
 
   Product({
     this.id,

@@ -12,19 +12,16 @@ import 'package:scanapp/views/search.dart';
 import 'package:scanapp/views/settings.dart';
 
 class HomeProvider extends ChangeNotifier{
-
-  static final HomeProvider _singleton = HomeProvider._internal();
-  factory HomeProvider() {
-    return _singleton;
-  }
-  HomeProvider._internal();
+  static  HomeProvider? _instance;
+  HomeProvider._();
+  factory HomeProvider() => _instance ??=HomeProvider._();
 
   int numOfSelecter = 0;
 
   bool bigger = false;
   TextEditingController searchItem = new TextEditingController();
 
-  void onPressedButton(){
+   void onPressedButton(){
     bigger = !bigger;
 
     notifyListeners();
@@ -39,10 +36,11 @@ class HomeProvider extends ChangeNotifier{
     return (num == numOfSelecter)?ColorsOf().primaryBackGround():ColorsOf().containerThings();
   }
 
+
   void changeSelecter(int num, context, path){
-    this.numOfSelecter = num;
+    numOfSelecter = num;
     Navigator.popAndPushNamed(context, path);
-    notifyListeners();
+    //notifyListeners();
   }
 
   Widget changeSelecterActivity(int num){
@@ -78,76 +76,76 @@ class HomeProvider extends ChangeNotifier{
               ),
             ),
             Container(
-              color: this.colorBox(0),
+              color: colorBox(0),
               alignment: Alignment.topCenter,
               height: 50,
               child: ListTile(
-                onTap:()=>this.changeSelecter(0,context, "/profile"), //(){Navigator.popAndPushNamed(context, "/home");},
-                leading: Icon(Icons.home, color: this.colorText(0),size: 20,),
+                onTap:()=>changeSelecter(0,context, "/profile"), //(){Navigator.popAndPushNamed(context, "/home");},
+                leading: Icon(Icons.home, color: colorText(0),size: 20,),
                 title: Align(
                     alignment: Alignment(-1.2, -0.1),
-                    child: Text("Home" , style: TextStyle(color: this.colorText(0),fontSize: 14 ),)
+                    child: Text("Home" , style: TextStyle(color: colorText(0),fontSize: 14 ),)
                 ),
               ),
             ),
             Container(
-              color: this.colorBox(8),
+              color: colorBox(8),
               height: 50,
               child: ListTile(
-                onTap:()=>this.changeSelecter(8,context, "/onGoingList"), //(){ /*Navigator.popAndPushNamed(context, "/profile"); */},
-                leading: Icon(Icons.format_list_bulleted_rounded, size: 20,color: this.colorText(8),),
+                onTap:()=>changeSelecter(8,context, "/onGoingList"), //(){ /*Navigator.popAndPushNamed(context, "/profile"); */},
+                leading: Icon(Icons.format_list_bulleted_rounded, size: 20,color: colorText(8),),
                 title: Align(
                     alignment: Alignment(-1.2, -0.1),
-                    child: Text("Afficher List", style: TextStyle(color:this.colorText(8),fontSize: 14 ),)),
+                    child: Text("Afficher List", style: TextStyle(color:colorText(8),fontSize: 14 ),)),
               ),
             ),
             Container(
-              color: this.colorBox(1),
+              color: colorBox(1),
               height: 50,
               child: ListTile(
-                onTap:()=>this.changeSelecter(1,context, "/home"), //(){ /*Navigator.popAndPushNamed(context, "/profile"); */},
-                leading: Icon(MyFlutterApp.qr_code,size: 20,color: this.colorText(1),),
+                onTap:()=>changeSelecter(1,context, "/home"), //(){ /*Navigator.popAndPushNamed(context, "/profile"); */},
+                leading: Icon(MyFlutterApp.qr_code,size: 20,color: colorText(1),),
                 title: Align(alignment: Alignment(-1.2, -0.1),
-                    child: Text("Scanner", style: TextStyle(color:this.colorText(1),fontSize: 14 ),)),
+                    child: Text("Scanner", style: TextStyle(color:colorText(1),fontSize: 14 ),)),
               ),
             ),
             Container(
-              color: this.colorBox(2),
+              color: colorBox(2),
               height: 50,
               child : ListTile(
-                onTap:()=>this.changeSelecter(2,context, "/home"), //(){ /*Navigator.pushNamed(context, "/news"); */},
-                leading: Icon(MyFlutterApp.import_second,size: 20,color: this.colorText(2),),
+                onTap:()=>changeSelecter(2,context, "/home"), //(){ /*Navigator.pushNamed(context, "/news"); */},
+                leading: Icon(MyFlutterApp.import_second,size: 20,color: colorText(2),),
                 title: Align(alignment: Alignment(-1.2, -0.1),
-                    child: Text("Importer fichier", style: TextStyle(color: this.colorText(2),fontSize: 14 ),)),
+                    child: Text("Importer fichier", style: TextStyle(color: colorText(2),fontSize: 14 ),)),
               ),),
             Container(
-              color: this.colorBox(3),
+              color: colorBox(3),
               height: 50,
               child: ListTile(
-                onTap:()=>this.changeSelecter(3,context, "/home"),// (){ /*Navigator.pushNamed(context, "/news"); */},
-                leading: Icon(MyFlutterApp.update,size: 20,color: this.colorText(3),),
+                onTap:()=>changeSelecter(3,context, "/home"),// (){ /*Navigator.pushNamed(context, "/news"); */},
+                leading: Icon(MyFlutterApp.update,size: 20,color: colorText(3),),
                 title: Align(alignment: Alignment(-1.2, -0.1),
-                    child: Text("Mettre à jour fichier", style: TextStyle(color: this.colorText(3),fontSize: 14 ),)),
+                    child: Text("Mettre à jour fichier", style: TextStyle(color: colorText(3),fontSize: 14 ),)),
               ),
             ),
             Container(
-              color: this.colorBox(4),
+              color: colorBox(4),
               height: 50,
               child: ListTile(
-                onTap: ()=>this.changeSelecter(4,context, "/home"),//(){ /* Navigator.pushNamed(context, "/news"); */},
-                leading:Icon(MyFlutterApp.repport,size: 20,color: this.colorText(4),),
+                onTap: ()=>changeSelecter(4,context, "/home"),//(){ /* Navigator.pushNamed(context, "/news"); */},
+                leading:Icon(MyFlutterApp.repport,size: 20,color: colorText(4),),
                 title: Align(alignment: Alignment(-1.2, -0.1),
-                    child: Text("Rapport", style: TextStyle(color: this.colorText(4),fontSize: 14 ),)),
+                    child: Text("Rapport", style: TextStyle(color: colorText(4),fontSize: 14 ),)),
               ),
             ),
             Container(
-              color: this.colorBox(5),
+              color: colorBox(5),
               height: 50,
               child: ListTile(
-                onTap: ()=>this.changeSelecter(5,context, "/home"),// (){ /*Navigator.pushNamed(context, "/news"); */ },
-                leading: Icon(MyFlutterApp.export_icon,size: 20,color: this.colorText(5),),
+                onTap: ()=>changeSelecter(5,context, "/home"),// (){ /*Navigator.pushNamed(context, "/news"); */ },
+                leading: Icon(MyFlutterApp.export_icon,size: 20,color: colorText(5),),
                 title: Align(alignment: Alignment(-1.2, -0.1),
-                    child: Text("Exporter fichier", style: TextStyle(color:this.colorText(5),fontSize: 14 ),)),
+                    child: Text("Exporter fichier", style: TextStyle(color:colorText(5),fontSize: 14 ),)),
               ),
             ),
             Divider(
@@ -157,23 +155,23 @@ class HomeProvider extends ChangeNotifier{
             ),
 
             Container(
-              color: this.colorBox(6),
+              color: colorBox(6),
               height: 50,
               child: ListTile(
-                onTap: ()=>this.changeSelecter(6,context, "/home"),
-                leading: Icon(Icons.settings, color: this.colorText(6),size: 20,),
+                onTap: ()=>changeSelecter(6,context, "/home"),
+                leading: Icon(Icons.settings, color: colorText(6),size: 20,),
                 title: Align(alignment: Alignment(-1.2, -0.1),
-                    child: Text("Paramètres", style: TextStyle(color:this.colorText(6),fontSize: 14 ),)),
+                    child: Text("Paramètres", style: TextStyle(color:colorText(6),fontSize: 14 ),)),
               ),
             ),
             Container(
-              color: this.colorBox(7),
+              color: colorBox(7),
               height: 50,
               child: ListTile(
-                onTap:  ()=>this.changeSelecter(7,context, "/home"),
-                leading: Icon(MyFlutterApp.logout,size: 20,color: this.colorText(7),),
+                onTap:  ()=>changeSelecter(7,context, "/home"),
+                leading: Icon(MyFlutterApp.logout,size: 20,color: colorText(7),),
                 title: Align(alignment: Alignment(-1.2, -0.1),
-                    child: Text("Se déconnecter",style: TextStyle(color:this.colorText(7),fontSize: 14 ),)),
+                    child: Text("Se déconnecter",style: TextStyle(color:colorText(7),fontSize: 14 ),)),
               ),
             )
           ],

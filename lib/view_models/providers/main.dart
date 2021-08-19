@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 
 class MainProvider extends ChangeNotifier{
 
-  static final MainProvider _singleton = MainProvider._internal();
-  factory MainProvider() {
-    return _singleton;
-  }
-  MainProvider._internal();
 
+  static MainProvider? _instance;
+  MainProvider._();
+  factory MainProvider() => _instance ??=MainProvider._();
 
 
 }

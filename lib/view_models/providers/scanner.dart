@@ -4,11 +4,11 @@ import 'package:scanapp/models/variables_define/my_flutter_app_icons.dart';
 
 class ScannerProvider extends ChangeNotifier{
 
-  static final ScannerProvider _singleton = ScannerProvider._internal();
-  factory ScannerProvider() {
-    return _singleton;
-  }
-  ScannerProvider._internal();
+  static ScannerProvider? _instance;
+  ScannerProvider._();
+  factory ScannerProvider() => _instance ??=ScannerProvider._();
+
+
 
 /* Variables */
   final formKey = GlobalKey<FormState>();

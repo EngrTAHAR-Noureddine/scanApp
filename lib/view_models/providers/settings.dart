@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:scanapp/models/variables_define/colors.dart';
 
 class SettingsProvider extends ChangeNotifier{
+  static SettingsProvider? _instance;
+  SettingsProvider._();
+  factory SettingsProvider() => _instance ??=SettingsProvider._();
 
-  static final SettingsProvider _singleton = SettingsProvider._internal();
-  factory SettingsProvider() {
-    return _singleton;
-  }
-  SettingsProvider._internal();
+
   List<bool> switches =[false,false,false,false];
 
   toggleMode(bool value, int num) async {

@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 
 class SearchProvider extends ChangeNotifier{
 
-  static final SearchProvider _singleton = SearchProvider._internal();
-  factory SearchProvider() {
-    return _singleton;
-  }
-  SearchProvider._internal();
+  static SearchProvider? _instance;
+  SearchProvider._();
+  factory SearchProvider() => _instance ??=SearchProvider._();
+
 
 
 

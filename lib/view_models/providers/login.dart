@@ -5,19 +5,17 @@ import 'package:scanapp/models/variables_define/my_flutter_app_icons.dart';
 import 'package:scanapp/views/home.dart';
 
 class LogInProvider extends ChangeNotifier{
+  static LogInProvider? _instance;
+  LogInProvider._();
+  factory LogInProvider() => _instance ??=LogInProvider._();
 
-  static final LogInProvider _singleton = LogInProvider._internal();
-  factory LogInProvider() {
-    return _singleton;
-  }
-  LogInProvider._internal();
 /* Variables */
-  final formKey = GlobalKey<FormState>();
-  TextEditingController passwordController = TextEditingController();
-  bool _switch = false;
+   final formKey = GlobalKey<FormState>();
+   TextEditingController passwordController = TextEditingController();
+   bool _switch = false;
 /* Provider Functions  */
 
-  inputPassword(){
+   inputPassword(){
     return Container(
       color:ColorsOf().primaryBackGround(),
       height:50,
@@ -109,7 +107,7 @@ class LogInProvider extends ChangeNotifier{
     );
   }
 
-  asAdminField(){
+   asAdminField(){
     return Container(
       color:ColorsOf().primaryBackGround(),
       height:50,
@@ -125,8 +123,11 @@ class LogInProvider extends ChangeNotifier{
 
         value: _switch,
         onChanged: (bool value) async {
+          print(value);
           _switch = value;
           notifyListeners();
+
+
           /*if (!value) {
             return await SettingsProvider().showDialogToHideGoals(context);
           } else {
@@ -142,7 +143,7 @@ class LogInProvider extends ChangeNotifier{
     );
   }
 
-  buttonLogIn(context){
+   buttonLogIn(context){
     return  Container(
       color:Colors.transparent,
       alignment: Alignment.centerRight,
@@ -176,7 +177,7 @@ class LogInProvider extends ChangeNotifier{
 
 
 /* Widgets  */
-Widget logoWidget(){
+  Widget logoWidget(){
   return Container(
     height: 100,
     width: 100,

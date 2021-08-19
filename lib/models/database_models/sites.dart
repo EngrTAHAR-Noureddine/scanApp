@@ -11,8 +11,8 @@ String siteToJson(Site data) {
 }
 
 class Site {
-  int id;
-  String nom;
+  int? id;
+  String? nom;
 
   Site({
     this.id,

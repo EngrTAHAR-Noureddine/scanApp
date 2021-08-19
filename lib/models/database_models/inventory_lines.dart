@@ -11,16 +11,16 @@ String inventoryLineToJson(InventoryLine data) {
 }
 
 class InventoryLine {
-  int id;
-  int inventoryId;
-  int productId;
-  int emplacementId;
-  int productLotId;
+  int? id;
+  int? inventoryId;
+  int? productId;
+  int? emplacementId;
+  int? productLotId;
 
-  int quantity;
-  int quantitySystem;
-  int difference;
-  String quality;
+  int? quantity;
+  int? quantitySystem;
+  int? difference;
+  String? quality;
 
 
   InventoryLine({

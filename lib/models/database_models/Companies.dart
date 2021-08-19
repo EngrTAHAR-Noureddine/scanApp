@@ -11,10 +11,10 @@ String companyToJson(Company data) {
 }
 
 class Company {
-  int id;
-  String nom;
-  int siteId;
-  String logo;
+  int? id;
+  String? nom;
+  int? siteId;
+  String? logo;
 
   Company({
     this.id,
@@ -36,4 +36,6 @@ class Company {
     "siteId": siteId,
     "logo": logo,
   };
+
+
 }
