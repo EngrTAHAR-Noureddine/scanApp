@@ -13,10 +13,17 @@ import 'package:scanapp/view_models/providers/repport.dart';
 import 'package:scanapp/view_models/providers/scanner.dart';
 import 'package:scanapp/view_models/providers/search.dart';
 import 'package:scanapp/view_models/providers/settings.dart';
+import 'package:scanapp/views/exports_list.dart';
 import 'package:scanapp/views/home.dart';
+import 'package:scanapp/views/import_new_file.dart';
+import 'package:scanapp/views/inventories_list.dart';
 import 'package:scanapp/views/list_of_items.dart';
 import 'package:scanapp/views/log_in.dart';
 import 'package:scanapp/views/onGoingList.dart';
+import 'package:scanapp/views/repport.dart';
+import 'package:scanapp/views/scanner.dart';
+import 'package:scanapp/views/search.dart';
+import 'package:scanapp/views/settings.dart';
 
 void main() {
   runApp(MyApp());
@@ -105,9 +112,18 @@ class MyApp extends StatelessWidget {
                                               themeMode: ThemeMode.system,
                                               home: LogIn(),
                                               routes: {
-                                                "/home": (context) => Home(),
-                                                "/onGoingList": (context) => OnGoingLists(),
+                                                "/inventoryList": (context) => InventoryList(),
                                                 "/listItems": (context) => ListItems(),
+                                                "/scanner": (context) => Scanner(),
+                                                "/import": (context) => ImportNewerFile(),
+                                                "/update": (context) => ImportNewerFile(),
+                                                "/export": (context) => Export(),
+                                                "/report": (context) => Repport(),
+                                                "/settings": (context) => Settings(),
+                                                "/logout": (context) => ImportNewerFile(),
+                                                "/search": (context) => Search(),
+                                                "/onGoingList": (context) => OnGoingLists(),
+
                                               },
                                                          );
                         }

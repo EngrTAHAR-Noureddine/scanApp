@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:scanapp/models/variables_define/colors.dart';
-import 'package:scanapp/models/variables_define/my_flutter_app_icons.dart';
 import 'package:scanapp/view_models/providers/home.dart';
 import 'package:scanapp/view_models/providers/scanner.dart';
 
@@ -11,7 +10,7 @@ import 'package:scanapp/view_models/providers/scanner.dart';
 class Scanner extends StatelessWidget {
 
   TextEditingController addCodeBar = TextEditingController();
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +22,7 @@ class Scanner extends StatelessWidget {
     return Consumer<ScannerProvider>(
         builder: (context, value, child) {
          return Scaffold(
-           key: _scaffoldKey,
+           key: scaffoldKey,
 
            resizeToAvoidBottomInset: false,
            backgroundColor: ColorsOf().backGround(),
@@ -38,7 +37,7 @@ class Scanner extends StatelessWidget {
 
              backgroundColor: ColorsOf().backGround(),
              leading: IconButton(
-               onPressed: () => _scaffoldKey.currentState!.openDrawer(),
+               onPressed: () => scaffoldKey.currentState!.openDrawer(),
                icon: Icon(Icons.menu , color: ColorsOf().primaryBackGround(),),
              ),
              elevation: 0,

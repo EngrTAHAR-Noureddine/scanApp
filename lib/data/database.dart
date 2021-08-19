@@ -146,6 +146,7 @@ class DBProvider {
           await db.execute("CREATE TABLE Inventory ("
               "id INTEGER PRIMARY KEY,"
               "openingDate TEXT,"
+              "status TEXT,"
               "closeDate TEXT"
               ")");
           await db.execute("CREATE TABLE InventoryLine ("
@@ -563,9 +564,9 @@ class DBProvider {
     res.isNotEmpty ? res.map((c) => Inventory.fromMap(c)).toList() : [];
     return list;
   }
-  Future<List<InventoryLine>> getAllInventoryLines() async {
+  Future<List<InventoryLine>> getAllInventoryLines(int? idInv) async {
     final db = await database;
-    var res = await db.rawQuery("SELECT * FROM InventoryLine");
+    var res = await db.query("InventoryLine", where: "inventoryId = ?", whereArgs: [idInv]);
     List<InventoryLine> list =
     res.isNotEmpty ? res.map((c) => InventoryLine.fromMap(c)).toList() : [];
     return list;
