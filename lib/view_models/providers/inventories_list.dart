@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:scanapp/data/database.dart';
 import 'package:scanapp/models/database_models/inventories.dart';
 import 'package:scanapp/models/variables_define/colors.dart';
@@ -17,11 +17,13 @@ class InventoryListProvider extends ChangeNotifier{
 
     List<Inventory> list = (await DBProvider.db.getAllInventories());
 
-
+    //notifyListeners();
     return (list.isNotEmpty)?list:[];
   }
 
-
+  setState(){
+    notifyListeners();
+  }
   Widget iconLoeading(Inventory inv){
 
     switch(inv.status){
@@ -41,100 +43,119 @@ class InventoryListProvider extends ChangeNotifier{
     notifyListeners();
   }
 
+  showDialogOfButtons(context ,Inventory inv,String title, String content,String buttonName)async{
+    return await showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return   Center(
+            child: SingleChildScrollView(
 
-  AppBar appBAR(context){
-    return AppBar(
-      backwardsCompatibility: false,
-      systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness:Theme.of(context).primaryColorBrightness,
+              child: AlertDialog(
+                backgroundColor:ColorsOf().primaryBackGround(),
+                elevation: 1,
+                shape: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                content: Text(content, style: TextStyle(color: ColorsOf().containerThings(),fontSize:14,),),
+                title: Text(title,style: TextStyle(color: ColorsOf().containerThings() ),),
+                actions: <Widget>[
+                  MaterialButton(
+                    child: Text('Annuler',style:TextStyle(color: ColorsOf().containerThings() )),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      notifyListeners();
+                    },
+                  ),
+                  MaterialButton(
+                    color:ColorsOf().containerThings() ,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    padding: EdgeInsets.all(0),
+                    child: Text(buttonName ,style: TextStyle(color: ColorsOf().primaryBackGround()),),
+
+
+                    onPressed: ()async{
+                      switch(buttonName){
+                        case "Supprimer":await deleteInventory(inv); break;
+                        case "Terminer": await finishInventory(inv); break;
+                        default : break;
+                      }
+                      Navigator.of(context).pop();
+                      },
+
+
+                  ),
+
+
+
+                ],
+              ),
+            ),
+          );
+
+        });
+  }
+
+  /* * Buttons  * */
+ Widget deleteButton(context, Inventory inv){
+   return Container(
+      height: double.infinity,
+      decoration: BoxDecoration(
+          color:ColorsOf().deleteItem(),
+
+          borderRadius: BorderRadius.only(
+            bottomRight: Radius.circular(10),
+            topRight: Radius.circular(10),
+          )
+      ),
+      child: IconSlideAction(
+        color: Colors.transparent,
+        foregroundColor: ColorsOf().backGround(),
+        icon: Icons.delete,
+        caption: 'Delete',
+        onTap: ()=>showDialogOfButtons(context, inv,"Supprimer Inventaire","êtes-vous sûr de supprimer l'inventaire ?","Supprimer"),
       ),
 
-      brightness: Theme.of(context).primaryColorBrightness,
-
-      backgroundColor: ColorsOf().backGround(),
-      leading: IconButton(
-        onPressed: () => scaffoldKey.currentState!.openDrawer(),
-        icon: Icon(Icons.menu , color: ColorsOf().primaryBackGround(),),
-      ),
-      elevation: 0,
-      actions: [
-        IconButton(
-          icon: Icon(
-            Icons.search,
-            color: ColorsOf().primaryBackGround(),
-          ),
-          onPressed: () => this.onPressedButton(),
-        ),
-        AnimatedContainer(
-          width: !bigger ? 0 : MediaQuery.of(context).size.width * 0.70,
-          margin: EdgeInsets.only(right: !bigger ? 10 : 10),
-          color: Colors.transparent,
-          child: TextField(
-            textAlign: TextAlign.left,
-            style: TextStyle(fontSize: 14, color: ColorsOf().borderContainer()),
-            maxLines: 1,
-            maxLength: 100,
-            showCursor: true,
-            onTap: () {},
-            onChanged: (value) { },
-            controller: this.searchItem,
-            autofocus: false,
-            minLines: 1,
-            keyboardType: TextInputType.text,
-            decoration: InputDecoration(
-              enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                      color: ColorsOf().primaryBackGround(),
-                      style: BorderStyle.solid,
-                      width: 1
-                  )
-              ),
-              focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                      color: ColorsOf().primaryBackGround(),
-                      style: BorderStyle.solid,
-                      width: 2
-                  )
-              ),
-              focusedErrorBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                      color: ColorsOf().primaryBackGround(),
-                      style: BorderStyle.solid,
-                      width: 1
-                  )
-              ),
-              errorBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                      color: ColorsOf().deleteItem(),
-                      style: BorderStyle.solid,
-                      width: 1
-                  )
-              ),
-              //isDense: true,
-              contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-              alignLabelWithHint: false,
-              labelText: null,
-
-              counterStyle: TextStyle(
-                height: double.minPositive,
-              ),
-              counterText: "",
-              hintText: "Rechercher...",
-              hintStyle: TextStyle(color: ColorsOf().importField()),
-
-            ),
-            toolbarOptions: ToolbarOptions(
-              cut: true,
-              copy: true,
-              selectAll: true,
-              paste: true,
-            ),
-          ),
-          duration: Duration(milliseconds: 150),
-        ) ,
-      ],
     );
+  }
+
+  finishButon(context, Inventory inv){
+    return Container(
+      height: double.infinity,
+      decoration: BoxDecoration(
+          color:ColorsOf().finisheItem(),
+
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(10),
+            bottomLeft: Radius.circular(10),
+          )
+      ),
+      child: IconSlideAction(
+        color: Colors.transparent,
+        foregroundColor: ColorsOf().borderContainer(),
+        icon: Icons.check_circle,
+        caption: 'Terminer',
+        onTap: ()=>showDialogOfButtons(context, inv,"Terminer Inventaire","êtes-vous sûr de terminer l'inventaire ?","Terminer"),
+      ),
+
+    );
+  }
+
+
+
+  //***************** Functions ********************
+
+  Future<void> deleteInventory(Inventory inv)async{
+     await  DBProvider.db.clearInventoryWithLines(inv);
+     notifyListeners();
+  }
+  Future<void> finishInventory(Inventory inv)async{
+   inv.closeDate = DateTime.now().toIso8601String();
+   inv.status = "finished";
+   await DBProvider.db.updateInventory(inv);
+   notifyListeners();
   }
 
 
