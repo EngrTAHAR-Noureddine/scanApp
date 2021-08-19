@@ -112,6 +112,7 @@ class MyApp extends StatelessWidget {
                                               themeMode: ThemeMode.system,
                                               home: LogIn(),
                                               routes: {
+                                                "/home": (context) => Home(),
                                                 "/inventoryList": (context) => InventoryList(),
                                                 "/listItems": (context) => ListItems(),
                                                 "/scanner": (context) => Scanner(),

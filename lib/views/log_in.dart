@@ -32,90 +32,95 @@ class LogIn extends StatelessWidget {
       child: Consumer<LogInProvider>(
           builder: (context, value, child) {
 
-                  return Scaffold(
+                  return FutureBuilder(
+                    future: value.checkLogIn(),
+                    builder: (context, snapshot) {
+                      return Scaffold(
 
 
 
-                    resizeToAvoidBottomInset: false,
-                    backgroundColor: ColorsOf().backGround(),
+                        resizeToAvoidBottomInset: false,
+                        backgroundColor: ColorsOf().backGround(),
 
 
-                    body: Container(
-                      height: MediaQuery.of(context).size.height,
-                      width: MediaQuery.of(context).size.width,
-                      alignment: Alignment.bottomCenter,
-                      color: Colors.transparent,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Container(
-                              color: Colors.transparent,
-                              height: MediaQuery.of(context).size.height*0.4,
-                              width: MediaQuery.of(context).size.width,
-                              padding: EdgeInsets.only(top: 50,left: 10,right: 10),
-                              alignment: Alignment.topLeft,
-                              child: Container(
-                                height: 50,
-                                width: MediaQuery.of(context).size.width,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        body: Container(
+                          height: MediaQuery.of(context).size.height,
+                          width: MediaQuery.of(context).size.width,
+                          alignment: Alignment.bottomCenter,
+                          color: Colors.transparent,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Container(
+                                  color: Colors.transparent,
+                                  height: MediaQuery.of(context).size.height*0.4,
+                                  width: MediaQuery.of(context).size.width,
+                                  padding: EdgeInsets.only(top: 50,left: 10,right: 10),
+                                  alignment: Alignment.topLeft,
+                                  child: Container(
+                                    height: 50,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                         Container(width: 200,height: 50,color: Colors.green,),
+                                          Container(
+                                            width: 50,height: 50,color: Colors.transparent,
+                                            child: new Image.memory(image),
+                                          )
+                                      ],
+                                    ),
+                                  ),
+                                  ),
+                              Container(
+                                color: Colors.transparent,
+                                child: Stack(
+                                  alignment: Alignment.topCenter,
+
                                   children: [
-                                     Container(width: 200,height: 50,color: Colors.green,),
-                                      Container(
-                                        width: 50,height: 50,color: Colors.transparent,
-                                        child: new Image.memory(image),
-                                      )
+                                    Container(
+                                      height: MediaQuery.of(context).size.height *0.6,
+                                      width: MediaQuery.of(context).size.width ,
+                                      padding: EdgeInsets.only(top: 50),
+
+
+                                      child: Container(
+                                        padding: EdgeInsets.only(top: 80),
+                                        decoration: BoxDecoration(
+                                          color: ColorsOf().primaryBackGround(),
+                                          borderRadius: BorderRadius.only(topLeft: Radius.circular(25), topRight: Radius.circular(25)),
+                                        ),
+                                        child: Form(
+                                          key: LogInProvider().formKey,
+                                          child: SingleChildScrollView(
+                                            padding: EdgeInsets.all(10),
+                                            child: Column(
+
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+
+                                                LogInProvider().inputPassword(),
+                                                SizedBox(height: 10),
+                                                LogInProvider().asAdminField(),
+                                                SizedBox(height: 10),
+                                                LogInProvider().buttonLogIn(context),
+                                              ],
+                                            ),
+                                          ),
+                                        )
+
+                                      ),
+
+                                    ),
+                                    LogInProvider().logoWidget(),
                                   ],
                                 ),
                               ),
-                              ),
-                          Container(
-                            color: Colors.transparent,
-                            child: Stack(
-                              alignment: Alignment.topCenter,
-
-                              children: [
-                                Container(
-                                  height: MediaQuery.of(context).size.height *0.6,
-                                  width: MediaQuery.of(context).size.width ,
-                                  padding: EdgeInsets.only(top: 50),
-
-
-                                  child: Container(
-                                    padding: EdgeInsets.only(top: 80),
-                                    decoration: BoxDecoration(
-                                      color: ColorsOf().primaryBackGround(),
-                                      borderRadius: BorderRadius.only(topLeft: Radius.circular(25), topRight: Radius.circular(25)),
-                                    ),
-                                    child: Form(
-                                      key: LogInProvider().formKey,
-                                      child: SingleChildScrollView(
-                                        padding: EdgeInsets.all(10),
-                                        child: Column(
-
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-
-                                            LogInProvider().inputPassword(),
-                                            SizedBox(height: 10),
-                                            LogInProvider().asAdminField(),
-                                            SizedBox(height: 10),
-                                            LogInProvider().buttonLogIn(context),
-                                          ],
-                                        ),
-                                      ),
-                                    )
-
-                                  ),
-
-                                ),
-                                LogInProvider().logoWidget(),
-                              ],
-                            ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
+                        ),
+                      );
+                    }
                   );
                // });
           }),
