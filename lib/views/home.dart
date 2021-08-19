@@ -32,8 +32,8 @@ class Home extends StatelessWidget {
             key: value.scaffoldKey,
             body:HomeProvider().changeSelecterActivity(),
 
-            appBar: value.appBAR(context),
-            drawer: HomeProvider().drawerApp(context),
+            appBar: value.customAppBar(context),
+            drawer: HomeProvider().customDrawer(context),
 
 
             floatingActionButton:HomeProvider().customFAB(context),

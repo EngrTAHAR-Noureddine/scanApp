@@ -125,7 +125,7 @@ class ProcessFileProvider extends ChangeNotifier{
 
                   ),
 
-                  ((title == "Importer")&&(inv == null))?
+                  ((title == "Importer")&&(inv == null)&&(MainProvider().user!.productLotsTable != "Empty"))?
                   MaterialButton(
                     splashColor: Colors.transparent,
                     focusColor: Colors.transparent,

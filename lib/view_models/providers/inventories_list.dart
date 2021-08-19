@@ -3,6 +3,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:scanapp/data/database.dart';
 import 'package:scanapp/models/database_models/inventories.dart';
 import 'package:scanapp/models/variables_define/colors.dart';
+import 'package:scanapp/view_models/providers/home.dart';
 
 class InventoryListProvider extends ChangeNotifier{
 
@@ -17,7 +18,7 @@ class InventoryListProvider extends ChangeNotifier{
 
     List<Inventory> list = (await DBProvider.db.getAllInventories());
 
-    //notifyListeners();
+
     return (list.isNotEmpty)?list:[];
   }
 
@@ -99,7 +100,7 @@ class InventoryListProvider extends ChangeNotifier{
   }
 
   /* * Buttons  * */
- Widget deleteButton(context, Inventory inv){
+  Widget deleteButton(context, Inventory inv){
    return Container(
       height: double.infinity,
       decoration: BoxDecoration(
@@ -151,6 +152,7 @@ class InventoryListProvider extends ChangeNotifier{
      await  DBProvider.db.clearInventoryWithLines(inv);
      notifyListeners();
   }
+
   Future<void> finishInventory(Inventory inv)async{
    inv.closeDate = DateTime.now().toIso8601String();
    inv.status = "finished";

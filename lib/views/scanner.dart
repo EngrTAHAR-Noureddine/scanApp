@@ -71,7 +71,7 @@ class Scanner extends StatelessWidget {
                )
              ],
            ),
-           drawer: HomeProvider().drawerApp(context),
+           drawer: HomeProvider().customDrawer(context),
            floatingActionButton: FloatingActionButton.extended(
 
              icon: Icon(Icons.check,color: ColorsOf().primaryBackGround() ),

@@ -194,11 +194,11 @@ class LogInProvider extends ChangeNotifier{
 }
 
 
-  Future<void> checkLogIn()async{
+  Future<User?> checkLogIn()async{
 
     User? user = await DBProvider.db.getUser(1);
     MainProvider().saveUser(user);
-
+    return user;
   }
 
 }
