@@ -30,7 +30,7 @@ class Home extends StatelessWidget {
         builder: (context, value, child) {
           return Scaffold(
             key: _scaffoldKey,
-            body:HomeProvider().changeSelecterActivity(0),
+            body:HomeProvider().changeSelecterActivity(1),
 
 
             appBar: AppBar(

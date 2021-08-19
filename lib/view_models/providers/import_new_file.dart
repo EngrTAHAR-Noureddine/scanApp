@@ -193,7 +193,7 @@ class ImportNewFileProvider extends ChangeNotifier{
                 onPressed: ()async{
 
                   print("This Emplacement ================= ");
-                  print((await DBProvider.db.getAllSites()));
+                  print((await DBProvider.db.getAllProductLots()));
                 },
 
 
@@ -258,14 +258,12 @@ class ImportNewFileProvider extends ChangeNotifier{
                         firstSite = excel.tables[filesName[0]].rows.first;
 
                         for (var row in excel.tables[filesName[0]].rows) {
-
+                          print(row);
                            if(!row.contains("id")){
-                             print(row);
-                             print(row[firstSite.indexOf("nom")]);
                             Site site;
                             site = new Site(
-                                id: int.parse(row[firstSite.indexOf("id")].toString()),
-                                nom:(firstSite.indexOf("nom")<0 )?null: row[firstSite.indexOf("nom")]
+                                id: (firstSite.indexOf("id")<0 )?null:row[firstSite.indexOf("id")],
+                                nom:(firstSite.indexOf("nom")<0 )?null:(row[firstSite.indexOf("nom")]!=null)? row[firstSite.indexOf("nom")].toString().replaceAll(RegExp('[\',\"]'),"''"):null
                             );
 
                           //  await DBProvider.db.checkSite(site);
@@ -279,30 +277,30 @@ class ImportNewFileProvider extends ChangeNotifier{
                           }
                         }
                       }
-/*
+
                       /* Company */
                       if(excel.tables.keys.contains(filesName[1])){
 
                         List<dynamic> firstCompany;
                         firstCompany = excel.tables[filesName[1]].rows.first;
                         for (var row in excel.tables[filesName[1]].rows) {
-
+                          print(row);
                           if(!row.contains("id")){
                             Company company;
                             company = new Company(
+                              id: (firstCompany.indexOf("id")<0)?null:row[firstCompany.indexOf("id")],
+                              nom: (firstCompany.indexOf("nom")<0)?null:(row[firstCompany.indexOf("nom")]!=null)?row[firstCompany.indexOf("nom")].toString().replaceAll(RegExp('[\',\"]'),"''"):null,
 
-                              nom: (firstCompany.indexOf("nom")<0)?null:row[firstCompany.indexOf("nom")],
+                              siteId: (firstCompany.indexOf("site_id")<0)?null:row[firstCompany.indexOf("site_id")],
 
-                              siteId: (firstCompany.indexOf("site_id")<0)?null:int.parse(row[firstCompany.indexOf("site_id")]),
-
-                              logo: (firstCompany.indexOf("logo")<0)?null:row[firstCompany.indexOf("logo")],
+                              logo: (firstCompany.indexOf("logo")<0)?null:(row[firstCompany.indexOf("logo")]!=null)?row[firstCompany.indexOf("logo")].toString().replaceAll(RegExp('[\',\"]'),"''"):null,
 
                             );
-                            await DBProvider.db.checkCompany(company);
-                            /*
+                            //await DBProvider.db.checkCompany(company);
+
                             if((await DBProvider.db.checkCompany(company)) == null){
                               await DBProvider.db.newCompany(company);
-                            }*/
+                            }
 
 
 
@@ -318,19 +316,20 @@ class ImportNewFileProvider extends ChangeNotifier{
                         firstStock = excel.tables[filesName[2]].rows.first;
 
                         for (var row in excel.tables[filesName[2]].rows) {
-
+                          print(row);
                           if(!row.contains("id")){
                             StockEntrepot stockEntrepot;
                             stockEntrepot = new StockEntrepot(
-                              directionType: (firstStock.indexOf("DirectionType")<0)?null:row[firstStock.indexOf("DirectionType")],
-                              companyId: (firstStock.indexOf("CompanyId")<0)?null:int.parse(row[firstStock.indexOf("CompanyId")]) ,
-                              directionId:  (firstStock.indexOf("DirectionId")<0)?null:int.parse(row[firstStock.indexOf("DirectionId")]),
-                              nom:  (firstStock.indexOf("nom")<0)?null:row[firstStock.indexOf("nom")],
+                              id: (firstStock.indexOf("id")<0)?null:row[firstStock.indexOf("id")],
+                              directionType: (firstStock.indexOf("DirectionType")<0)?null:(row[firstStock.indexOf("DirectionType")]!=null)?row[firstStock.indexOf("DirectionType")].toString().replaceAll(RegExp('[\',\"]'),"''"):null,
+                              companyId: (firstStock.indexOf("CompanyId")<0)?null:row[firstStock.indexOf("CompanyId")] ,
+                              directionId:  (firstStock.indexOf("DirectionId")<0)?null:row[firstStock.indexOf("DirectionId")],
+                              nom:  (firstStock.indexOf("nom")<0)?null:(row[firstStock.indexOf("nom")]!=null)?row[firstStock.indexOf("nom")].toString().replaceAll(RegExp('[\',\"]'),"''"):null,
                             );
-                            await DBProvider.db.checkStockEntrepot(stockEntrepot);
-                            /*if((await DBProvider.db.checkStockEntrepot(stockEntrepot)) == null){
+                          //  await DBProvider.db.checkStockEntrepot(stockEntrepot);
+                            if((await DBProvider.db.checkStockEntrepot(stockEntrepot)) == null){
                               await  DBProvider.db.newStockEntrepot(stockEntrepot);
-                            }*/
+                            }
 
                           }
                         }
@@ -344,20 +343,20 @@ class ImportNewFileProvider extends ChangeNotifier{
                         firstEmplacement = excel.tables[filesName[3]].rows.first;
 
                         for (var row in excel.tables[filesName[3]].rows) {
-
+                          print(row);
                           if(!row.contains("id")){
                             Emplacement emplacement = new Emplacement(
-
-                              nom: (firstEmplacement.indexOf("nom")<0)?null:row[firstEmplacement.indexOf("nom")],
-                              entrepotId: (firstEmplacement.indexOf("enterpot-id")<0)?null:int.parse(row[firstEmplacement.indexOf("enterpot-id")]),
-                              barCodeEmp: (firstEmplacement.indexOf("barcodeemp")<0)?null:row[firstEmplacement.indexOf("barcodeemp")],
+                              id: (firstEmplacement.indexOf("id")<0)?null:row[firstEmplacement.indexOf("id")],
+                              nom: (firstEmplacement.indexOf("nom")<0)?null:(row[firstEmplacement.indexOf("nom")]!=null)?row[firstEmplacement.indexOf("nom")].toString().replaceAll(RegExp('[\',\"]'),"''"):null,
+                              entrepotId: (firstEmplacement.indexOf("enterpot-id")<0)?null:row[firstEmplacement.indexOf("enterpot-id")],
+                              barCodeEmp: (firstEmplacement.indexOf("barcodeemp")<0)?null:(row[firstEmplacement.indexOf("barcodeemp")]!=null)?row[firstEmplacement.indexOf("barcodeemp")].toString().replaceAll(RegExp('[\',\"]'),"''"):null,
 
                             );
-                            await DBProvider.db.checkEmplacement(emplacement);
-                            /*
+                            //await DBProvider.db.checkEmplacement(emplacement);
+
                             if((await DBProvider.db.checkEmplacement(emplacement)) == null){
                               await DBProvider.db.newEmplacement(emplacement);
-                            }*/
+                            }
 
                           }
                         }
@@ -371,20 +370,21 @@ class ImportNewFileProvider extends ChangeNotifier{
                         firstStockSys = excel.tables[filesName[4]].rows.first;
 
                         for (var row in excel.tables[filesName[4]].rows) {
-
+                          print(row);
                           if(!row.contains("id")){
 
                             StockSystem stockSystem = new StockSystem(
-                              emplacementId:(firstStockSys.indexOf("EmplacmentId")<0)?null:int.parse(row[firstStockSys.indexOf("EmplacmentId")]),
-                              productId:(firstStockSys.indexOf("ProductId")<0)?null:int.parse(row[firstStockSys.indexOf("ProductId")]),
-                              productLotId:(firstStockSys.indexOf("ProductLotId")<0)?null:int.parse(row[firstStockSys.indexOf("ProductLotId")]),
-                              quantity:(firstStockSys.indexOf("Quantity")<0)?null:int.parse(row[firstStockSys.indexOf("Quantity")]),
+                              id: (firstStockSys.indexOf("id")<0)?null:row[firstStockSys.indexOf("id")],
+                              emplacementId:(firstStockSys.indexOf("EmplacmentId")<0)?null:row[firstStockSys.indexOf("EmplacmentId")],
+                              productId:(firstStockSys.indexOf("ProductId")<0)?null:row[firstStockSys.indexOf("ProductId")],
+                              productLotId:(firstStockSys.indexOf("ProductLotId")<0)?null:row[firstStockSys.indexOf("ProductLotId")],
+                              quantity:(firstStockSys.indexOf("Quantity")<0)?null:row[firstStockSys.indexOf("Quantity")],
                             );
-                            await DBProvider.db.checkStockSystem(stockSystem);
-                            /*
+                           // await DBProvider.db.checkStockSystem(stockSystem);
+
                             if((await DBProvider.db.checkStockSystem(stockSystem)) == null){
                               await DBProvider.db.newStockSystem(stockSystem);
-                            }*/
+                            }
 
                           }
                         }
@@ -399,21 +399,22 @@ class ImportNewFileProvider extends ChangeNotifier{
 
                         for (var row in excel.tables[filesName[5]].rows) {
 
-
+                          print(row);
                           if(!row.contains("id")){
 
                             Product product = new Product(
-                              productCode:(firstProduct.indexOf("code")<0)?null:row[firstProduct.indexOf("code")],
-                              nom:(firstProduct.indexOf("nom")<0)?null:row[firstProduct.indexOf("nom")],
+                              id: (firstProduct.indexOf("id")<0)?null:row[firstProduct.indexOf("id")],
+                              productCode:(firstProduct.indexOf("code")<0)?null:(row[firstProduct.indexOf("code")]!=null)?row[firstProduct.indexOf("code")].toString().replaceAll(RegExp('[\',\"]'),"''"):null,
+                              nom:(firstProduct.indexOf("nom")<0)?null:(row[firstProduct.indexOf("nom")]!=null)?row[firstProduct.indexOf("nom")].replaceAll("'","''"):null,
                               categoryId:(firstProduct.indexOf("categoryId")<0)?null:row[firstProduct.indexOf("categoryId")],
-                              gestionLot:(firstProduct.indexOf("gestionLot")<0)?null:row[firstProduct.indexOf("gestionLot")],
-                              productType:(firstProduct.indexOf("producttype")<0)?null:row[firstProduct.indexOf("producttype")],
+                              gestionLot:(firstProduct.indexOf("gestionLot")<0)?null:(row[firstProduct.indexOf("gestionLot")]!=null)?row[firstProduct.indexOf("gestionLot")].toString().replaceAll(RegExp('[\',\"]'),"''"):null,
+                              productType:(firstProduct.indexOf("producttype")<0)?null:(row[firstProduct.indexOf("producttype")]!=null)?row[firstProduct.indexOf("producttype")].toString().replaceAll(RegExp('[\',\"]'),"''"):null,
                             );
-                            await DBProvider.db.checkProduct(product);
-                            /*
+                            //await DBProvider.db.checkProduct(product);
+
                             if((await DBProvider.db.checkProduct(product)) == null){
                               await  DBProvider.db.newProduct(product);
-                            }*/
+                            }
 
                           }
                         }
@@ -427,21 +428,22 @@ class ImportNewFileProvider extends ChangeNotifier{
                         firstProductLot = excel.tables[filesName[6]].rows.first;
 
                         for (var row in excel.tables[filesName[6]].rows) {
-
+                          print(row);
 
                           if(!row.contains("id")){
 
                             ProductLot productLot = new ProductLot(
-                              immatriculation:(firstProductLot.indexOf("immatriculation")<0)?null:row[firstProductLot.indexOf("immatriculation")],
-                              numSerie:(firstProductLot.indexOf("num_serie")<0)?null:row[firstProductLot.indexOf("num_serie")],
-                              numLot:(firstProductLot.indexOf("num_lot")<0)?null:row[firstProductLot.indexOf("num_lot")],
+                              id: (firstProductLot.indexOf("id")<0)?null:row[firstProductLot.indexOf("id")],
+                              immatriculation:(firstProductLot.indexOf("immatriculation")<0)?null:(row[firstProductLot.indexOf("immatriculation")]!=null)?row[firstProductLot.indexOf("immatriculation")].toString().replaceAll(RegExp('[\',\"]'),"''"):null,
+                              numSerie:(firstProductLot.indexOf("num_serie")<0)?null:(row[firstProductLot.indexOf("num_serie")]!=null)?row[firstProductLot.indexOf("num_serie")].toString().replaceAll(RegExp('[\',\"]'),"''"):null,
+                              numLot:(firstProductLot.indexOf("num_lot")<0)?null:(row[firstProductLot.indexOf("num_lot")]!=null)?row[firstProductLot.indexOf("num_lot")].toString().replaceAll(RegExp('[\',\"]'),"''"):null,
                               productId:(firstProductLot.indexOf("product_id")<0)?null:row[firstProductLot.indexOf("product_id")],
                             );
-                            await DBProvider.db.checkProductLot(productLot);
-                            /*
+                            //await DBProvider.db.checkProductLot(productLot);
+
                             if((await DBProvider.db.checkProductLot(productLot)) == null ){
                               await DBProvider.db.newProductLot(productLot);
-                            }*/
+                            }
 
                           }
                         }
@@ -455,26 +457,28 @@ class ImportNewFileProvider extends ChangeNotifier{
                         firstProductCategory = excel.tables[filesName[7]].rows.first;
 
                         for (var row in excel.tables[filesName[7]].rows) {
-
+                          print(row);
                           if(!row.contains("id")){
 
                             ProductCategory productCategory = new ProductCategory(
-                              categoryName:(firstProductCategory.indexOf("nom")<0)?null:row[firstProductCategory.indexOf("nom")],
-                              categoryCode: (firstProductCategory.indexOf("code")<0)?null:row[firstProductCategory.indexOf("code")],
-                              parentId: (firstProductCategory.indexOf("parentId")<0)?null:int.parse(row[firstProductCategory.indexOf("parentId")]),
-                              parentPath:(firstProductCategory.indexOf("parentPath")<0)?null:row[firstProductCategory.indexOf("parentPath")],
+                              id:(firstProductCategory.indexOf("id")<0)?null:row[firstProductCategory.indexOf("id")] ,
+                              categoryName:(firstProductCategory.indexOf("nom")<0)?null:(row[firstProductCategory.indexOf("nom")]!=null)?row[firstProductCategory.indexOf("nom")].toString().replaceAll(RegExp('[\',\"]'),"''"):null,
+                              categoryCode: (firstProductCategory.indexOf("code")<0)?null:(row[firstProductCategory.indexOf("code")]!=null)?row[firstProductCategory.indexOf("code")].toString().replaceAll(RegExp('[\',\"]'),"''"):null,
+                              parentId: (firstProductCategory.indexOf("parentId")<0)?null:row[firstProductCategory.indexOf("parentId")],
+                              parentPath:(firstProductCategory.indexOf("parentPath")<0)?null:(row[firstProductCategory.indexOf("parentPath")]!=null)?row[firstProductCategory.indexOf("parentPath")].toString().replaceAll(RegExp('[\',\"]'),"''"):null,
                             );
-                            await DBProvider.db.checkProductCategory(productCategory);
-                            /*
+                            //await DBProvider.db.checkProductCategory(productCategory);
+
                             if((await DBProvider.db.checkProductCategory(productCategory)) == null){
                               await  DBProvider.db.newProductCategory(productCategory);
-                            }*/
+                            }
 
                           }
                         }
 
                       }
-*/
+
+
                     }
 
 
@@ -483,7 +487,7 @@ class ImportNewFileProvider extends ChangeNotifier{
                   }
 
                 }else{ throw "we haven't a file";}
-/*
+
                 /* check site  */
                 if((await DBProvider.db.getAllSites()).isNotEmpty){listing[0] = "Done";} else listing[0] = "Empty";
 
@@ -522,7 +526,7 @@ class ImportNewFileProvider extends ChangeNotifier{
 
                 }else{ listing[6] = "Empty"; throw "il n'y a pas des lots"; }
 
-*/
+
               }catch(e){ throw "catch error : "+e.toString(); }
 
 
@@ -530,7 +534,7 @@ class ImportNewFileProvider extends ChangeNotifier{
 
                })
         .catchError((err)=>throw err);
-/*
+
 await DBProvider.db.updateUser(new User(
   allStocks: totalStockSys,
   sitesTable: listing[0],
@@ -543,8 +547,10 @@ await DBProvider.db.updateUser(new User(
   categoriesTable: listing[7],
 
 ));
-*/
-  return ((await DBProvider.db.getAllSites()).isNotEmpty)?true:false;
+
+
+
+  return ((await DBProvider.db.getAllProductLots()).isNotEmpty)?true:false;
 
   }
 

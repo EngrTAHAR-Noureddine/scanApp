@@ -188,7 +188,7 @@ class DBProvider {
   }
   newStockSystem(StockSystem newStockSystem) async {
     final db = await database;
-    var res = await db.insert("Emplacement", newStockSystem.toMap());
+    var res = await db.insert("StockSystem", newStockSystem.toMap());
     return res;
   }
   newProduct(Product newProduct) async {
@@ -198,7 +198,7 @@ class DBProvider {
   }
   newProductLot(ProductLot newProductLot) async {
     final db = await database;
-    var res = await db.insert("Emplacement", newProductLot.toMap());
+    var res = await db.insert("ProductLot", newProductLot.toMap());
     return res;
   }
   newProductCategory(ProductCategory newProductCategory) async {
@@ -213,7 +213,7 @@ class DBProvider {
   }
   newInventoryLine(InventoryLine newInventoryLine) async {
     final db = await database;
-    var res = await db.insert("Emplacement", newInventoryLine.toMap());
+    var res = await db.insert("InventoryLine", newInventoryLine.toMap());
     return res;
   }
 
@@ -355,10 +355,15 @@ class DBProvider {
 
   /* get for update database */
   Future<Site?> checkSite(Site check) async {
-    print("i'm in checksite === ");
+
     final db = await database;
-    var res = await  db.query("Site", where: "nom = ?", whereArgs: [check.nom]);
-    print(res);
+    List<dynamic> myVaribles = [
+      (check.nom == null)?"IS null ":"= '${check.nom}'",
+    ];
+    var res = await db.rawQuery("SELECT * FROM Site WHERE nom ${myVaribles[0]}");
+
+   // var res = await  db.query("Site", where: "nom ${myVaribles[0]} ?", whereArgs: [check.nom]);
+
     Site? site;
     if((res != null) && (res.isNotEmpty)) {
       site = Site.fromMap(res.first);
@@ -367,7 +372,16 @@ class DBProvider {
   }
   Future<Company?> checkCompany(Company check) async {
     final db = await database;
-    var res =await  db.query("Company", where: "nom = ? and logo = ? and siteId = ?", whereArgs: [check.nom,check.logo,check.siteId]);
+
+
+    List<dynamic> myVaribles =[
+      (check.nom == null)?"IS null ":"= '${check.nom}'",
+      (check.logo == null)?"IS null ":"= '${check.logo}'",
+      (check.siteId == null)?"IS null ":"= '${check.siteId}'",
+     ];
+
+    var res = await db.rawQuery("SELECT * FROM Company WHERE nom ${myVaribles[0]} and logo ${myVaribles[1]} and siteId ${myVaribles[2]}");
+
     Company? someth;
 
     if(res.isNotEmpty) someth = Company.fromMap(res.first);
@@ -377,7 +391,16 @@ class DBProvider {
   }
   Future<StockEntrepot?> checkStockEntrepot(StockEntrepot check) async {
     final db = await database;
-    var res =await  db.query("StockEntrepot", where: "nom = ? and companyId = ? and directionId = ? and directionType = ?", whereArgs: [check.nom,check.companyId,check.directionId,check.directionType]);
+    List<dynamic> myVaribles =[
+      (check.nom == null)?"IS null ":"= '${check.nom}'",
+      (check.companyId == null)?"IS null ":"= '${check.companyId}'",
+      (check.directionId == null)?"IS null ":"= '${check.directionId}'",
+      (check.directionType == null)?"IS null ":"= '${check.directionType}'",
+    ];
+   var res = await db.rawQuery("SELECT * FROM StockEntrepot WHERE nom ${myVaribles[0]} and companyId ${myVaribles[1]} and directionId ${myVaribles[2]} and directionType ${myVaribles[3]}");
+
+
+
     StockEntrepot? someth;
 
     if(res.isNotEmpty) someth = StockEntrepot.fromMap(res.first);
@@ -387,7 +410,13 @@ class DBProvider {
   }
   Future<Emplacement?> checkEmplacement(Emplacement check) async {
     final db = await database;
-    var res =await  db.query("Emplacement", where: "nom = ? and barCodeEmp = ? and entrepotId = ? ", whereArgs: [check.nom,check.barCodeEmp,check.entrepotId]);
+    List<dynamic> myVaribles =[
+      (check.nom == null)?"IS null ":"= '${check.nom}'",
+      (check.barCodeEmp == null)?"IS null ":"= '${check.barCodeEmp}'",
+      (check.entrepotId == null)?"IS null ":"= '${check.entrepotId}'",
+    ];
+    var res = await db.rawQuery("SELECT * FROM Emplacement WHERE nom ${myVaribles[0]} and barCodeEmp ${myVaribles[1]} and entrepotId ${myVaribles[2]}");
+
     Emplacement? someth;
 
       if(res.isNotEmpty) someth = Emplacement.fromMap(res.first);
@@ -397,18 +426,33 @@ class DBProvider {
   }
   Future<StockSystem?> checkStockSystem(StockSystem check) async {
     final db = await database;
-    var res =await  db.query("StockSystem", where: "emplacementId = ? and productId = ? and productLotId = ? quantity = ? ", whereArgs: [check.emplacementId,check.productId,check.productLotId,check.quantity]);
-    StockSystem? someth;
-    var rest;
+    List<dynamic> myVaribles =[
+      (check.emplacementId == null)?"IS null ":"= '${check.emplacementId}'",
+      (check.productId == null)?"IS null ":"= '${check.productId}'",
+      (check.productLotId == null)?"IS null ":"= '${check.productLotId}'",
+      (check.quantity == null)?"IS null ":"= '${check.quantity}'",
+    ];
+    var res = await db.rawQuery("SELECT * FROM StockSystem WHERE emplacementId ${myVaribles[0]} and productId ${myVaribles[1]} and quantity ${myVaribles[2]}");
 
-      if(rest.isNotEmpty) someth = StockSystem.fromMap(res.first);
+    StockSystem? someth;
+
+
+      if(res.isNotEmpty) someth = StockSystem.fromMap(res.first);
 
 
     return someth;
   }
   Future<Product?> checkProduct(Product check) async {
     final db = await database;
-    var res =await  db.query("Product", where: "nom = ? and categoryId = ? and gestionLot = ? productCode = ? and productType = ? ",whereArgs: [check.nom,check.categoryId,check.gestionLot,check.productCode,check.productType]);
+    List<dynamic> myVaribles =[
+      (check.nom == null)?"IS null ":"= '${check.nom}'",
+      (check.categoryId == null)?"IS null ":"= '${check.categoryId}'",
+      (check.gestionLot == null)?"IS null ":"= '${check.gestionLot}'",
+      (check.productCode == null)?"IS null ":"= '${check.productCode}'",
+      (check.productType == null)?"IS null ":"= '${check.productType}'",
+    ];
+    var res = await db.rawQuery("SELECT * FROM Product WHERE nom ${myVaribles[0]} and categoryId ${myVaribles[1]} and gestionLot ${myVaribles[2]} and productCode ${myVaribles[3]} and productType ${myVaribles[4]}");
+
     Product? someth;
 
 
@@ -418,7 +462,14 @@ class DBProvider {
   }
   Future<ProductLot?> checkProductLot(ProductLot check) async {
     final db = await database;
-    var res =await  db.query("ProductLot", where: "productId = ? and immatriculation = ? and numLot = ? numSerie = ? ", whereArgs: [check.productId,check.immatriculation,check.numLot,check.numSerie]);
+    List<dynamic> myVaribles =[
+      (check.productId == null)?"IS null ":"= '${check.productId}'",
+      (check.immatriculation == null)?"IS null ":"= '${check.immatriculation}'",
+      (check.numLot == null)?"IS null ":"= '${check.numLot}'",
+      (check.numSerie == null)?"IS null ":"= '${check.numSerie}'",
+    ];
+    var res = await db.rawQuery("SELECT * FROM ProductLot WHERE productId ${myVaribles[0]} and immatriculation ${myVaribles[1]} and numLot ${myVaribles[2]} and numSerie ${myVaribles[3]}");
+
     ProductLot? someth;
 
       if(res.isNotEmpty) someth = ProductLot.fromMap(res.first);
@@ -427,7 +478,14 @@ class DBProvider {
   }
   Future<ProductCategory?> checkProductCategory(ProductCategory check) async {
     final db = await database;
-    var res =await  db.query("ProductCategory", where: "categoryCode = ? and categoryName = ? and parentId = ? parentPath = ? ", whereArgs: [check.categoryCode,check.categoryName,check.parentId,check.parentPath]);
+    List<dynamic> myVaribles =[
+      (check.categoryCode == null)?"IS null ":"= '${check.categoryCode}'",
+      (check.categoryName == null)?"IS null ":"= '${check.categoryName}'",
+      (check.parentId == null)?"IS null ":"= '${check.parentId}'",
+      (check.parentPath == null)?"IS null ":"= '${check.parentPath}'",
+    ];
+    var res = await db.rawQuery("SELECT * FROM ProductCategory WHERE categoryCode ${myVaribles[0]} and categoryName ${myVaribles[1]} and parentId ${myVaribles[2]} and parentPath ${myVaribles[3]}");
+
     ProductCategory? someth;
 
       if(res.isNotEmpty) someth = ProductCategory.fromMap(res.first);
