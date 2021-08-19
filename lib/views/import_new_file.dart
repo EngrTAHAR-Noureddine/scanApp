@@ -6,7 +6,7 @@ class ImportNewerFile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Consumer<importNewFileProvider>(
+    return  Consumer<ImportNewFileProvider>(
         builder: (context, value, child) {
           return Scaffold(
               backgroundColor: ColorsOf().backGround(),

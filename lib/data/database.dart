@@ -3,28 +3,40 @@ import 'dart:io';
 
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:scanapp/models/database_models/Companies.dart';
+import 'package:scanapp/models/database_models/counter_stocks_in_emplacement.dart';
+import 'package:scanapp/models/database_models/emplacements.dart';
+import 'package:scanapp/models/database_models/inventories.dart';
+import 'package:scanapp/models/database_models/inventory_lines.dart';
+import 'package:scanapp/models/database_models/product_categories.dart';
+import 'package:scanapp/models/database_models/product_lots.dart';
+import 'package:scanapp/models/database_models/products.dart';
+import 'package:scanapp/models/database_models/sites.dart';
+import 'package:scanapp/models/database_models/stock_entrepots.dart';
+import 'package:scanapp/models/database_models/stock_systems.dart';
+import 'package:scanapp/models/database_models/user.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DBProvider {
   DBProvider._();
 
   static final DBProvider db = DBProvider._();
-  static Database _database;
+  static Database? _database;
 
   Future<Database> get database async {
     // ignore: unnecessary_null_comparison
     if (_database != null)
-      return _database;
+      return _database!;
 
     // if _database is null we instantiate it
     _database = await initDB();
-    return _database;
+    return _database!;
   }
 
 
   initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, "ToDoListDB.db");
+    String path = join(documentsDirectory.path, "scanApp.db");
     return await openDatabase(path, version: 1,
         onOpen: (db) {},
         onCreate: (Database db, int version) async {
@@ -36,7 +48,6 @@ class DBProvider {
 
               "phoneEnterprise TEXT,"
               "addressEnterprise TEXT,"
-              "checkingFile TEXT,"
               "adminPassword TEXT,"
 
               "userPasswordReset TEXT,"
@@ -61,7 +72,6 @@ class DBProvider {
             "phoneEnterprise":"Empty",
 
             "addressEnterprise":"Empty",
-            "checkingFile":"Empty",
             "adminPassword":"123456",
             "userPasswordReset":"123456",
 
@@ -149,8 +159,369 @@ class DBProvider {
               "difference INTEGER,"
               "quality TEXT"
               ")");
+          await db.execute("CREATE TABLE StocksCounter ("
+              "emplacementID INTEGER,"
+              "number INTEGER"
+              ")");
         });
   }
+  /* Insert */
+  newSite(Site newSite) async {
+    final db = await database;
+    var res = await db.insert("Site", newSite.toMap());
+    return res;
+  }
+  newCompany(Company newCompany) async {
+    final db = await database;
+    var res = await db.insert("Company", newCompany.toMap());
+    return res;
+  }
+  newStockEntrepot(StockEntrepot newStockEntrepot) async {
+    final db = await database;
+    var res = await db.insert("StockEntrepot", newStockEntrepot.toMap());
+    return res;
+  }
+  newEmplacement(Emplacement newEmplacement) async {
+    final db = await database;
+    var res = await db.insert("Emplacement", newEmplacement.toMap());
+    return res;
+  }
+  newStockSystem(StockSystem newStockSystem) async {
+    final db = await database;
+    var res = await db.insert("Emplacement", newStockSystem.toMap());
+    return res;
+  }
+  newProduct(Product newProduct) async {
+    final db = await database;
+    var res = await db.insert("Product", newProduct.toMap());
+    return res;
+  }
+  newProductLot(ProductLot newProductLot) async {
+    final db = await database;
+    var res = await db.insert("Emplacement", newProductLot.toMap());
+    return res;
+  }
+  newProductCategory(ProductCategory newProductCategory) async {
+    final db = await database;
+    var res = await db.insert("ProductCategory", newProductCategory.toMap());
+    return res;
+  }
+  newInventory(Inventory newInventory) async {
+    final db = await database;
+    var res = await db.insert("Inventory", newInventory.toMap());
+    return res;
+  }
+  newInventoryLine(InventoryLine newInventoryLine) async {
+    final db = await database;
+    var res = await db.insert("Emplacement", newInventoryLine.toMap());
+    return res;
+  }
+
+  /* Delete */
+  Future<void> clearAllTables() async {
+    final db = await database;
+    //db.rawDelete("Delete * from History");
+    try{
+      await db.transaction((txn) async {
+        var batch = txn.batch();
+        batch.delete("Site");
+        batch.delete("Company");
+
+        batch.delete("StockEntrepot");
+        batch.delete("StockSystem");
+
+        batch.delete("Emplacement");
+        batch.delete("Product");
+
+        batch.delete("ProductCategory");
+        batch.delete("ProductLot");
+
+        await batch.commit();
+      });
+    } catch(error){
+      throw Exception('DbBase.cleanDatabase: ' + error.toString());
+    }
+  }
+  Future<void> clearIncompleteInventory(Inventory inv) async {
+    final db = await database;
+
+    db.delete("Inventory", where: "id = ?", whereArgs: [inv.id]);
+    db.delete("InventoryLine", where: "inventoryId = ?", whereArgs: [inv.id]);
+
+  }
+
+  /*  Get  */
+ Future<Inventory?> getIncompleteInventory() async {
+    DateTime dateTime =  DateTime(2000,1,1);
+    String oldDate = dateTime.toIso8601String();
+
+    final db = await database;
+    Inventory? inv;
+    var res =await  db.query("Inventory", where: "closeDate = ?", whereArgs: [oldDate]);
+    if(res.isNotEmpty) inv = Inventory.fromMap(res.first);
+    return inv;
+  }
+
+  Future<Site?> getSite(int id) async {
+    final db = await database;
+    var res =await  db.query("Site", where: "id = ?", whereArgs: [id]);
+    Site? site;
+    if(res.isNotEmpty) site = Site.fromMap(res.first);
+    return site;
+  }
+  Future<Company?> getCompany(int id) async {
+    final db = await database;
+    var res =await  db.query("Company", where: "id = ?", whereArgs: [id]);
+    Company? company;
+    if(res.isNotEmpty) company = Company.fromMap(res.first);
+    return company;
+  }
+  Future<StockEntrepot?> getStockEntrepot(int id) async {
+    final db = await database;
+    var res =await  db.query("StockEntrepot", where: "id = ?", whereArgs: [id]);
+    StockEntrepot? stockEntrepot;
+    if(res.isNotEmpty) stockEntrepot = StockEntrepot.fromMap(res.first);
+    return stockEntrepot;
+  }
+  Future<Emplacement?> getEmplacement(int id) async {
+    final db = await database;
+    var res =await  db.query("Emplacement", where: "id = ?", whereArgs: [id]);
+    Emplacement? one;
+    if(res.isNotEmpty) one = Emplacement.fromMap(res.first);
+    return one;
+  }
+  Future<StockSystem?> getStockSystem(int id) async {
+    final db = await database;
+    var res =await  db.query("StockSystem", where: "id = ?", whereArgs: [id]);
+    StockSystem? one;
+    if(res.isNotEmpty) one = StockSystem.fromMap(res.first);
+    return one;
+  }
+  Future<Product?> getProduct(int id) async {
+    final db = await database;
+    var res =await  db.query("Product", where: "id = ?", whereArgs: [id]);
+    Product? one;
+    if(res.isNotEmpty) one = Product.fromMap(res.first);
+    return one;
+  }
+  Future<ProductLot?> getProductLot(int id) async {
+    final db = await database;
+    var res =await  db.query("ProductLot", where: "id = ?", whereArgs: [id]);
+    ProductLot? one;
+    if(res.isNotEmpty) one = ProductLot.fromMap(res.first);
+    return one;
+  }
+  Future<ProductCategory?> getProductCategory(int id) async {
+    final db = await database;
+    var res =await  db.query("ProductCategory", where: "id = ?", whereArgs: [id]);
+    ProductCategory? one;
+    if(res.isNotEmpty) one = ProductCategory.fromMap(res.first);
+    return one;
+  }
+
+  Future<Inventory?> getInventory(int id) async {
+    final db = await database;
+    var res =await  db.query("Inventory", where: "id = ?", whereArgs: [id]);
+    Inventory? one;
+    if(res.isNotEmpty) one = Inventory.fromMap(res.first);
+    return one;
+  }
+  Future<InventoryLine?> getInventoryLine(int id) async {
+    final db = await database;
+    var res =await  db.query("InventoryLine", where: "id = ?", whereArgs: [id]);
+    InventoryLine? one;
+    if(res.isNotEmpty) one = InventoryLine.fromMap(res.first);
+    return one;
+  }
+
+  /* Count  */
+  Future<List<StocksCounter>> saveStocksOfEmplacement() async {
+    final db = await database;
+    var res = await db.rawQuery("SELECT  emplacementId,COUNT(id) FROM StockSystem GROUP BY emplacementId");
+    List<StocksCounter> list =
+    res.isNotEmpty ? res.map((c) => StocksCounter.fromMap(c)).toList() : [];
+
+    if(list.isNotEmpty){
+
+      for(int i =0 ; i< list.length; i++){
+
+        await db.insert("StocksCounter", list[i].toMap());
+      }
+
+    }
+    return list;
+  }
+
+
+  /* get for update database */
+  Future<Site?> checkSite(Site check) async {
+    print("i'm in checksite === ");
+    final db = await database;
+    var res = await  db.query("Site", where: "nom = ?", whereArgs: [check.nom]);
+    print(res);
+    Site? site;
+    if((res != null) && (res.isNotEmpty)) {
+      site = Site.fromMap(res.first);
+    }
+    return site;
+  }
+  Future<Company?> checkCompany(Company check) async {
+    final db = await database;
+    var res =await  db.query("Company", where: "nom = ? and logo = ? and siteId = ?", whereArgs: [check.nom,check.logo,check.siteId]);
+    Company? someth;
+
+    if(res.isNotEmpty) someth = Company.fromMap(res.first);
+
+
+    return someth;
+  }
+  Future<StockEntrepot?> checkStockEntrepot(StockEntrepot check) async {
+    final db = await database;
+    var res =await  db.query("StockEntrepot", where: "nom = ? and companyId = ? and directionId = ? and directionType = ?", whereArgs: [check.nom,check.companyId,check.directionId,check.directionType]);
+    StockEntrepot? someth;
+
+    if(res.isNotEmpty) someth = StockEntrepot.fromMap(res.first);
+
+
+    return someth;
+  }
+  Future<Emplacement?> checkEmplacement(Emplacement check) async {
+    final db = await database;
+    var res =await  db.query("Emplacement", where: "nom = ? and barCodeEmp = ? and entrepotId = ? ", whereArgs: [check.nom,check.barCodeEmp,check.entrepotId]);
+    Emplacement? someth;
+
+      if(res.isNotEmpty) someth = Emplacement.fromMap(res.first);
+
+
+    return someth;
+  }
+  Future<StockSystem?> checkStockSystem(StockSystem check) async {
+    final db = await database;
+    var res =await  db.query("StockSystem", where: "emplacementId = ? and productId = ? and productLotId = ? quantity = ? ", whereArgs: [check.emplacementId,check.productId,check.productLotId,check.quantity]);
+    StockSystem? someth;
+    var rest;
+
+      if(rest.isNotEmpty) someth = StockSystem.fromMap(res.first);
+
+
+    return someth;
+  }
+  Future<Product?> checkProduct(Product check) async {
+    final db = await database;
+    var res =await  db.query("Product", where: "nom = ? and categoryId = ? and gestionLot = ? productCode = ? and productType = ? ",whereArgs: [check.nom,check.categoryId,check.gestionLot,check.productCode,check.productType]);
+    Product? someth;
+
+
+      if(res.isNotEmpty) someth = Product.fromMap(res.first);
+
+    return someth;
+  }
+  Future<ProductLot?> checkProductLot(ProductLot check) async {
+    final db = await database;
+    var res =await  db.query("ProductLot", where: "productId = ? and immatriculation = ? and numLot = ? numSerie = ? ", whereArgs: [check.productId,check.immatriculation,check.numLot,check.numSerie]);
+    ProductLot? someth;
+
+      if(res.isNotEmpty) someth = ProductLot.fromMap(res.first);
+
+    return someth;
+  }
+  Future<ProductCategory?> checkProductCategory(ProductCategory check) async {
+    final db = await database;
+    var res =await  db.query("ProductCategory", where: "categoryCode = ? and categoryName = ? and parentId = ? parentPath = ? ", whereArgs: [check.categoryCode,check.categoryName,check.parentId,check.parentPath]);
+    ProductCategory? someth;
+
+      if(res.isNotEmpty) someth = ProductCategory.fromMap(res.first);
+    return someth;
+  }
+
+
+
+  /* *************************************** */
+
+  /* Get ALL */
+  Future<List<Site>> getAllSites() async {
+    final db = await database;
+    var res = await db.rawQuery("SELECT * FROM Site");
+    List<Site> list =
+    res.isNotEmpty ? res.map((c) => Site.fromMap(c)).toList() : [];
+    return list;
+  }
+  Future<List<Company>> getAllCompanies() async {
+    final db = await database;
+    var res = await db.rawQuery("SELECT * FROM Company");
+    List<Company> list =
+    res.isNotEmpty ? res.map((c) => Company.fromMap(c)).toList() : [];
+    return list;
+  }
+  Future<List<StockEntrepot>> getAllStockEntrepots() async {
+    final db = await database;
+    var res = await db.rawQuery("SELECT * FROM StockEntrepot");
+    List<StockEntrepot> list =
+    res.isNotEmpty ? res.map((c) => StockEntrepot.fromMap(c)).toList() : [];
+    return list;
+  }
+  Future<List<Emplacement>> getAllEmplacements() async {
+    final db = await database;
+    var res = await db.rawQuery("SELECT * FROM Emplacement");
+    List<Emplacement> list =
+    res.isNotEmpty ? res.map((c) => Emplacement.fromMap(c)).toList() : [];
+    return list;
+  }
+  Future<List<StockSystem>> getAllStockSystems() async {
+    final db = await database;
+    var res = await db.rawQuery("SELECT * FROM StockSystem");
+    List<StockSystem> list =
+    res.isNotEmpty ? res.map((c) => StockSystem.fromMap(c)).toList() : [];
+    return list;
+  }
+  Future<List<Product>> getAllProducts() async {
+    final db = await database;
+    var res = await db.rawQuery("SELECT * FROM Product");
+    List<Product> list =
+    res.isNotEmpty ? res.map((c) => Product.fromMap(c)).toList() : [];
+    return list;
+  }
+  Future<List<ProductLot>> getAllProductLots() async {
+    final db = await database;
+    var res = await db.rawQuery("SELECT * FROM ProductLot");
+    List<ProductLot> list =
+    res.isNotEmpty ? res.map((c) => ProductLot.fromMap(c)).toList() : [];
+    return list;
+  }
+  Future<List<ProductCategory>> getAllProductCategories() async {
+    final db = await database;
+    var res = await db.rawQuery("SELECT * FROM ProductCategory");
+    List<ProductCategory> list =
+    res.isNotEmpty ? res.map((c) => ProductCategory.fromMap(c)).toList() : [];
+    return list;
+  }
+
+
+
+  Future<List<Inventory>> getAllInventories() async {
+    final db = await database;
+    var res = await db.rawQuery("SELECT * FROM Inventory");
+    List<Inventory> list =
+    res.isNotEmpty ? res.map((c) => Inventory.fromMap(c)).toList() : [];
+    return list;
+  }
+  Future<List<InventoryLine>> getAllInventoryLines() async {
+    final db = await database;
+    var res = await db.rawQuery("SELECT * FROM InventoryLine");
+    List<InventoryLine> list =
+    res.isNotEmpty ? res.map((c) => InventoryLine.fromMap(c)).toList() : [];
+    return list;
+  }
+
+  /*UPdate */
+  updateUser(User newUser) async {
+    final db = await database;
+    var res = await db.update("User", newUser.toMap(),
+        where: "id = ?", whereArgs: [newUser.id]);
+    return res;
+  }
+
+
 }
 
 
