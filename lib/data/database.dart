@@ -243,7 +243,7 @@ class DBProvider {
       throw Exception('DbBase.cleanDatabase: ' + error.toString());
     }
   }
-  Future<void> clearIncompleteInventory(Inventory inv) async {
+  Future<void> clearInventoryWithLines(Inventory inv) async {
     final db = await database;
 
     db.delete("Inventory", where: "id = ?", whereArgs: [inv.id]);
@@ -252,6 +252,14 @@ class DBProvider {
   }
 
   /*  Get  */
+  Future<User?> getUser(int id) async {
+    final db = await database;
+    var res =await  db.query("User", where: "id = ?", whereArgs: [id]);
+    User? user;
+    if(res.isNotEmpty) user = User.fromMap(res.first);
+    return user;
+  }
+
  Future<Inventory?> getIncompleteInventory() async {
     DateTime dateTime =  DateTime(2000,1,1);
     String oldDate = dateTime.toIso8601String();
@@ -577,6 +585,12 @@ class DBProvider {
     final db = await database;
     var res = await db.update("User", newUser.toMap(),
         where: "id = ?", whereArgs: [newUser.id]);
+    return res;
+  }
+  updateInventory(Inventory inv)async{
+    final db = await database;
+    var res = await db.update("Inventory", inv.toMap(),
+        where: "id = ?", whereArgs: [inv.id]);
     return res;
   }
 

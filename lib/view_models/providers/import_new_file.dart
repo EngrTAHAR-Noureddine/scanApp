@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:scanapp/data/database.dart';
@@ -15,6 +17,8 @@ import 'package:scanapp/models/database_models/stock_entrepots.dart';
 import 'package:scanapp/models/database_models/stock_systems.dart';
 import 'package:scanapp/models/database_models/user.dart';
 import 'package:scanapp/models/variables_define/colors.dart';
+import 'package:scanapp/view_models/providers/home.dart';
+import 'package:scanapp/view_models/providers/main.dart';
 import 'package:spreadsheet_decoder/spreadsheet_decoder.dart';
 
  Future<dynamic> readFile(File file)async{
@@ -33,7 +37,7 @@ class ImportNewFileProvider extends ChangeNotifier{
   late File file;
 
   Future<void> pickFileExcel(context , bool updating)async{
-
+   // Navigator.pop(context);
 
       try{
         FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -44,7 +48,7 @@ class ImportNewFileProvider extends ChangeNotifier{
         if(result != null) {
           file  = File(result.files.first.path??"");
           print(file.path);
-
+          Navigator.pop(context);
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -60,9 +64,23 @@ class ImportNewFileProvider extends ChangeNotifier{
 
   }
 
-  Future<void> showDialogToImportFile(BuildContext context,String text) async {
+  //"Renouveler"
 
-    String title = (text=="new")?"Importer nouveau Fichier":"Mettre à jour le fichier";
+  Future<void> showDialogToProcess(BuildContext context,String text) async {
+
+    String title;
+    if(text == "cancel"){
+      title = "Annuler le processus";
+    }else{
+      if(MainProvider().user!.productLotsTable != "Emprty"){
+        title = (text=="new")?"Importer":"Mettre à jour";
+      }else{
+        title = "Importer";
+      }
+    }
+
+
+
 
     return await showDialog(
         barrierDismissible: false,
@@ -73,11 +91,11 @@ class ImportNewFileProvider extends ChangeNotifier{
 
               child: AlertDialog(
                 backgroundColor:ColorsOf().primaryBackGround(),
-
+                elevation: 1,
                 shape: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                content: Text("Importer Fichier", style: TextStyle(color: ColorsOf().containerThings(),fontSize:14,),),
+                content: Text("Voulez-vous vraiment "+title.toLowerCase()+" ?", style: TextStyle(color: ColorsOf().containerThings(),fontSize:14,),),
                 title: Text(title,style: TextStyle(color: ColorsOf().containerThings() ),),
                 actions: <Widget>[
 
@@ -87,33 +105,41 @@ class ImportNewFileProvider extends ChangeNotifier{
                       borderRadius: BorderRadius.circular(100),
                     ),
                     padding: EdgeInsets.all(0),
-                    child: Text("Importer" ,style: TextStyle(color: ColorsOf().primaryBackGround()),),
+                    child: Text((text != "cancel")?title:"OUI",style: TextStyle(color: ColorsOf().primaryBackGround()),),
 
 
-                    onPressed: ()=>pickFileExcel(context,false),
+                    onPressed:(text != "cancel")? ()=>pickFileExcel(context,(title != "Importer")?true:false)
+                        :(){
+                          Navigator.pop(context);
+                          HomeProvider().changeSelecter(0, context, "/inventoryList");
+                          Navigator.pop(context);
+                          //Navigator.pushNamed(context, "/home");
+                          
+                          },
 
 
                   ),
 
-
+                  ((text != "cancel")&&(MainProvider().user!.productLotsTable != "Empty"))?
                   MaterialButton(
-                    color:ColorsOf().containerThings() ,
+                    color:Colors.transparent ,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(100),
+                      side: BorderSide(color:ColorsOf().primaryBackGround(),width: 1,style: BorderStyle.solid)
                     ),
                     padding: EdgeInsets.all(0),
-                    child: Text("Update" ,style: TextStyle(color: ColorsOf().primaryBackGround()),),
+                    child: Text("Renouveler" ,style: TextStyle(color: ColorsOf().primaryBackGround()),),
 
-                    onPressed: ()=>pickFileExcel(context,true),
+                    onPressed: ()=>renewWork(context),
 
-                  ),
+                  )
+                  : SizedBox(width: 50,),
 
 
                   MaterialButton(
-                    child: Text('Cancel',style:TextStyle(color: ColorsOf().containerThings() )),
+                    child: Text((text != "cancel")?'Cancel':"Non",style:TextStyle(color: ColorsOf().containerThings() )),
                     onPressed: () {
                       Navigator.of(context).pop();
-
                     },
                   ),
                 ],
@@ -131,46 +157,53 @@ class ImportNewFileProvider extends ChangeNotifier{
 
     String meg = (text == "import")?"Importer Fichier.....":"Mettre à jour.....";
 
-    return Scaffold(
-      backgroundColor: ColorsOf().backGround(),
-      body: FutureBuilder(
-        future: (text == "import")?saveInDataBase():updateDataBase(),
-        builder: (context, snapshot) {
-          print(snapshot);
+    return WillPopScope(
+      onWillPop: () async{
 
-          if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
-           String res =  (snapshot.data == true)?"Success":"Failed";
-            return whenFinishProcess(context, res);
-          }else if(snapshot.connectionState == ConnectionState.done && snapshot.hasError && snapshot.error != null){
-            String res = "Failed";
-            return whenFinishProcess(context, res);
-          }
+         await showDialogToProcess(context,"cancel");
+        return false;
+      },
+      child: Scaffold(
+        backgroundColor: ColorsOf().backGround(),
+        body: FutureBuilder(
+          future: (text == "import")?saveInDataBase():updateDataBase(),
+          builder: (context, snapshot) {
+            print(snapshot);
 
-          return Container(
-            color: ColorsOf().backGround(),
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            alignment: Alignment.center,
-            child: Container(
+            if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+             String res =  (snapshot.data == true)?"Success":"Failed";
+              return whenFinishProcess(context, res);
+            }else if(snapshot.connectionState == ConnectionState.done && snapshot.hasError && snapshot.error != null){
+              String res = "Failed";
+              return whenFinishProcess(context, res);
+            }
+
+            return Container(
+              color: ColorsOf().backGround(),
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
               alignment: Alignment.center,
-              color: Colors.transparent,
-              width: 200,
-              height: 200,
-              child: Column(
-                children: [
-                  CircleAvatar(
-                      backgroundColor: Colors.transparent,
-                      radius: 50,
-                      child: CircularProgressIndicator(color:ColorsOf().primaryBackGround()  ,backgroundColor: Colors.transparent,)
-                  ),
-                  SizedBox(height: 20,),
-                  Text(meg, style: TextStyle(fontSize: 16 , color: ColorsOf().primaryBackGround(),),)
-                ],
-              ),
+              child: Container(
+                alignment: Alignment.center,
+                color: Colors.transparent,
+                width: 200,
+                height: 200,
+                child: Column(
+                  children: [
+                    CircleAvatar(
+                        backgroundColor: Colors.transparent,
+                        radius: 50,
+                        child: CircularProgressIndicator(color:ColorsOf().primaryBackGround()  ,backgroundColor: Colors.transparent,)
+                    ),
+                    SizedBox(height: 20,),
+                    Text(meg, style: TextStyle(fontSize: 16 , color: ColorsOf().primaryBackGround(),),)
+                  ],
+                ),
 
-            ),
-          );
-        }
+              ),
+            );
+          }
+        ),
       ),
     );
   }
@@ -180,43 +213,57 @@ class ImportNewFileProvider extends ChangeNotifier{
     Color aColor =  (text == "Success")? ColorsOf().finisheItem():ColorsOf().deleteItem();
     Color textColor = (text == "Success")? ColorsOf().borderContainer():ColorsOf().backGround();
 
-    return Container(
-        color: ColorsOf().backGround(),
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        alignment: Alignment.center,
-        child: Container(
-          alignment: Alignment.center,
-          width: 200,
-          height: 200,
-          child: Column(
-            children: [
+    return WillPopScope(
+      onWillPop: () async{
+        HomeProvider().changeSelecter(0, context, "/inventoryList");
+        Navigator.pop(context);
+        //Navigator.pushNamed(context, "/home");
+        return false;
+      },
+      child: Scaffold(
 
-              Text(msg, style: TextStyle(fontSize: 16 ,fontWeight: FontWeight.bold, color: ColorsOf().primaryBackGround(),),),
-              SizedBox(height: 50,),
-              MaterialButton(
-                height: 50,
-                minWidth: 200,
-                color: aColor ,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                padding: EdgeInsets.all(0),
-                child: Text("Retournez à la page d'accueil" ,style: TextStyle(color:textColor ),),
+        backgroundColor: ColorsOf().backGround(),
+        body: Container(
+            color: ColorsOf().backGround(),
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            alignment: Alignment.center,
+            child: Container(
+              alignment: Alignment.center,
+              width: 200,
+              height: 200,
+              child: Column(
+                children: [
+
+                  Text(msg, style: TextStyle(fontSize: 16 ,fontWeight: FontWeight.bold, color: ColorsOf().primaryBackGround(),),),
+                  SizedBox(height: 50,),
+                  MaterialButton(
+                    height: 50,
+                    minWidth: 200,
+                    color: aColor ,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    padding: EdgeInsets.all(0),
+                    child: Text("Retournez à la page d'accueil" ,style: TextStyle(color:textColor ),),
 
 
-                onPressed: ()async{
+                    onPressed: (){
+                      HomeProvider().changeSelecter(0, context, "/inventoryList");
+                      Navigator.pop(context);
+                      //Navigator.pushNamed(context, "/home");
+                    },
 
-                },
 
+                  ),
 
+                ],
               ),
 
-            ],
+            ),
           ),
-
-        ),
-      );
+      ),
+    );
   }
 
 
@@ -235,7 +282,6 @@ class ImportNewFileProvider extends ChangeNotifier{
   }
   
   */
-
 
 
 
@@ -631,7 +677,7 @@ class ImportNewFileProvider extends ChangeNotifier{
         .then((value) async{
               Inventory? invIncomplete = (await DBProvider.db.getIncompleteInventory());
               if(invIncomplete != null) {
-                await DBProvider.db.clearIncompleteInventory(invIncomplete);
+                await DBProvider.db.clearInventoryWithLines(invIncomplete);
               }
 
               try{
@@ -750,13 +796,6 @@ await DBProvider.db.updateUser(new User(
       /* product lot  */
       if((await DBProvider.db.getAllProductLots()).isNotEmpty){
         listing[7] = "Done";
-        await  DBProvider.db.newInventory(new Inventory(
-            closeDate: DateTime(2000, 1, 1).toIso8601String(),
-            openingDate: DateTime.now().toIso8601String(),
-            status: "begin"
-        ));
-
-
 
       }else{ listing[6] = "Empty"; throw "il n'y a pas des lots"; }
 
@@ -779,6 +818,17 @@ await DBProvider.db.updateUser(new User(
 
 
     return ((await DBProvider.db.getAllProductLots()).isNotEmpty)?true:false;
+  }
+
+  Future<void> renewWork(context)async{
+        Inventory? inv = await DBProvider.db.getIncompleteInventory();
+        if(inv != null){
+          await DBProvider.db.clearInventoryWithLines(inv);
+        }
+        HomeProvider().changeSelecter(0, context, "/inventoryList");
+        Navigator.pop(context);
+        //Navigator.pushNamed(context, "/home");
+        //notifyListeners();
   }
 
 

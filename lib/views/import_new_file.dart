@@ -38,7 +38,7 @@ class ImportNewerFile extends StatelessWidget {
 
 
                         onPressed: ()async{
-                          return await value.showDialogToImportFile(context, "text");
+                          return await value.showDialogToProcess(context, "new");
                         },
 
 
