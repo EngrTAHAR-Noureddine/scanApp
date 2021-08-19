@@ -580,7 +580,7 @@ class DBProvider {
     return list;
   }
 
-  /*UPdate */
+  /*UPdate  **********************************************************************************/
   updateUser(User newUser) async {
     final db = await database;
     var res = await db.update("User", newUser.toMap(),
@@ -606,7 +606,14 @@ class DBProvider {
     db.delete("InventoryLine", where: "inventoryId = ?", whereArgs: [inv.id]);
 
   }
-
+/* *Search *********************************************************************** */
+  Future<List<ProductLot>> getAllSearchs(String? search) async {
+    final db = await database;
+    var res = await db.rawQuery("SELECT * FROM ProductLot WHERE numLot LIKE '%$search%'");
+    List<ProductLot> list =
+    res.isNotEmpty ? res.map((c) => ProductLot.fromMap(c)).toList() : [];
+    return list;
+  }
 }
 
 

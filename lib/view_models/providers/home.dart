@@ -4,6 +4,7 @@ import 'package:scanapp/models/variables_define/colors.dart';
 import 'package:scanapp/models/variables_define/my_flutter_app_icons.dart';
 import 'package:scanapp/view_models/providers/main.dart';
 import 'package:scanapp/view_models/providers/process_on_file.dart';
+import 'package:scanapp/view_models/providers/search.dart';
 import 'package:scanapp/views/exports_list.dart';
 import 'package:scanapp/views/home.dart';
 import 'package:scanapp/views/import_new_file.dart';
@@ -44,6 +45,10 @@ class HomeProvider extends ChangeNotifier{
     return (num == numOfSelecter)?ColorsOf().primaryBackGround():ColorsOf().containerThings();
   }
 
+  void setSelector(num){
+    numOfSelecter = num;
+    notifyListeners();
+  }
 
   void changeSelecter(int num, context,path){
     numOfSelecter = num;
@@ -96,8 +101,8 @@ class HomeProvider extends ChangeNotifier{
              maxLines: 1,
              maxLength: 100,
              showCursor: true,
-             onTap: () {},
-             onChanged: (value) { },
+              onTap: ()=>setSelector(9),
+             onChanged: (value)=>SearchProvider().onSearch(value),
              controller: this.searchItem,
              autofocus: false,
              minLines: 1,
