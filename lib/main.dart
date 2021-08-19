@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:scanapp/view_models/providers/exports_list.dart';
 import 'package:scanapp/view_models/providers/home.dart';
-import 'package:scanapp/view_models/providers/import_new_file.dart';
+import 'package:scanapp/view_models/providers/process_on_file.dart';
 import 'package:scanapp/view_models/providers/inventories_list.dart';
 import 'package:scanapp/view_models/providers/list_of_items.dart';
 import 'package:scanapp/view_models/providers/login.dart';
@@ -63,8 +63,8 @@ class MyApp extends StatelessWidget {
             create: (context) => SearchProvider(), ),
           ChangeNotifierProvider<ScannerProvider>(
             create: (context) => ScannerProvider(), ),
-          ChangeNotifierProvider<ImportNewFileProvider>(
-            create: (context) => ImportNewFileProvider(), ),
+          ChangeNotifierProvider<ProcessFileProvider>(
+            create: (context) => ProcessFileProvider(), ),
 
         ],
         child: Builder(

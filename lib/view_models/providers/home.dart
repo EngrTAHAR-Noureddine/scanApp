@@ -29,6 +29,9 @@ class HomeProvider extends ChangeNotifier{
 
     notifyListeners();
   }
+  setState(){
+     notifyListeners();
+  }
 
   Color colorBox(int num){
 

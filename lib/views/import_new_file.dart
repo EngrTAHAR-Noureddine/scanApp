@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:scanapp/models/variables_define/colors.dart';
-import 'package:scanapp/view_models/providers/import_new_file.dart';
+import 'package:scanapp/view_models/providers/process_on_file.dart';
 class ImportNewerFile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Consumer<ImportNewFileProvider>(
+    return  Consumer<ProcessFileProvider>(
         builder: (context, value, child) {
           return Scaffold(
               backgroundColor: ColorsOf().backGround(),

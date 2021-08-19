@@ -65,7 +65,7 @@ class DBProvider {
               "productLotsTable TEXT"
               ")");
           await db.insert("User", {
-
+            "id":1,
             "allStocks":0,
             "logoName":"Empty",
             "logoImage":"Empty",
@@ -594,6 +594,18 @@ class DBProvider {
     return res;
   }
 
+  Future<void> resetInventory(Inventory inv) async {
+    final db = await database;
+    inv.openingDate = DateTime.now().toIso8601String();
+    inv.closeDate = DateTime(2000,1,1).toIso8601String();
+    inv.status = "begin";
+
+    var res = await db.update("Inventory", inv.toMap(),
+        where: "id = ?", whereArgs: [inv.id]);
+
+    db.delete("InventoryLine", where: "inventoryId = ?", whereArgs: [inv.id]);
+
+  }
 
 }
 

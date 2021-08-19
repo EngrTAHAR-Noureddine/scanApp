@@ -29,10 +29,10 @@ import 'package:spreadsheet_decoder/spreadsheet_decoder.dart';
 
 
 
-class ImportNewFileProvider extends ChangeNotifier{
-  static ImportNewFileProvider? _instance;
-  ImportNewFileProvider._();
-  factory ImportNewFileProvider() => _instance ??=ImportNewFileProvider._();
+class ProcessFileProvider extends ChangeNotifier{
+  static ProcessFileProvider? _instance;
+  ProcessFileProvider._();
+  factory ProcessFileProvider() => _instance ??=ProcessFileProvider._();
 
   late File file;
 
@@ -65,19 +65,22 @@ class ImportNewFileProvider extends ChangeNotifier{
   }
 
   //"Renouveler"
+  //import - update - reset
+  Future<void> showDialogToProcess(BuildContext context,String process) async {
 
-  Future<void> showDialogToProcess(BuildContext context,String text) async {
+    await MainProvider().getUser();
+    Inventory? inv = await DBProvider.db.getIncompleteInventory();
+
+
 
     String title;
-    if(text == "cancel"){
-      title = "Annuler le processus";
-    }else{
-      if(MainProvider().user!.productLotsTable != "Emprty"){
-        title = (text=="new")?"Importer":"Mettre à jour";
+
+      if(MainProvider().user!.productLotsTable != "Empty"){
+        title = (process=="import")?"Importer":(process == "reset")?"Réinitialiser":"Mettre à jour";
       }else{
         title = "Importer";
       }
-    }
+
 
 
 
@@ -100,35 +103,45 @@ class ImportNewFileProvider extends ChangeNotifier{
                 actions: <Widget>[
 
                   MaterialButton(
+                    splashColor: Colors.transparent,
+                    focusColor: Colors.transparent,
+                    hoverColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    highlightElevation: 0,
+                    elevation: 0,
+                    focusElevation: 0,
+                    hoverElevation: 0,
+
                     color:ColorsOf().containerThings() ,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(100),
                     ),
                     padding: EdgeInsets.all(0),
-                    child: Text((text != "cancel")?title:"OUI",style: TextStyle(color: ColorsOf().primaryBackGround()),),
+                    child: Text(title,style: TextStyle(color: ColorsOf().primaryBackGround()),),
 
 
-                    onPressed:(text != "cancel")? ()=>pickFileExcel(context,(title != "Importer")?true:false)
-                        :(){
-                          Navigator.pop(context);
-                          HomeProvider().changeSelecter(0, context, "/inventoryList");
-                          Navigator.pop(context);
-                          //Navigator.pushNamed(context, "/home");
-                          
-                          },
+                    onPressed:(process != "reset")?()=>pickFileExcel(context,(title != "Importer")?true:false):()=>resetInventory(context),
 
 
                   ),
 
-                  ((text != "cancel")&&(MainProvider().user!.productLotsTable != "Empty"))?
+                  ((title == "Importer")&&(inv == null))?
                   MaterialButton(
+                    splashColor: Colors.transparent,
+                    focusColor: Colors.transparent,
+                    hoverColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    highlightElevation: 0,
+                    elevation: 0,
+                    focusElevation: 0,
+                    hoverElevation: 0,
                     color:Colors.transparent ,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(100),
-                      side: BorderSide(color:ColorsOf().primaryBackGround(),width: 1,style: BorderStyle.solid)
+                      side: BorderSide(color:ColorsOf().containerThings(),width: 1,style: BorderStyle.solid)
                     ),
                     padding: EdgeInsets.all(0),
-                    child: Text("Renouveler" ,style: TextStyle(color: ColorsOf().primaryBackGround()),),
+                    child: Text("Renouveler" ,style: TextStyle(color: ColorsOf().containerThings(),fontWeight: FontWeight.normal),),
 
                     onPressed: ()=>renewWork(context),
 
@@ -137,7 +150,15 @@ class ImportNewFileProvider extends ChangeNotifier{
 
 
                   MaterialButton(
-                    child: Text((text != "cancel")?'Cancel':"Non",style:TextStyle(color: ColorsOf().containerThings() )),
+                    splashColor: Colors.transparent,
+                    focusColor: Colors.transparent,
+                    hoverColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    highlightElevation: 0,
+                    elevation: 0,
+                    focusElevation: 0,
+                    hoverElevation: 0,
+                    child: Text('Cancel',style:TextStyle(color: ColorsOf().containerThings() )),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
@@ -153,20 +174,18 @@ class ImportNewFileProvider extends ChangeNotifier{
   }
 
 
-  Widget processSaving(context,text){
+  Widget processSaving(context,process){
 
-    String meg = (text == "import")?"Importer Fichier.....":"Mettre à jour.....";
+    String meg = (process == "import")?"Importer Fichier.....":"Mettre à jour.....";
 
     return WillPopScope(
       onWillPop: () async{
-
-         await showDialogToProcess(context,"cancel");
         return false;
       },
       child: Scaffold(
         backgroundColor: ColorsOf().backGround(),
         body: FutureBuilder(
-          future: (text == "import")?saveInDataBase():updateDataBase(),
+          future: (process == "import")?importInDataBase():updateDataBase(),
           builder: (context, snapshot) {
             print(snapshot);
 
@@ -208,16 +227,13 @@ class ImportNewFileProvider extends ChangeNotifier{
     );
   }
 
-  Widget whenFinishProcess(context,text){
-    String msg = (text == "Success")? "le processus est terminé avec succès":"le processus a échoué";
-    Color aColor =  (text == "Success")? ColorsOf().finisheItem():ColorsOf().deleteItem();
-    Color textColor = (text == "Success")? ColorsOf().borderContainer():ColorsOf().backGround();
+  Widget whenFinishProcess(context,isSuccess){
+    String msg = (isSuccess == "Success")? "le processus est terminé avec succès":"le processus a échoué";
+    Color aColor =  (isSuccess == "Success")? ColorsOf().finisheItem():ColorsOf().deleteItem();
+    Color textColor = (isSuccess == "Success")? ColorsOf().borderContainer():ColorsOf().backGround();
 
     return WillPopScope(
       onWillPop: () async{
-        HomeProvider().changeSelecter(0, context, "/inventoryList");
-        Navigator.pop(context);
-        //Navigator.pushNamed(context, "/home");
         return false;
       },
       child: Scaffold(
@@ -660,16 +676,14 @@ class ImportNewFileProvider extends ChangeNotifier{
       }
     }
   }
+  
 
-
-
-
-  Future<bool> saveInDataBase()async{
+  Future<bool> importInDataBase()async{
 
 
 
     //bool loading = false;
-    List<String> listing = ["Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty"];
+    List<String?> listing = ["Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty"];
     int totalStockSys =0;
 
 
@@ -715,7 +729,7 @@ class ImportNewFileProvider extends ChangeNotifier{
                 if((await DBProvider.db.getAllProductCategories()).isNotEmpty){listing[7] = "Done";} else listing[7] = "Empty";
                 /* product lot  */
                 if((await DBProvider.db.getAllProductLots()).isNotEmpty){
-                  listing[7] = "Done";
+                  listing[6] = "Done";
                   await  DBProvider.db.newInventory(new Inventory(
                       closeDate: DateTime(2000, 1, 1).toIso8601String(),
                       openingDate: DateTime.now().toIso8601String(),
@@ -735,7 +749,10 @@ class ImportNewFileProvider extends ChangeNotifier{
                })
         .catchError((err)=>throw err);
 
-await DBProvider.db.updateUser(new User(
+    print(listing[6]);
+    print(totalStockSys);
+await DBProvider.db.updateUser( User(
+  id: 1,
   allStocks: totalStockSys,
   sitesTable: listing[0],
   companyTable: listing[1],
@@ -748,7 +765,7 @@ await DBProvider.db.updateUser(new User(
 
 ));
 
-
+    await MainProvider().getUser();
 
   return ((await DBProvider.db.getAllProductLots()).isNotEmpty)?true:false;
 
@@ -795,14 +812,16 @@ await DBProvider.db.updateUser(new User(
       if((await DBProvider.db.getAllProductCategories()).isNotEmpty){listing[7] = "Done";} else listing[7] = "Empty";
       /* product lot  */
       if((await DBProvider.db.getAllProductLots()).isNotEmpty){
-        listing[7] = "Done";
+        listing[6] = "Done";
 
       }else{ listing[6] = "Empty"; throw "il n'y a pas des lots"; }
 
 
     }catch(e){ throw "catch error : "+e.toString(); }
 
-    await DBProvider.db.updateUser(new User(
+    print(listing[6]);
+    await DBProvider.db.updateUser(User(
+      id: 1,
       allStocks: totalStockSys,
       sitesTable: listing[0],
       companyTable: listing[1],
@@ -816,19 +835,37 @@ await DBProvider.db.updateUser(new User(
     ));
 
 
-
+    await MainProvider().getUser();
     return ((await DBProvider.db.getAllProductLots()).isNotEmpty)?true:false;
   }
 
   Future<void> renewWork(context)async{
-        Inventory? inv = await DBProvider.db.getIncompleteInventory();
-        if(inv != null){
-          await DBProvider.db.clearInventoryWithLines(inv);
-        }
-        HomeProvider().changeSelecter(0, context, "/inventoryList");
-        Navigator.pop(context);
-        //Navigator.pushNamed(context, "/home");
-        //notifyListeners();
+
+    Inventory inv = new Inventory(status: "begin", closeDate: DateTime(2000,1,1).toIso8601String(), openingDate: DateTime.now().toIso8601String());
+    await DBProvider.db.newInventory(inv);
+    HomeProvider().changeSelecter(0, context, "/inventoryList");
+    Navigator.pop(context);
+    HomeProvider().setState();
+    //Navigator.pushNamed(context, "/home");
+    //notifyListeners();
+
+    
+    
+  }
+  
+  Future<void> resetInventory(context)async{
+    
+    Inventory? inv = await DBProvider.db.getIncompleteInventory();
+    if(inv != null){
+      await DBProvider.db.resetInventory(inv);
+      // print(DateTime.tryParse(inv.openingDate??DateTime.now().toIso8601String()));
+      //  print(inv.status);
+    }
+    HomeProvider().changeSelecter(0, context, "/inventoryList");
+    Navigator.pop(context);
+    HomeProvider().setState();
+    //Navigator.pushNamed(context, "/home");
+    //notifyListeners();
   }
 
 
