@@ -4,6 +4,7 @@ import 'package:scanapp/data/database.dart';
 import 'package:scanapp/models/database_models/inventories.dart';
 import 'package:scanapp/models/variables_define/colors.dart';
 import 'package:scanapp/view_models/providers/home.dart';
+import 'package:scanapp/view_models/providers/main.dart';
 
 class InventoryListProvider extends ChangeNotifier{
 
@@ -25,6 +26,12 @@ class InventoryListProvider extends ChangeNotifier{
   setState(){
     notifyListeners();
   }
+
+  bool showingUpdateButton(){
+    bool b =  MainProvider().user!.productLotsTable != "Empty";
+    return b;
+  }
+
   Widget iconLoeading(Inventory inv){
 
     switch(inv.status){

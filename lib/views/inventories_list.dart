@@ -50,7 +50,12 @@ class InventoryList extends StatelessWidget {
                             return Container(
                               margin: EdgeInsets.all(5),
                               child:Slidable(
+                                  dismissal: SlidableDismissal(
+                                    child: SlidableDrawerDismissal(),
+                                    onDismissed: (actionType) {},
+                                  ),
                                 actionPane: SlidableScrollActionPane(),
+
                                 actionExtentRatio: 0.3,
 
                                 actions:(list[index].status != "finished")? [
@@ -93,7 +98,33 @@ class InventoryList extends StatelessWidget {
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
-                                          Container(
+                            (value.showingUpdateButton())?
+                                              Container(
+                                              height: 40,
+                                              width: 40,
+                                              color: Colors.transparent,
+                                              child:MaterialButton(
+                                              splashColor: Colors.transparent,
+                                              focusColor: Colors.transparent,
+                                              hoverColor: Colors.transparent,
+                                              highlightColor: Colors.transparent,
+                                              highlightElevation: 0,
+                                              elevation: 0,
+                                              focusElevation: 0,
+                                              hoverElevation: 0,
+                                              minWidth: 40,
+                                              height: 40,
+                                              child: Icon(
+                                              MyFlutterApp.update,
+                                              color:(list[index].status != "finished")?ColorsOf().borderContainer():ColorsOf().importField(),
+                                              size: 20,
+                                              ),
+
+
+                                              onPressed:(list[index].status != "finished")? ()=>ProcessFileProvider().showDialogToProcess(context, "update"):null,
+
+                                              )
+                                              ):  Container(
                                               height: 40,
                                               width: 40,
                                               color: Colors.transparent,
@@ -119,33 +150,32 @@ class InventoryList extends StatelessWidget {
 
                                                 onPressed:(list[index].status != "finished")? ()=>ProcessFileProvider().showDialogToProcess(context, "import"):null,
 
-                                              )             ),
-                                          Container(
+                                              )
+                            ),
+                                              Container(
                                               height: 40,
                                               width: 40,
                                               color: Colors.transparent,
-                                              child:MaterialButton(
-                                                splashColor: Colors.transparent,
-                                                focusColor: Colors.transparent,
-                                                hoverColor: Colors.transparent,
-                                                highlightColor: Colors.transparent,
-                                                highlightElevation: 0,
-                                                elevation: 0,
-                                                focusElevation: 0,
-                                                hoverElevation: 0,
-                                                minWidth: 40,
-                                                height: 40,
-                                                child: Icon(
-                                                  MyFlutterApp.update,
-                                                  color:(list[index].status != "finished")?ColorsOf().borderContainer():ColorsOf().importField(),
-                                                  size: 20,
-                                                ),
+                                              child: MaterialButton(
+                                                        splashColor: Colors.transparent,
+                                                        focusColor: Colors.transparent,
+                                                        hoverColor: Colors.transparent,
+                                                        highlightColor: Colors.transparent,
+                                                        highlightElevation: 0,
+                                                        elevation: 0,
+                                                        focusElevation: 0,
+                                                        hoverElevation: 0,
+                                                        minWidth: 40,
+                                                        height: 40,
+                                                        child: Icon(
+                                                        Icons.check_circle,
+                                                        color:(list[index].status=="ongoing")?ColorsOf().borderContainer():ColorsOf().importField(),
+                                                        size: 20,
+                                                        ),
 
-
-                                                onPressed:(list[index].status != "finished")? ()=>ProcessFileProvider().showDialogToProcess(context, "update"):null,
-
-                                              )
-                                          ),
+                                                        onPressed:(list[index].status=="ongoing")? ()=>value.finishButon(context,list[index]):null,
+                                                        )
+                                              ),
                                           Container(
                                               height: 40,
                                               width: 40,
