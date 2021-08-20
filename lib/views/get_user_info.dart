@@ -8,9 +8,9 @@ class GetUserInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: MainProvider().getUser(),
+        future: MainProvider().createUser(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+          if (snapshot.connectionState == ConnectionState.done) {
 
             return LogIn();
 

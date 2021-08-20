@@ -38,7 +38,7 @@ class ColorsOf{
   }
   // EBEBF0 ==> 242426
   Color backGround(){
-    return (darkMode!)?Color(0xFF242426):Color(0xFFEBEBF0);
+    return ((darkMode != null) && darkMode!)?Color(0xFF242426):Color(0xFFEBEBF0);
   }
   // FF9500 ==> 363638
   Color profilField(){

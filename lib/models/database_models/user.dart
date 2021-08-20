@@ -12,7 +12,7 @@ String userToJson(User data) {
 
 class User {
   int? id;
-  int? allStocks;
+  int? allProductLots;
   String? logoName;
   String? logoImage;
 
@@ -46,7 +46,7 @@ class User {
 
     this.userPasswordActually,
     this.stateUser,
-    this.allStocks,
+    this.allProductLots,
     this.sitesTable,
 
     this.companyTable,
@@ -71,7 +71,7 @@ class User {
 
       userPasswordActually: json["userPasswordActually"],
       stateUser: json["stateUser"],
-      allStocks: json["allStocks"],
+      allProductLots: json["allProductLots"],
       sitesTable: json["sitesTable"],
 
       companyTable: json["companyTable"],
@@ -97,7 +97,7 @@ class User {
 
     "userPasswordActually": userPasswordActually,
     "stateUser": stateUser,
-    "allStocks": allStocks,
+    "allProductLots": allProductLots,
     "sitesTable": sitesTable,
 
     "companyTable": companyTable,

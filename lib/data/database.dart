@@ -42,7 +42,7 @@ class DBProvider {
         onCreate: (Database db, int version) async {
           await db.execute("CREATE TABLE User ("
               "id INTEGER PRIMARY KEY,"
-              "allStocks INTEGER,"
+              "allProductLots INTEGER,"
               "logoName TEXT,"
               "logoImage TEXT,"
 
@@ -66,7 +66,7 @@ class DBProvider {
               ")");
           await db.insert("User", {
             "id":1,
-            "allStocks":0,
+            "allProductLots":0,
             "logoName":"Empty",
             "logoImage":"Empty",
             "phoneEnterprise":"Empty",
@@ -594,6 +594,7 @@ class DBProvider {
     return res;
   }
 
+  /* reset inventory */
   Future<void> resetInventory(Inventory inv) async {
     final db = await database;
     inv.openingDate = DateTime.now().toIso8601String();
@@ -614,84 +615,23 @@ class DBProvider {
     res.isNotEmpty ? res.map((c) => ProductLot.fromMap(c)).toList() : [];
     return list;
   }
+
+  Future<Emplacement?> scanEmplacement(String theScan)async{
+    final db = await database;
+    var res =await  db.query("Emplacement", where: "barCodeEmp = ?", whereArgs: [theScan]);
+    Emplacement? one;
+    if(res.isNotEmpty) one = Emplacement.fromMap(res.first);
+    return one;
+  }
+
+  Future<ProductLot?> scanByBarCode(String barCode)async{
+    final db = await database;
+    var res =await  db.query("ProductLot", where: "numLot = ?", whereArgs: [barCode]);
+    ProductLot? one;
+    if(res.isNotEmpty) one = ProductLot.fromMap(res.first);
+    return one;
+  }
+
 }
 
-
-
-/*
-
-//insert new task
-  newTask(Task newTask) async {
-    final db = await database;
-    var res = await db.insert("Task", newTask.toMap());
-    return res;
-  }
-
-//get all tasks  with category
-  Future<List<Task>> getCategory(String category) async {
-    final db = await database;
-    var res = await db.query("Task", where: "category = ?", whereArgs: [category]);
-    List<Task> list =
-    res.isNotEmpty ? res.map((c) => Task.fromMap(c)).toList() : [];
-    return list;
-  }
-
-  Future<List<Map<dynamic, dynamic>>> getCategories() async {
-    final db = await database;
-    var res = await db.rawQuery("SELECT COUNT(category), category FROM Task GROUP BY category");
-    List<Map<dynamic, dynamic>> list =
-    res.isNotEmpty ? res.toList() : [];
-    return list;
-  }
-
-  //get all tasks with search by task name
-  Future<List<Task>> getAllSearch(String taskSearch) async {
-    final db = await database;
-    var res = await db.rawQuery("SELECT * FROM Task WHERE task LIKE '%$taskSearch%'");
-    List<Task> list =
-    res.isNotEmpty ? res.map((c) => Task.fromMap(c)).toList() : [];
-    return list;
-  }
-
-//get all tasks
-  Future<List<Task>> getAllTask() async {
-    final db = await database;
-    var res = await db.rawQuery("SELECT * FROM Task  ORDER BY status asc");
-    //db.query("Task",orderBy: "status asc");
-    List<Task> list =
-    res.isNotEmpty ? res.map((c) => Task.fromMap(c)).toList() : [];
-    return list;
-  }
-//update task
-  updateTask(Task newTask) async {
-    final db = await database;
-    var res = await db.update("Task", newTask.toMap(),
-        where: "id = ?", whereArgs: [newTask.id]);
-    return res;
-  }
-
-  // delete task
-  deleteTask(int id) async {
-    final db = await database;
-    db.delete("Task", where: "id = ?", whereArgs: [id]);
-  }
-
-// delete all
-  deleteAll() async {
-    final db = await database;
-    //db.rawDelete("Delete * from History");
-    try{
-
-      await db.transaction((txn) async {
-        var batch = txn.batch();
-        batch.delete("Task");
-        await batch.commit();
-      });
-    } catch(error){
-      throw Exception('DbBase.cleanDatabase: ' + error.toString());
-    }
-  }
-
-
-*/
 

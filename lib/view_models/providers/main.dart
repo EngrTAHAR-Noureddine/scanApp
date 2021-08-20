@@ -20,6 +20,10 @@ class MainProvider extends ChangeNotifier{
     return user;
   }
 
+  Future<void> createUser()async{
+    user = await DBProvider.db.getUser(1);
+  }
+
 }
 
 
