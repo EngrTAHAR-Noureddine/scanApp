@@ -20,7 +20,7 @@ class ScannerProvider extends ChangeNotifier{
 /* Variables */
   final formKey = GlobalKey<FormState>();
   TextEditingController barCodeController = TextEditingController();
-  TextEditingController stateController = TextEditingController();
+
 
 
   String? barCode;
@@ -30,10 +30,23 @@ class ScannerProvider extends ChangeNotifier{
   String? nameEmplacement;
   String? quality;
   InventoryLine? newLine;
+  Inventory? incompleteInventory;
+  bool isStateFocus = false;
 
 
 
 /* Provider Functions  */
+  void clearVars(){
+    barCode = null;
+    didFinished = false;
+    idEmplacement = null;
+    idProduct= null;
+    nameEmplacement= null;
+    quality= null;
+    newLine= null;
+    incompleteInventory = null;
+  }
+
   Future<void> useCamera()async{
     String? getFromCamera;
     try {
@@ -44,24 +57,26 @@ class ScannerProvider extends ChangeNotifier{
   }
 
   Future<bool?> searchTheScan()async{
+    print(DateTime(2000,1,1).toIso8601String());
+    (incompleteInventory!=null)? print(incompleteInventory!.id): print("is null");
     bool? findIt;
     ProductLot? productLot;
     Emplacement? emplacement;
 
 
     /* get incomplete inventory */
-    Inventory? incompleteInventory = await DBProvider.db.getIncompleteInventory();
+    incompleteInventory = await DBProvider.db.getIncompleteInventory();
     /**/
 
     /* get All inventory lines to compare with all product lots */
     if(incompleteInventory!=null){
-      List<InventoryLine> listInvLines = await DBProvider.db.getAllInventoryLines(incompleteInventory.id);
+      List<InventoryLine> listInvLines = await DBProvider.db.getAllInventoryLines(incompleteInventory!.id);
       if(listInvLines.isNotEmpty)didFinished = (MainProvider().user!.allProductLots == listInvLines.length)?true:false;
     }
     /**/
 
 
-    if(didFinished && barCode != null){
+    if(!didFinished && barCode != null){
 
       /* scan the emplacemnt */
       emplacement = await DBProvider.db.scanEmplacement(barCode!);
@@ -73,10 +88,10 @@ class ScannerProvider extends ChangeNotifier{
      if(emplacement!=null){
        idEmplacement = emplacement.id;
        nameEmplacement = emplacement.nom;
-
      }
       if(productLot != null){
         findIt = true;
+      //  print("findIt of future : "+findIt.toString());
         idProduct = productLot.productId;
 
         newLine = new InventoryLine(
@@ -91,27 +106,34 @@ class ScannerProvider extends ChangeNotifier{
                 );
       }else{findIt = false;}
 
-    }else{
+    }
+    if(didFinished){
 
     if(incompleteInventory != null){
-      incompleteInventory.closeDate = DateTime.now().toIso8601String();
-      DBProvider.db.updateInventory(incompleteInventory);
+      incompleteInventory!.closeDate = DateTime.now().toIso8601String();
+      incompleteInventory!.status = "finished";
+       await DBProvider.db.updateInventory(incompleteInventory!);
     }
 
 
     }
-
+  //  print("findIt of future : "+findIt.toString());
     return findIt;
   }
 
   Future<void> validation()async{
     if(newLine != null){
-      newLine!.quality = quality ?? "bon";
-      if(newLine !=null) await DBProvider.db.newInventoryLine(newLine!);
+      newLine!.quality = quality ?? "Bon";
+      if(newLine !=null){
+        await DBProvider.db.newInventoryLine(newLine!);
+        if(incompleteInventory!=null) {
+          incompleteInventory!.status = "ongoing";
+          await DBProvider.db.updateInventory(incompleteInventory!);
+        }
+      }
 
       quality = null;
       barCodeController.clear();
-      stateController.clear();
       barCode = null;
       idProduct = null;
       newLine = null;
@@ -151,217 +173,133 @@ class ScannerProvider extends ChangeNotifier{
     ):Container();
   }
 
+
   inputBarCode(context){
     return Container(
       color:ColorsOf().primaryBackGround(),
       height:50,
       alignment: Alignment.center,
       padding: EdgeInsets.only(left: 10, right: 10, ),
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () {
-          // SystemChannels.textInput.invokeMethod('TextInput.hide');
-          FocusScope.of(context).requestFocus(new FocusNode());
+      child: TextFormField(
+
+        onEditingComplete: (){
+          barCode = barCodeController.text;
+          barCodeController.clear();
+          notifyListeners();
         },
-        child: TextFormField(
-          onEditingComplete: (){
-            barCode = barCodeController.text;
-            barCodeController.clear();
-            notifyListeners();
-          },
-          onFieldSubmitted: (val){
-            barCode = val;
-            barCodeController.clear();
-            notifyListeners();
-          },
-          onSaved: (val){
-            barCode = val;
-            barCodeController.clear();
-            notifyListeners();
-          },
-          validator: (value){
+        validator: (value){
 
-            if(value != null){
-              if(value.contains('\n') || value.contains('\t')){
-                barCodeController.text = value.replaceAll('\t', '');
-                barCode = barCodeController.text;
-                barCodeController.clear();
-                notifyListeners();
-              }
+          if(value != null){
+            if(value.contains('\n') || value.contains('\t')){
+              barCodeController.text = value.replaceAll('\t', '');
+              barCode = barCodeController.text;
+              barCodeController.clear();
+              notifyListeners();
             }
+          }
 
-            return null;
-          },
+          return null;
+        },
 
-          textAlign: TextAlign.left,
-          style: TextStyle(fontSize: 16,color:ColorsOf().backGround() ),
-          maxLines: 1,
-          maxLength: 100,
-          showCursor: true,
-          obscureText: false,
-          controller: barCodeController,
-          autofocus: true,
-          minLines: 1,
-          keyboardType: TextInputType.text,
-          decoration: InputDecoration(
-            isDense: true,
-            contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-            alignLabelWithHint: false,
-            labelText: null,
-            prefixIcon: Icon(Icons.qr_code_scanner_outlined,color: ColorsOf().backGround()),
-            counterStyle: TextStyle(
-              height: double.minPositive,
-            ),
-            counterText: "",
-            focusedBorder:OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-
-              borderSide: BorderSide(
-                color: ColorsOf().containerThings(),
-                width: 1,
-                style: BorderStyle.solid,
-              ),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-
-              borderSide: BorderSide(
-                color: ColorsOf().containerThings(),
-                width: 1,
-                style: BorderStyle.solid,
-              ),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-
-              borderSide: BorderSide(
-                color: ColorsOf().deleteItem(),
-                width: 1,
-                style: BorderStyle.solid,
-              ),
-            ),
-            hintText: "code à barre...",
-            hintStyle: TextStyle(color: ColorsOf().hintText()),
-
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-
-              borderSide: BorderSide(
-                color: ColorsOf().containerThings(),
-                width: 1,
-                style: BorderStyle.solid,
-              ),
-            ),
-
+        textAlign: TextAlign.left,
+        style: TextStyle(fontSize: 16,color:ColorsOf().backGround() ),
+        maxLines: 1,
+        maxLength: 100,
+        showCursor: true,
+        obscureText: false,
+        controller: barCodeController,
+        autofocus: !isStateFocus,
+        minLines: 1,
+        keyboardType: TextInputType.text,
+        decoration: InputDecoration(
+          isDense: true,
+          contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+          alignLabelWithHint: false,
+          labelText: null,
+          prefixIcon: Icon(Icons.qr_code_scanner_outlined,color: ColorsOf().backGround()),
+          counterStyle: TextStyle(
+            height: double.minPositive,
           ),
-          toolbarOptions: ToolbarOptions(
-            cut: true,
-            copy: true,
-            selectAll: true,
-            paste: true,
+          counterText: "",
+          focusedBorder:OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+
+            borderSide: BorderSide(
+              color: ColorsOf().containerThings(),
+              width: 1,
+              style: BorderStyle.solid,
+            ),
           ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+
+            borderSide: BorderSide(
+              color: ColorsOf().containerThings(),
+              width: 1,
+              style: BorderStyle.solid,
+            ),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+
+            borderSide: BorderSide(
+              color: ColorsOf().deleteItem(),
+              width: 1,
+              style: BorderStyle.solid,
+            ),
+          ),
+          hintText: "code à barre...",
+          hintStyle: TextStyle(color: ColorsOf().hintText()),
+
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+
+            borderSide: BorderSide(
+              color: ColorsOf().containerThings(),
+              width: 1,
+              style: BorderStyle.solid,
+            ),
+          ),
+
+        ),
+        toolbarOptions: ToolbarOptions(
+          cut: true,
+          copy: true,
+          selectAll: true,
+          paste: true,
         ),
       ),
 
     );
   }
-  inputState(context,findIt){
+
+
+  bool _switch = false;
+  setIsGood(){
+    String text =(quality!=null) ? "Etat : "+quality.toString() : "Etat : -----";
     return Container(
-      margin: EdgeInsets.only(top: 10,bottom: 10),
-      color:ColorsOf().containerThings(),
+      color:Colors.transparent,//ColorsOf().primaryBackGround(),
       height:50,
       alignment: Alignment.center,
-      padding: EdgeInsets.only(left: 10, right: 10, ),
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () {
-          // SystemChannels.textInput.invokeMethod('TextInput.hide');
-          FocusScope.of(context).requestFocus(new FocusNode());
-        },
-        child: TextFormField(
-          onEditingComplete: (){
-            quality = stateController.text;
-          },
-          onSaved: (val){
-            quality = stateController.text;
-          },
-          onFieldSubmitted: (val){
-            quality = stateController.text;
-          },
-
-          enabled: (findIt!=null)?findIt:false,
-
-          textAlign: TextAlign.left,
-          style: TextStyle(fontSize: 16,color:ColorsOf().primaryBackGround() ),
-          maxLines: 1,
-          maxLength: 100,
-          showCursor: true,
-          obscureText: false,
-          controller: stateController,
-          autofocus: false,
-          minLines: 1,
-          keyboardType: TextInputType.text,
-
-          decoration: InputDecoration(
-            isDense: true,
-            contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-            alignLabelWithHint: false,
-            labelText: null,
-            prefixIcon: Icon(Icons.assignment_turned_in_outlined,color: ColorsOf().primaryBackGround()),
-            counterStyle: TextStyle(
-              height: double.minPositive,
-            ),
-            counterText: "",
-            focusedBorder:OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-
-              borderSide: BorderSide(
-                color: ColorsOf().primaryBackGround(),
-                width: 1,
-                style: BorderStyle.solid,
-              ),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-
-              borderSide: BorderSide(
-                color: ColorsOf().primaryBackGround(),
-                width: 1,
-                style: BorderStyle.solid,
-              ),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-
-              borderSide: BorderSide(
-                color: ColorsOf().deleteItem(),
-                width: 1,
-                style: BorderStyle.solid,
-              ),
-            ),
-            hintText: "bon/pas bon....",
-            hintStyle: TextStyle(color: ColorsOf().importField()),
-
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-
-              borderSide: BorderSide(
-                color: ColorsOf().primaryBackGround(),
-                width: 1,
-                style: BorderStyle.solid,
-              ),
-            ),
-
-          ),
-          toolbarOptions: ToolbarOptions(
-            cut: true,
-            copy: true,
-            selectAll: true,
-            paste: true,
-          ),
+      child: SwitchListTile(
+        activeColor: Colors.blue,
+        inactiveThumbColor: Colors.grey,
+        inactiveTrackColor: Colors.grey,
+        activeTrackColor: Colors.blue,
+        title: Text(
+          text, style: TextStyle(color:ColorsOf().primaryBackGround() ,fontSize: 16,fontWeight: FontWeight.bold),
         ),
-      ),
 
+        value: _switch,
+        onChanged: (bool value) async {
+          print(value);
+          _switch = value;
+          quality = (_switch)?"Bon":"Pas Bon";
+          notifyListeners();
+
+        },
+
+      ),
     );
   }
 

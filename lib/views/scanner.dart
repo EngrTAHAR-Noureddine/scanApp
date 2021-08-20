@@ -101,20 +101,20 @@ class Scanner extends StatelessWidget {
                    children: [
 
                      Container(
-                       height: MediaQuery.of(context).size.height * 0.9 ,
+                       height: MediaQuery.of(context).size.height * 0.8 ,
                        width: MediaQuery.of(context).size.width ,
                        padding: EdgeInsets.only(top: 50),
 
 
                        child: Container(
-                           padding: EdgeInsets.only(top: 50),
+                           padding: EdgeInsets.all(0),
                            decoration: BoxDecoration(
                              color: ColorsOf().primaryBackGround(),
                              borderRadius: BorderRadius.only(topLeft: Radius.circular(25), topRight: Radius.circular(25)),
                            ),
                            child: Form(
                              key: value.formKey,
-                             child: SingleChildScrollView(
+                             child: Container(
                                padding: EdgeInsets.all(10),
                                child: Column(
 
@@ -180,6 +180,7 @@ class Scanner extends StatelessWidget {
                                      ),
                                    ),
                                    SizedBox(height: 20),
+
                                    Container(
                                      width: MediaQuery.of(context).size.width,
                                      decoration: BoxDecoration(
@@ -237,16 +238,7 @@ class Scanner extends StatelessWidget {
                                              onTap:null,
                                            ),
                                          ),
-                                         Container(
-                                            alignment: Alignment.centerLeft,
-                                           padding: EdgeInsets.only(left: 20),
-                                           child:Text("Etat : ",
-                                             style: TextStyle(color : ColorsOf().primaryBackGround() ,fontSize: 14 ,fontWeight: FontWeight.bold),
-                                           ),
-
-                                         ),
-
-                                         value.inputState(context,findIt),
+                                         value.setIsGood(),
 
                                        ],
                                      ),
