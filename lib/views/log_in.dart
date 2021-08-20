@@ -27,9 +27,7 @@ class LogIn extends StatelessWidget {
     );
     ColorsOf().mode(context);
     var image = base64.decode(blob);
-    return ChangeNotifierProvider(
-      create: (_) => LogInProvider(),
-      child: Consumer<LogInProvider>(
+    return  Consumer<LogInProvider>(
           builder: (context, value, child) {
 
                   return FutureBuilder(
@@ -126,8 +124,8 @@ class LogIn extends StatelessWidget {
                     }
                   );
                // });
-          }),
-    );
+          });
+
   }
 }
 
