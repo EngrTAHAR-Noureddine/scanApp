@@ -15,7 +15,15 @@ class GetUserInfo extends StatelessWidget {
             return LogIn();
 
 
-          }else{ return Container(color: ColorsOf().backGround());}
+          }else if(snapshot.connectionState == ConnectionState.waiting){
+            return Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                color: ColorsOf().backGround());
+          }else{ return Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              color: ColorsOf().backGround());}
 
         }
     );

@@ -80,7 +80,7 @@ class InventoryList extends StatelessWidget {
                                         TextSpan(text:"Inventory : ",
                                           style: TextStyle(color : ColorsOf().profilField() ,fontSize: 18 ,fontWeight: FontWeight.bold),
                                         ),
-                                        TextSpan(text:list[index].closeDate.toString(),
+                                        TextSpan(text:list[index].id.toString(),
                                           style: TextStyle(color : ColorsOf().backGround() ,fontSize: 18 ,fontWeight: FontWeight.bold),
                                         ),
 
@@ -286,6 +286,8 @@ class InventoryList extends StatelessWidget {
                     return ImportNewerFile();
                   }*/
 
+                  }if(snapshot.connectionState == ConnectionState.waiting){
+                    return Container();
                   }else {
                     return ImportNewerFile();
                   }

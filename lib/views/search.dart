@@ -130,6 +130,12 @@ class Search extends StatelessWidget {
                     );
                   }
 
+                }else if(snapshot.connectionState == ConnectionState.waiting){
+                  return Container(
+                    color:ColorsOf().backGround(),
+                    alignment: Alignment.center,
+                    child: Text("Rechercher..." , style: TextStyle(color: ColorsOf().primaryBackGround(),fontSize: 20),),
+                  );
                 }else{
                   return Container(
                   color:ColorsOf().backGround(),
