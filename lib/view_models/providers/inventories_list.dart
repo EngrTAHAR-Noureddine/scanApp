@@ -29,7 +29,7 @@ class InventoryListProvider extends ChangeNotifier{
 
     switch(inv.status){
       case "finished": return Icon(Icons.check_circle, color: ColorsOf().finisheItem(),);
-      case "ongoing": return Icon(Icons.stream, color: ColorsOf().onGoingItem(),);
+      case "ongoing": return Icon(Icons.circle, color: ColorsOf().onGoingItem(),);
       default : return Icon(Icons.circle, color: ColorsOf().backGround(),);
 
     }

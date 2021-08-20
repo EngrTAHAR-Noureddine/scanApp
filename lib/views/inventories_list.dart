@@ -99,6 +99,7 @@ class InventoryList extends StatelessWidget {
                                               color: Colors.transparent,
                                               alignment: Alignment.center,
                                               child: MaterialButton(
+
                                                 splashColor: Colors.transparent,
                                                 focusColor: Colors.transparent,
                                                 hoverColor: Colors.transparent,
@@ -112,11 +113,11 @@ class InventoryList extends StatelessWidget {
                                                 child: Icon(
 
                                                   MyFlutterApp.import_second,
-                                                  color:ColorsOf().borderContainer(),
+                                                  color: (list[index].status != "finished")?ColorsOf().borderContainer():ColorsOf().importField(),
                                                   size: 20,
                                                 ),
 
-                                                onPressed: ()=>ProcessFileProvider().showDialogToProcess(context, "import"),
+                                                onPressed:(list[index].status != "finished")? ()=>ProcessFileProvider().showDialogToProcess(context, "import"):null,
 
                                               )             ),
                                           Container(
@@ -136,12 +137,12 @@ class InventoryList extends StatelessWidget {
                                                 height: 40,
                                                 child: Icon(
                                                   MyFlutterApp.update,
-                                                  color:ColorsOf().borderContainer(),
+                                                  color:(list[index].status != "finished")?ColorsOf().borderContainer():ColorsOf().importField(),
                                                   size: 20,
                                                 ),
 
 
-                                                onPressed: ()=>ProcessFileProvider().showDialogToProcess(context, "update"),
+                                                onPressed:(list[index].status != "finished")? ()=>ProcessFileProvider().showDialogToProcess(context, "update"):null,
 
                                               )
                                           ),
@@ -162,11 +163,11 @@ class InventoryList extends StatelessWidget {
                                                 height: 40,
                                                 child: Icon(
                                                   MyFlutterApp.reset_second,
-                                                  color:ColorsOf().borderContainer(),
+                                                  color:(list[index].status != "finished")?ColorsOf().borderContainer():ColorsOf().importField(),
                                                   size: 20,
                                                 ),
 
-                                                onPressed: ()=>ProcessFileProvider().showDialogToProcess(context, "reset"),
+                                                onPressed:(list[index].status != "finished")? ()=>ProcessFileProvider().showDialogToProcess(context, "reset"):null,
                                               )
                                           ),
                                           Container(
@@ -210,11 +211,11 @@ class InventoryList extends StatelessWidget {
                                                 height: 40,
                                                 child: Icon(
                                                   MyFlutterApp.export_icon,
-                                                  color:ColorsOf().borderContainer(),
+                                                  color:(list[index].status != "begin")?ColorsOf().borderContainer():ColorsOf().importField(),
                                                   size: 20,
                                                 ),
 
-                                                onPressed: (){print("export");},
+                                                onPressed:(list[index].status != "begin")? (){print("export");}:null,
                                               )
                                           ),
 
