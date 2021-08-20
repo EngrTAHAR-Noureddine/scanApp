@@ -14,6 +14,7 @@ import 'package:scanapp/view_models/providers/scanner.dart';
 import 'package:scanapp/view_models/providers/search.dart';
 import 'package:scanapp/view_models/providers/settings.dart';
 import 'package:scanapp/views/exports_list.dart';
+import 'package:scanapp/views/get_user_info.dart';
 import 'package:scanapp/views/home.dart';
 import 'package:scanapp/views/import_new_file.dart';
 import 'package:scanapp/views/inventories_list.dart';
@@ -110,7 +111,7 @@ class MyApp extends StatelessWidget {
 
                                               ),
                                               themeMode: ThemeMode.system,
-                                              home: LogIn(),
+                                              home: GetUserInfo(),//LogIn(),
                                               routes: {
                                                 "/home": (context) => Home(),
                                                 "/inventoryList": (context) => InventoryList(),
