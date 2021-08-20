@@ -78,7 +78,7 @@ class InventoryList extends StatelessWidget {
                                         TextSpan(text:"Inventory : ",
                                           style: TextStyle(color : ColorsOf().profilField() ,fontSize: 18 ,fontWeight: FontWeight.bold),
                                         ),
-                                        TextSpan(text:"10",
+                                        TextSpan(text:list[index].closeDate.toString(),
                                           style: TextStyle(color : ColorsOf().backGround() ,fontSize: 18 ,fontWeight: FontWeight.bold),
                                         ),
 

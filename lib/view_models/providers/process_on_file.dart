@@ -731,9 +731,11 @@ class ProcessFileProvider extends ChangeNotifier{
                 if((await DBProvider.db.getAllProductLots()).isNotEmpty){
                   listing[6] = "Done";
                   totalProductLots = (await DBProvider.db.getAllProductLots()).length;
-                  
+                  DateTime dateTime =  DateTime(2000,1,1);
+                  String oldDate = dateTime.toIso8601String();
+
                   await  DBProvider.db.newInventory(new Inventory(
-                      closeDate: DateTime(2000, 1, 1).toIso8601String(),
+                      closeDate: oldDate,
                       openingDate: DateTime.now().toIso8601String(),
                       status:"begin"
                   ));
@@ -842,8 +844,9 @@ await DBProvider.db.updateUser( User(
   }
 
   Future<void> renewWork(context)async{
-
-    Inventory inv = new Inventory(status: "begin", closeDate: DateTime(2000,1,1).toIso8601String(), openingDate: DateTime.now().toIso8601String());
+    DateTime dateTime =  DateTime(2000,1,1);
+    String oldDate = dateTime.toIso8601String();
+    Inventory inv = new Inventory(status: "begin", closeDate: oldDate, openingDate: DateTime.now().toIso8601String());
     await DBProvider.db.newInventory(inv);
     HomeProvider().changeSelecter(0, context, "/inventoryList");
     Navigator.pop(context);

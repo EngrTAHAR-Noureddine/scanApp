@@ -28,9 +28,9 @@ class InventoryListProvider extends ChangeNotifier{
   Widget iconLoeading(Inventory inv){
 
     switch(inv.status){
-      case "finished": return Icon(Icons.check_circle, color: ColorsOf().finisheItem(),); break;
-      case "ongoing": return Icon(Icons.circle, color: ColorsOf().onGoingItem(),); break;
-      default : return Icon(Icons.circle, color: ColorsOf().backGround(),); break;
+      case "finished": return Icon(Icons.check_circle, color: ColorsOf().finisheItem(),);
+      case "ongoing": return Icon(Icons.stream, color: ColorsOf().onGoingItem(),);
+      default : return Icon(Icons.circle, color: ColorsOf().backGround(),);
 
     }
   }

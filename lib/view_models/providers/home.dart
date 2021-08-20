@@ -4,6 +4,7 @@ import 'package:scanapp/models/variables_define/colors.dart';
 import 'package:scanapp/models/variables_define/my_flutter_app_icons.dart';
 import 'package:scanapp/view_models/providers/main.dart';
 import 'package:scanapp/view_models/providers/process_on_file.dart';
+import 'package:scanapp/view_models/providers/scanner.dart';
 import 'package:scanapp/view_models/providers/search.dart';
 import 'package:scanapp/views/exports_list.dart';
 import 'package:scanapp/views/home.dart';
@@ -55,6 +56,7 @@ class HomeProvider extends ChangeNotifier{
   void changeSelecter(int num, context,path){
     numOfSelecter = num;
     this.scaffoldKey.currentState!.openEndDrawer();
+    if(numOfSelecter == 2) ScannerProvider().clearVars();
     //Navigator.pushNamed(context, path);
     notifyListeners();
   }
