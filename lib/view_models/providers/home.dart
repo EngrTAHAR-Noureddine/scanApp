@@ -25,11 +25,13 @@ class HomeProvider extends ChangeNotifier{
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
   bool bigger = false;
+
   TextEditingController searchItem = new TextEditingController();
 
    void onPressedButton(){
     bigger = !bigger;
-
+    searchItem.clear();
+    if(!bigger) numOfSelecter = 0;
     notifyListeners();
   }
   setState(){
@@ -65,7 +67,7 @@ class HomeProvider extends ChangeNotifier{
 
 
   }
-
+  FocusNode focusNode = new FocusNode();
 
   AppBar customAppBar(context){
      return AppBar(
@@ -86,7 +88,7 @@ class HomeProvider extends ChangeNotifier{
        actions: [
          IconButton(
            icon: Icon(
-             Icons.search,
+             (!bigger)?Icons.search:Icons.close,
              color: ColorsOf().primaryBackGround(),
            ),
            onPressed: () => this.onPressedButton(),
@@ -96,15 +98,17 @@ class HomeProvider extends ChangeNotifier{
            margin: EdgeInsets.only(right: !HomeProvider().bigger ? 10 : 10),
            color: Colors.transparent,
            child: TextField(
+              readOnly: !bigger,
+             //focusNode: MainProvider().getCurrentFocus(context),
              textAlign: TextAlign.left,
              style: TextStyle(fontSize: 14, color: ColorsOf().borderContainer()),
              maxLines: 1,
              maxLength: 100,
              showCursor: true,
-              onTap: ()=>setSelector(9),
-             onChanged: (value)=>SearchProvider().onSearch(value),
+             onTap: ()=>setSelector(9),
+             onChanged: (value){setSelector(9);SearchProvider().onSearch(value);},
              controller: this.searchItem,
-             autofocus: false,
+             autofocus: bigger,
              minLines: 1,
              keyboardType: TextInputType.text,
              decoration: InputDecoration(

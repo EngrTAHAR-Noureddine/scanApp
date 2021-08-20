@@ -11,7 +11,7 @@ class SearchProvider extends ChangeNotifier{
   String? searchItem;
 
   void onSearch(value){
-    searchItem=value.toString();
+    searchItem=value.toString().toLowerCase();
     notifyListeners();
   }
 

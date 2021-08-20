@@ -23,7 +23,7 @@ class Search extends StatelessWidget {
               builder: (context, snapshot) {
 
                 if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
-
+               //   if(snapshot.hasData){
                   List<ProductLot> list = snapshot.data as List<ProductLot>;
 
 

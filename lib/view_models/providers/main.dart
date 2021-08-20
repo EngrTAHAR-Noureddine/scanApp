@@ -10,6 +10,7 @@ class MainProvider extends ChangeNotifier{
   factory MainProvider() => _instance ??=MainProvider._();
 
   User? user;
+
   saveUser(User? user){
     this.user = user;
   }
