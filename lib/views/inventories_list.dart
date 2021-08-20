@@ -50,10 +50,7 @@ class InventoryList extends StatelessWidget {
                             return Container(
                               margin: EdgeInsets.all(5),
                               child:Slidable(
-                                  dismissal: SlidableDismissal(
-                                    child: SlidableDrawerDismissal(),
-                                    onDismissed: (actionType) {},
-                                  ),
+                                closeOnScroll: true,
                                 actionPane: SlidableScrollActionPane(),
 
                                 actionExtentRatio: 0.3,
@@ -117,7 +114,7 @@ class InventoryList extends StatelessWidget {
                                               child: Icon(
                                               MyFlutterApp.update,
                                               color:(list[index].status != "finished")?ColorsOf().borderContainer():ColorsOf().importField(),
-                                              size: 20,
+                                              size: 25,
                                               ),
 
 
@@ -145,7 +142,7 @@ class InventoryList extends StatelessWidget {
 
                                                   MyFlutterApp.import_second,
                                                   color: (list[index].status != "finished")?ColorsOf().borderContainer():ColorsOf().importField(),
-                                                  size: 20,
+                                                  size: 25,
                                                 ),
 
                                                 onPressed:(list[index].status != "finished")? ()=>ProcessFileProvider().showDialogToProcess(context, "import"):null,
@@ -170,7 +167,7 @@ class InventoryList extends StatelessWidget {
                                                         child: Icon(
                                                         Icons.check_circle,
                                                         color:(list[index].status=="ongoing")?ColorsOf().borderContainer():ColorsOf().importField(),
-                                                        size: 20,
+                                                        size: 25,
                                                         ),
 
                                                         onPressed:(list[index].status=="ongoing")? ()=>value.finishButon(context,list[index]):null,
@@ -194,7 +191,7 @@ class InventoryList extends StatelessWidget {
                                                 child: Icon(
                                                   MyFlutterApp.reset_second,
                                                   color:(list[index].status != "finished")?ColorsOf().borderContainer():ColorsOf().importField(),
-                                                  size: 20,
+                                                  size: 25,
                                                 ),
 
                                                 onPressed:(list[index].status != "finished")? ()=>ProcessFileProvider().showDialogToProcess(context, "reset"):null,
@@ -218,7 +215,7 @@ class InventoryList extends StatelessWidget {
                                                 child: Icon(
                                                   MyFlutterApp.delete,
                                                   color:ColorsOf().borderContainer(),
-                                                  size: 20,
+                                                  size: 25,
                                                 ),
 
                                                 onPressed: ()=>value.showDialogOfButtons(context,list[index],"Supprimer Inventaire","êtes-vous sûr de supprimer l'inventaire ?","Supprimer"),
@@ -242,7 +239,7 @@ class InventoryList extends StatelessWidget {
                                                 child: Icon(
                                                   MyFlutterApp.export_icon,
                                                   color:(list[index].status != "begin")?ColorsOf().borderContainer():ColorsOf().importField(),
-                                                  size: 20,
+                                                  size: 25,
                                                 ),
 
                                                 onPressed:(list[index].status != "begin")? (){print("export");}:null,
@@ -256,7 +253,7 @@ class InventoryList extends StatelessWidget {
                                       alignment: Alignment.center,
                                       height: 50,
                                       child: Container(
-                                        height: 30,
+                                        height: 40,
                                         width: 200,
                                         decoration: BoxDecoration(
                                             borderRadius: BorderRadius.all(Radius.circular(100)),
