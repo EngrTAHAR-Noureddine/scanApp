@@ -11,6 +11,7 @@ import 'package:scanapp/views/home.dart';
 import 'package:scanapp/views/import_new_file.dart';
 import 'package:scanapp/views/inventories_list.dart';
 import 'package:scanapp/views/list_of_items.dart';
+import 'package:scanapp/views/log_in.dart';
 import 'package:scanapp/views/onGoingList.dart';
 import 'package:scanapp/views/repport.dart';
 import 'package:scanapp/views/scanner.dart';
@@ -69,6 +70,7 @@ class HomeProvider extends ChangeNotifier{
 
 
   }
+
   FocusNode focusNode = new FocusNode();
 
   AppBar customAppBar(context){
@@ -285,7 +287,7 @@ class HomeProvider extends ChangeNotifier{
               color: colorBox(8),
               height: 50,
               child: ListTile(
-                onTap:  ()=>changeSelecter(8,context,"/logout"),
+                onTap:  ()=>showDialogLogOut(context),
                 leading: Icon(MyFlutterApp.logout,size: 20,color: colorText(8),),
                 title: Align(alignment: Alignment(-1.2, -0.1),
                     child: Text("Se déconnecter",style: TextStyle(color:colorText(8),fontSize: 14 ),)),
@@ -310,5 +312,95 @@ class HomeProvider extends ChangeNotifier{
      );
   }
 
+
+  Future<void> showDialogLogOut(BuildContext context) async {
+
+
+
+    String title = "Deconnecter";
+
+
+
+
+
+
+    return await showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return   Center(
+            child: SingleChildScrollView(
+
+              child: AlertDialog(
+                backgroundColor:ColorsOf().primaryBackGround(),
+                elevation: 1,
+                shape: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                content: Text("Voulez-vous vraiment "+title.toLowerCase()+" ?", style: TextStyle(color: ColorsOf().containerThings(),fontSize:14,),),
+                title: Text(title,style: TextStyle(color: ColorsOf().containerThings() ),),
+                actions: <Widget>[
+
+                  MaterialButton(
+                    splashColor: Colors.transparent,
+                    focusColor: Colors.transparent,
+                    hoverColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    highlightElevation: 0,
+                    elevation: 0,
+                    focusElevation: 0,
+                    hoverElevation: 0,
+
+                    color:ColorsOf().containerThings() ,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    padding: EdgeInsets.all(0),
+                    child: Text(title,style: TextStyle(color: ColorsOf().primaryBackGround()),),
+
+
+                    onPressed:(){
+                     // Navigator.of(context).popUntil((route) => route.isFirst);
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                      //Navigator.popUntil(context, (route) => false)
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>LogIn(),
+                        ),
+                      );
+
+                    }
+
+                  ),
+
+                   SizedBox(width: 50,),
+
+
+                  MaterialButton(
+                    splashColor: Colors.transparent,
+                    focusColor: Colors.transparent,
+                    hoverColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    highlightElevation: 0,
+                    elevation: 0,
+                    focusElevation: 0,
+                    hoverElevation: 0,
+                    child: Text('Cancel',style:TextStyle(color: ColorsOf().containerThings() )),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+
+        });
+
+
+  }
 
 }

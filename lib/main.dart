@@ -122,7 +122,7 @@ class MyApp extends StatelessWidget {
                                                 "/export": (context) => Export(),
                                                 "/report": (context) => Repport(),
                                                 "/settings": (context) => Settings(),
-                                                "/logout": (context) => ImportNewerFile(),
+                                                "/logout": (context) => LogIn(),
                                                 "/search": (context) => Search(),
                                                 "/onGoingList": (context) => OnGoingLists(),
 
