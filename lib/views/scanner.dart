@@ -21,6 +21,7 @@ class Scanner extends StatelessWidget {
 
     return Consumer<ScannerProvider>(
         builder: (context, value, child) {
+
          return Scaffold(
            key: scaffoldKey,
            resizeToAvoidBottomInset: false,
@@ -63,9 +64,7 @@ class Scanner extends StatelessWidget {
                        Text("Camera" ,style: TextStyle(color: ColorsOf().containerThings(),fontSize: 20),),
                      ],
                    ),
-                   onPressed: (){
-
-                   },
+                   onPressed: ()=> value.useCamera(),
                  ),
                )
              ],
@@ -80,197 +79,193 @@ class Scanner extends StatelessWidget {
                  borderRadius: BorderRadius.circular(100),
                  side:BorderSide(color: ColorsOf().containerThings(),width: 1,style:BorderStyle.solid)),
 
-             onPressed: () {},
+             onPressed: ()=>value.validation(),
            ),
 
 
-           body: Container(
-             height: MediaQuery.of(context).size.height,
-             width: MediaQuery.of(context).size.width,
-             alignment: Alignment.bottomCenter,
+           body: FutureBuilder(
+             future: value.searchTheScan(),
+             builder: (context, snapshot) {
+               bool? findIt;
+               if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+                 findIt = snapshot.data as bool;
+               }
 
-             child: Stack(
-               alignment: Alignment.topCenter,
-               children: [
+               return Container(
+                 height: MediaQuery.of(context).size.height,
+                 width: MediaQuery.of(context).size.width,
+                 alignment: Alignment.bottomCenter,
 
-                 Container(
-                   height: MediaQuery.of(context).size.height * 0.9 ,
-                   width: MediaQuery.of(context).size.width ,
-                   padding: EdgeInsets.only(top: 50),
+                 child: Stack(
+                   alignment: Alignment.topCenter,
+                   children: [
 
-
-                   child: Container(
+                     Container(
+                       height: MediaQuery.of(context).size.height * 0.9 ,
+                       width: MediaQuery.of(context).size.width ,
                        padding: EdgeInsets.only(top: 50),
-                       decoration: BoxDecoration(
-                         color: ColorsOf().primaryBackGround(),
-                         borderRadius: BorderRadius.only(topLeft: Radius.circular(25), topRight: Radius.circular(25)),
-                       ),
-                       child: Form(
-                         key: value.formKey,
-                         child: SingleChildScrollView(
-                           padding: EdgeInsets.all(10),
-                           child: Column(
-
-                             mainAxisAlignment: MainAxisAlignment.center,
-                             children: [
-                               Container(
-                                 height: 50,
-                                 width: MediaQuery.of(context).size.width,
-                                 alignment: Alignment.center,
-                                 margin: EdgeInsets.only(bottom: 10),
-                                /*
-                                * Trouver :
-                                * backgroung =>ColorsOf().finisheItem(),
-                                * foreground ==> ColorsOf().borderContainer()
-                                * non-Trouver :
-                                * background ==>ColorsOf().deleteItem(),
-                                * foreground ==>ColorsOf().backGround()
-                                * */
-                                   decoration: BoxDecoration(
-                                     color: ColorsOf().finisheItem(),
-                                     borderRadius: BorderRadius.all(Radius.circular(10)),
-                                   ),
-                                 child: Text("Trouver le code à barre", style: TextStyle(color: ColorsOf().borderContainer(),fontSize: 20,fontWeight: FontWeight.bold),)
-                               ),
-                               value.inputBarCode(),
-                               SizedBox(height: 10),
-                               Container(
-                                 width: MediaQuery.of(context).size.width,
-                                 decoration: BoxDecoration(
-                                   color: ColorsOf().containerThings(),
-                                   borderRadius: BorderRadius.all(Radius.circular(10)),
-                                 ),
-                                 child: Column(
-                                   children: [
-                                     ListTile(
-                                       shape: RoundedRectangleBorder(
-                                           borderRadius: BorderRadius.all(Radius.circular(10)),
-                                           side: BorderSide(color:Colors.transparent ,width: 0,style: BorderStyle.solid)
-                                       ),
-                                       title: RichText(
-                                           text: TextSpan(children: [
-
-                                             TextSpan(text:"ID Emplacement : ",
-                                               style: TextStyle(color : ColorsOf().primaryBackGround() ,fontSize: 14 ,fontWeight: FontWeight.bold),
-                                             ),
-                                             TextSpan(text:"100000",
-                                               style: TextStyle(color : ColorsOf().primaryBackGround() ,fontSize: 14 ,fontWeight: FontWeight.bold),
-                                             ),
-
-                                           ])
-                                       ),
-
-                                       tileColor:ColorsOf().primaryBackGround(),
-                                       onTap:null,
-                                     ),
-                                     ListTile(
-                                       shape: RoundedRectangleBorder(
-                                           borderRadius: BorderRadius.all(Radius.circular(10)),
-                                           side: BorderSide(color:Colors.transparent ,width: 0,style: BorderStyle.solid)
-                                       ),
-                                       title: RichText(
-                                           text: TextSpan(children: [
-
-                                             TextSpan(text:"Nom Emplacement : ",
-                                               style: TextStyle(color : ColorsOf().primaryBackGround() ,fontSize: 14 ,fontWeight: FontWeight.bold),
-                                             ),
-                                             TextSpan(text:"100000",
-                                               style: TextStyle(color : ColorsOf().primaryBackGround() ,fontSize: 14 ,fontWeight: FontWeight.bold),
-                                             ),
-
-                                           ])
-                                       ),
-
-                                       tileColor:ColorsOf().primaryBackGround(),
-                                       onTap:null,
-                                     ),
-                                   ],
-                                 ),
-                               ),
-                               SizedBox(height: 20),
-                               Container(
-                                 width: MediaQuery.of(context).size.width,
-                                 decoration: BoxDecoration(
-                                   color: ColorsOf().containerThings(),
-                                   borderRadius: BorderRadius.all(Radius.circular(10)),
-                                 ),
-                                 child: Column(
-                                   children: [
-                                     Container(
-
-                                       child: ListTile(
-                                         shape: RoundedRectangleBorder(
-                                             borderRadius: BorderRadius.all(Radius.circular(10)),
-                                             side: BorderSide(color:Colors.transparent ,width: 0,style: BorderStyle.solid)
-                                         ),
-
-                                         title: RichText(
-                                             text: TextSpan(children: [
-
-                                               TextSpan(text:"Code à Barre : ",
-                                                 style: TextStyle(color : ColorsOf().primaryBackGround() ,fontSize: 14 ,fontWeight: FontWeight.bold),
-                                               ),
-                                               TextSpan(text:"100000",
-                                                 style: TextStyle(color : ColorsOf().primaryBackGround() ,fontSize: 14 ,fontWeight: FontWeight.bold),
-                                               ),
-
-                                             ])
-                                         ),
-
-                                         tileColor:ColorsOf().primaryBackGround(),
-                                         onTap:null,
-                                       ),
-                                     ),
-                                     Container(
-                                       child: ListTile(
-                                         shape: RoundedRectangleBorder(
-                                             borderRadius: BorderRadius.all(Radius.circular(10)),
-                                             side: BorderSide(color:Colors.transparent ,width: 0,style: BorderStyle.solid)
-                                         ),
-                                         title: RichText(
-                                             text: TextSpan(children: [
-
-                                               TextSpan(text:"ID Produit : ",
-                                                 style: TextStyle(color : ColorsOf().primaryBackGround() ,fontSize: 14 ,fontWeight: FontWeight.bold),
-                                               ),
-                                               TextSpan(text:"100000",
-                                                 style: TextStyle(color : ColorsOf().primaryBackGround() ,fontSize: 14 ,fontWeight: FontWeight.bold),
-                                               ),
-
-                                             ])
-                                         ),
-
-                                         tileColor:ColorsOf().primaryBackGround(),
-                                         onTap:null,
-                                       ),
-                                     ),
-                                     Container(
-                                        alignment: Alignment.centerLeft,
-                                       padding: EdgeInsets.only(left: 20),
-                                       child:Text("Etat : ",
-                                         style: TextStyle(color : ColorsOf().primaryBackGround() ,fontSize: 14 ,fontWeight: FontWeight.bold),
-                                       ),
-
-                                     ),
-
-                                     value.inputState(),
-
-                                   ],
-                                 ),
-                               ),
 
 
-                             ],
+                       child: Container(
+                           padding: EdgeInsets.only(top: 50),
+                           decoration: BoxDecoration(
+                             color: ColorsOf().primaryBackGround(),
+                             borderRadius: BorderRadius.only(topLeft: Radius.circular(25), topRight: Radius.circular(25)),
                            ),
-                         ),
-                       )
+                           child: Form(
+                             key: value.formKey,
+                             child: SingleChildScrollView(
+                               padding: EdgeInsets.all(10),
+                               child: Column(
 
-                   ),
+                                 mainAxisAlignment: MainAxisAlignment.center,
+                                 children: [
+                                   value.dialogBox(context, findIt),
+                                   value.inputBarCode(context),
+                                   SizedBox(height: 10),
+                                   Container(
+                                     width: MediaQuery.of(context).size.width,
+                                     decoration: BoxDecoration(
+                                       color: ColorsOf().containerThings(),
+                                       borderRadius: BorderRadius.all(Radius.circular(10)),
+                                     ),
+                                     child: Column(
+                                       children: [
+                                         ListTile(
+                                           shape: RoundedRectangleBorder(
+                                               borderRadius: BorderRadius.all(Radius.circular(10)),
+                                               side: BorderSide(color:Colors.transparent ,width: 0,style: BorderStyle.solid)
+                                           ),
+                                           title: RichText(
+                                               text: TextSpan(children: [
 
+                                                 TextSpan(
+                                                   text:"ID Emplacement : ",
+                                                   style: TextStyle(color : ColorsOf().primaryBackGround() ,fontSize: 14 ,fontWeight: FontWeight.bold),
+                                                 ),
+                                                 TextSpan(
+                                                   text:(value.idEmplacement != null)? value.idEmplacement.toString() :"-----",
+                                                   style: TextStyle(color : ColorsOf().primaryBackGround() ,fontSize: 14 ,fontWeight: FontWeight.bold),
+                                                 ),
+
+                                               ])
+                                           ),
+
+                                           tileColor:ColorsOf().primaryBackGround(),
+                                           onTap:null,
+                                         ),
+                                         ListTile(
+                                           shape: RoundedRectangleBorder(
+                                               borderRadius: BorderRadius.all(Radius.circular(10)),
+                                               side: BorderSide(color:Colors.transparent ,width: 0,style: BorderStyle.solid)
+                                           ),
+                                           title: RichText(
+                                               text: TextSpan(children: [
+
+                                                 TextSpan(text:"Nom Emplacement : ",
+                                                   style: TextStyle(color : ColorsOf().primaryBackGround() ,fontSize: 14 ,fontWeight: FontWeight.bold),
+                                                 ),
+                                                 TextSpan(
+                                                   text:value.nameEmplacement??"-----",
+                                                   style: TextStyle(color : ColorsOf().primaryBackGround() ,fontSize: 14 ,fontWeight: FontWeight.bold),
+                                                 ),
+
+                                               ])
+                                           ),
+
+                                           tileColor:ColorsOf().primaryBackGround(),
+                                           onTap:null,
+                                         ),
+                                       ],
+                                     ),
+                                   ),
+                                   SizedBox(height: 20),
+                                   Container(
+                                     width: MediaQuery.of(context).size.width,
+                                     decoration: BoxDecoration(
+                                       color: ColorsOf().containerThings(),
+                                       borderRadius: BorderRadius.all(Radius.circular(10)),
+                                     ),
+                                     child: Column(
+                                       children: [
+                                         Container(
+
+                                           child: ListTile(
+                                             shape: RoundedRectangleBorder(
+                                                 borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                 side: BorderSide(color:Colors.transparent ,width: 0,style: BorderStyle.solid)
+                                             ),
+
+                                             title: RichText(
+                                                 text: TextSpan(children: [
+
+                                                   TextSpan(text:"Code à Barre : ",
+                                                     style: TextStyle(color : ColorsOf().primaryBackGround() ,fontSize: 14 ,fontWeight: FontWeight.bold),
+                                                   ),
+                                                   TextSpan(text:value.barCode??"-----",
+                                                     style: TextStyle(color : ColorsOf().primaryBackGround() ,fontSize: 14 ,fontWeight: FontWeight.bold),
+                                                   ),
+
+                                                 ])
+                                             ),
+
+                                             tileColor:ColorsOf().primaryBackGround(),
+                                             onTap:null,
+                                           ),
+                                         ),
+                                         Container(
+                                           child: ListTile(
+                                             shape: RoundedRectangleBorder(
+                                                 borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                 side: BorderSide(color:Colors.transparent ,width: 0,style: BorderStyle.solid)
+                                             ),
+                                             title: RichText(
+                                                 text: TextSpan(children: [
+
+                                                   TextSpan(text:"ID Produit : ",
+                                                     style: TextStyle(color : ColorsOf().primaryBackGround() ,fontSize: 14 ,fontWeight: FontWeight.bold),
+                                                   ),
+                                                   TextSpan(
+                                                     text:(value.idProduct!=null)?value.idProduct.toString():"-----",
+                                                     style: TextStyle(color : ColorsOf().primaryBackGround() ,fontSize: 14 ,fontWeight: FontWeight.bold),
+                                                   ),
+
+                                                 ])
+                                             ),
+
+                                             tileColor:ColorsOf().primaryBackGround(),
+                                             onTap:null,
+                                           ),
+                                         ),
+                                         Container(
+                                            alignment: Alignment.centerLeft,
+                                           padding: EdgeInsets.only(left: 20),
+                                           child:Text("Etat : ",
+                                             style: TextStyle(color : ColorsOf().primaryBackGround() ,fontSize: 14 ,fontWeight: FontWeight.bold),
+                                           ),
+
+                                         ),
+
+                                         value.inputState(context,findIt),
+
+                                       ],
+                                     ),
+                                   ),
+
+
+                                 ],
+                               ),
+                             ),
+                           )
+
+                       ),
+
+                     ),
+                     value.logoWidget(),
+                   ],
                  ),
-                 value.logoWidget(),
-               ],
-             ),
+               );
+             }
            ),
          );
 
