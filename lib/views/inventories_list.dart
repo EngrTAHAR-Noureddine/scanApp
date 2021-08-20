@@ -53,10 +53,10 @@ class InventoryList extends StatelessWidget {
                                 actionPane: SlidableScrollActionPane(),
                                 actionExtentRatio: 0.3,
 
-                                actions: [
+                                actions:(list[index].status != "finished")? [
                                   /*left*/
-                                  (list[index].status != "finished")?  value.finishButon(context,list[index]):Container(),
-                                ],
+                                    value.finishButon(context,list[index]),
+                                ] : [],
 
 
 
