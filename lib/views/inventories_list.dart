@@ -33,7 +33,7 @@ class InventoryList extends StatelessWidget {
 
                   if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
                     List<Inventory> list = snapshot.data as List<Inventory>;
-
+                    value.moveFirst(list);
                   //if(list.isNotEmpty) {
                     return RefreshIndicator(
                       onRefresh: ()async{
@@ -55,7 +55,7 @@ class InventoryList extends StatelessWidget {
 
                                 actions: [
                                   /*left*/
-                                 value.finishButon(context,list[index]),
+                                  (list[index].status != "finished")?  value.finishButon(context,list[index]):Container(),
                                 ],
 
 
@@ -230,7 +230,7 @@ class InventoryList extends StatelessWidget {
                                         width: 200,
                                         decoration: BoxDecoration(
                                             borderRadius: BorderRadius.all(Radius.circular(100)),
-                                            color: ColorsOf().primaryBackGround()
+                                            color:(list[index].status != "finished")? ColorsOf().primaryBackGround():ColorsOf().importField()
                                         ),
                                         child: MaterialButton(
                                           splashColor: Colors.transparent,
@@ -243,7 +243,7 @@ class InventoryList extends StatelessWidget {
                                           hoverElevation: 0,
                                           child: Text("Parcours" , style: TextStyle(fontSize: 20, color:ColorsOf().containerThings()),),
 
-                                          onPressed: (){print("parcours");},
+                                          onPressed:(list[index].status != "finished")? (){print("parcours");} : null,
                                         ),
                                       ),
                                     )

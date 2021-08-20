@@ -44,6 +44,26 @@ class InventoryListProvider extends ChangeNotifier{
     notifyListeners();
   }
 
+
+  void moveFirst(List<Inventory> list){
+
+    if(incompleteInventory!=null){
+      for(int i = list.length-1; i>=0 ;i--){
+        for(int j =i-1 ; j>=0;j-- ){
+
+          if(list[i].id == incompleteInventory!.id){
+            dynamic c = list[i];
+            list[i] =list[j];
+            list[j] = c;
+          }
+
+        }
+      }
+    }
+
+  }
+
+
   showDialogOfButtons(context ,Inventory inv,String title, String content,String buttonName)async{
     return await showDialog(
         barrierDismissible: false,
