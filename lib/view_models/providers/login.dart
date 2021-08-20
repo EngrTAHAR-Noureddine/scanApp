@@ -86,7 +86,7 @@ class LogInProvider extends ChangeNotifier{
             ),
           ),
           hintText: "Enter password",
-          hintStyle: TextStyle(color: ColorsOf().importField()),
+          hintStyle: TextStyle(color: ColorsOf().hintText()),
 
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
@@ -194,12 +194,7 @@ class LogInProvider extends ChangeNotifier{
 }
 
 
-  Future<User?> checkLogIn()async{
 
-    User? user = await DBProvider.db.getUser(1);
-    MainProvider().saveUser(user);
-    return user;
-  }
 
 }
 

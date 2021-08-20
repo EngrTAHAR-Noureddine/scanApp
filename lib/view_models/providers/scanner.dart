@@ -84,8 +84,8 @@ class ScannerProvider extends ChangeNotifier{
               style: BorderStyle.solid,
             ),
           ),
-          hintText: "Enter password",
-          hintStyle: TextStyle(color: ColorsOf().importField()),
+          hintText: "code à barre...",
+          hintStyle: TextStyle(color: ColorsOf().hintText()),
 
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
@@ -176,7 +176,7 @@ class ScannerProvider extends ChangeNotifier{
               style: BorderStyle.solid,
             ),
           ),
-          hintText: "Enter password",
+          hintText: "bon/pas bon....",
           hintStyle: TextStyle(color: ColorsOf().importField()),
 
           enabledBorder: OutlineInputBorder(

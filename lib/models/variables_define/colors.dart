@@ -48,6 +48,9 @@ class ColorsOf{
   Color importField(){
     return (darkMode!)?Color(0xFFAEAEB2):Color(0xFF545456);
   }
+  Color hintText(){
+    return (darkMode!)?Colors.black38:Color(0xFF545456);
+  }
   // FF9500 ==> 242426
  Color containerThings(){
     return (darkMode!)?Color(0xFF242426):Color(0xFFFF9500);

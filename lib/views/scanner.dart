@@ -23,7 +23,6 @@ class Scanner extends StatelessWidget {
         builder: (context, value, child) {
          return Scaffold(
            key: scaffoldKey,
-
            resizeToAvoidBottomInset: false,
            backgroundColor: ColorsOf().backGround(),
            appBar: AppBar(
