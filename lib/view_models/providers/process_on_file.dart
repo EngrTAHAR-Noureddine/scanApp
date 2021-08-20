@@ -684,7 +684,7 @@ class ProcessFileProvider extends ChangeNotifier{
 
     //bool loading = false;
     List<String?> listing = ["Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty"];
-    int totalStockSys =0;
+    int totalProductLots =0;
 
 
     await DBProvider.db.clearAllTables()
@@ -713,11 +713,11 @@ class ProcessFileProvider extends ChangeNotifier{
                 /* stock system  */
                 if((await DBProvider.db.getAllStockSystems()).isNotEmpty){
                   listing[4] = "Done";
-                  totalStockSys = (await DBProvider.db.getAllStockSystems()).length;
+                  
                   await DBProvider.db.saveStocksOfEmplacement();
 
 
-                }else{listing[4] = "Empty"; totalStockSys = 0;}
+                }else{listing[4] = "Empty"; totalProductLots = 0;}
 
                 /*Emplacement */
                 if((await DBProvider.db.getAllEmplacements()).isNotEmpty){listing[3] = "Done";} else listing[3] = "Empty";
@@ -730,6 +730,8 @@ class ProcessFileProvider extends ChangeNotifier{
                 /* product lot  */
                 if((await DBProvider.db.getAllProductLots()).isNotEmpty){
                   listing[6] = "Done";
+                  totalProductLots = (await DBProvider.db.getAllProductLots()).length;
+                  
                   await  DBProvider.db.newInventory(new Inventory(
                       closeDate: DateTime(2000, 1, 1).toIso8601String(),
                       openingDate: DateTime.now().toIso8601String(),
@@ -750,10 +752,10 @@ class ProcessFileProvider extends ChangeNotifier{
         .catchError((err)=>throw err);
 
     print(listing[6]);
-    print(totalStockSys);
+    print(totalProductLots);
 await DBProvider.db.updateUser( User(
   id: 1,
-  allStocks: totalStockSys,
+  allProductLots: totalProductLots,
   sitesTable: listing[0],
   companyTable: listing[1],
   stockEnterpriseTable: listing[2],
@@ -822,7 +824,7 @@ await DBProvider.db.updateUser( User(
     print(listing[6]);
     await DBProvider.db.updateUser(User(
       id: 1,
-      allStocks: totalStockSys,
+      allProductLots: totalStockSys,
       sitesTable: listing[0],
       companyTable: listing[1],
       stockEnterpriseTable: listing[2],
