@@ -232,16 +232,21 @@ class HomeProvider extends ChangeNotifier{
               color: colorBox(3),
               height: 50,
               child : ListTile(
-                onTap:()=>ProcessFileProvider().showDialogToProcess(context, "import"), //(){ /*Navigator.pushNamed(context, "/news"); */},
+                onTap:(){
+                  Navigator.pop(context);
+                  ProcessFileProvider().showDialogToProcess(context, "import");
+                  }, //(){ /*Navigator.pushNamed(context, "/news"); */},
                 leading: Icon(MyFlutterApp.import_second,size: 20,color: colorText(3),),
                 title: Align(alignment: Alignment(-1.2, -0.1),
                     child: Text("Importer fichier", style: TextStyle(color: colorText(3),fontSize: 14 ),)),
-              ),),
+              ),
+            ),
             (MainProvider().user!.productLotsTable != "Empty")?Container(
               color: colorBox(4),
               height: 50,
               child: ListTile(
-                onTap:()=>ProcessFileProvider().showDialogToProcess(context, "update"),// (){ /*Navigator.pushNamed(context, "/news"); */},
+              onTap:(){
+              Navigator.pop(context);ProcessFileProvider().showDialogToProcess(context, "update");},// (){ /*Navigator.pushNamed(context, "/news"); */},
                 leading: Icon(MyFlutterApp.update,size: 20,color: colorText(4),),
                 title: Align(alignment: Alignment(-1.2, -0.1),
                     child: Text("Mettre à jour fichier", style: TextStyle(color: colorText(4),fontSize: 14 ),)),
@@ -287,7 +292,8 @@ class HomeProvider extends ChangeNotifier{
               color: colorBox(8),
               height: 50,
               child: ListTile(
-                onTap:  ()=>showDialogLogOut(context),
+                onTap:(){
+                Navigator.pop(context);showDialogLogOut(context);},
                 leading: Icon(MyFlutterApp.logout,size: 20,color: colorText(8),),
                 title: Align(alignment: Alignment(-1.2, -0.1),
                     child: Text("Se déconnecter",style: TextStyle(color:colorText(8),fontSize: 14 ),)),
@@ -315,14 +321,7 @@ class HomeProvider extends ChangeNotifier{
 
   Future<void> showDialogLogOut(BuildContext context) async {
 
-
-
     String title = "Deconnecter";
-
-
-
-
-
 
     return await showDialog(
         barrierDismissible: false,
@@ -360,8 +359,7 @@ class HomeProvider extends ChangeNotifier{
 
 
                     onPressed:(){
-                     // Navigator.of(context).popUntil((route) => route.isFirst);
-                      Navigator.pop(context);
+
                       Navigator.pop(context);
                       Navigator.pop(context);
                       //Navigator.popUntil(context, (route) => false)
