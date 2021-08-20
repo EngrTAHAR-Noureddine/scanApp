@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:scanapp/data/database.dart';
 import 'package:scanapp/models/database_models/emplacements.dart';
@@ -31,12 +32,16 @@ class ScannerProvider extends ChangeNotifier{
   String? quality;
   InventoryLine? newLine;
   Inventory? incompleteInventory;
-  bool isStateFocus = false;
+  bool showKeyBoard = false;
 
-
-
+/*
+  keyBoardToggle(bool show){
+    (show)? SystemChannels.textInput.invokeMethod('TextInput.show'):SystemChannels.textInput.invokeMethod('TextInput.hide');
+  }
+*/
 /* Provider Functions  */
   void clearVars(){
+    showKeyBoard = false;
     barCode = null;
     didFinished = false;
     idEmplacement = null;
@@ -44,6 +49,7 @@ class ScannerProvider extends ChangeNotifier{
     nameEmplacement= null;
     quality= null;
     newLine= null;
+    _switch = false;
     incompleteInventory = null;
   }
 
@@ -52,13 +58,13 @@ class ScannerProvider extends ChangeNotifier{
     try {
       getFromCamera = await FlutterBarcodeScanner.scanBarcode("#ff6666", "Annuler", true, ScanMode.DEFAULT);
     } catch (e) { print(e); }
-    barCode = ((getFromCamera == null) && (getFromCamera == "-1")) ?null: getFromCamera;
+    barCode = ((getFromCamera == null) || (getFromCamera == "-1")) ?null: getFromCamera;
     notifyListeners();
   }
 
   Future<bool?> searchTheScan()async{
-    print(DateTime(2000,1,1).toIso8601String());
-    (incompleteInventory!=null)? print(incompleteInventory!.id): print("is null");
+   if(!showKeyBoard) SystemChannels.textInput.invokeMethod('TextInput.hide');
+
     bool? findIt;
     ProductLot? productLot;
     Emplacement? emplacement;
@@ -122,6 +128,8 @@ class ScannerProvider extends ChangeNotifier{
   }
 
   Future<void> validation()async{
+    //keyBoardToggle(false);
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
     if(newLine != null){
       newLine!.quality = quality ?? "Bon";
       if(newLine !=null){
@@ -181,7 +189,9 @@ class ScannerProvider extends ChangeNotifier{
       alignment: Alignment.center,
       padding: EdgeInsets.only(left: 10, right: 10, ),
       child: TextFormField(
-
+        onTap: (){
+          showKeyBoard = true;
+        },
         onEditingComplete: (){
           barCode = barCodeController.text;
           barCodeController.clear();
@@ -208,7 +218,7 @@ class ScannerProvider extends ChangeNotifier{
         showCursor: true,
         obscureText: false,
         controller: barCodeController,
-        autofocus: !isStateFocus,
+        autofocus: true,
         minLines: 1,
         keyboardType: TextInputType.text,
         decoration: InputDecoration(
