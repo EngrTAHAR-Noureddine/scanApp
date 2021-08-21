@@ -26,7 +26,7 @@ class StocksCounter {
   );
 
   Map<String, dynamic> toMap() => {
-    "COUNT(id)": number,
+    "number": number,
     "emplacementId": emplacementID,
 
   };
