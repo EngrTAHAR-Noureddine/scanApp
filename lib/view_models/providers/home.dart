@@ -56,7 +56,8 @@ class HomeProvider extends ChangeNotifier{
   void setSelector(num,[params]){
      print("parameter in set selector : "+params.toString());
     numOfSelecter = num;
-    param = params;
+    print("parameter : "+params.toString());
+    this.param = params;
     notifyListeners();
   }
 
@@ -69,7 +70,7 @@ class HomeProvider extends ChangeNotifier{
   }
 
   Widget changeSelecterActivity(){
-
+      print("in change selector "+param.toString());
     // put numselected
     List<dynamic> listWidgets = [
       InventoryList(),ListItems(), //1
@@ -77,7 +78,7 @@ class HomeProvider extends ChangeNotifier{
       ImportNewerFile(),Repport(), //5
       Export(), Settings(), //7
       ImportNewerFile(),Search(), //9
-      OnGoingListInventory(id: param),ItemInfo(idProduct:(param!=null)?param:0), //11
+      OnGoingListInventory(),ItemInfo(idProduct:(param!=null)?param:0), //11
 
     ];
     return listWidgets[numOfSelecter];

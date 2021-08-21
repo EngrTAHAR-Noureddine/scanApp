@@ -7,12 +7,12 @@ class OnGoingListProvider extends ChangeNotifier{
   static OnGoingListProvider? _instance;
   OnGoingListProvider._();
   factory OnGoingListProvider() => _instance ??=OnGoingListProvider._();
-
+    int? id;
   setState(){
     notifyListeners();
   }
 
-  Future<List<InventoryLine>> getAllLines(int? id)async{
+  Future<List<InventoryLine>> getAllLines()async{
     
     List<InventoryLine>? listLines = await DBProvider.db.getAllInventoryLines(id);
     

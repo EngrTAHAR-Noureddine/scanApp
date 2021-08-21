@@ -6,9 +6,8 @@ import 'package:scanapp/view_models/providers/home.dart';
 import 'package:scanapp/view_models/providers/onGoing_list.dart';
 
 class OnGoingListInventory extends StatelessWidget {
-    int? id;
-    OnGoingListInventory({id});
-    
+
+
   @override
   Widget build(BuildContext context) {
     return  Consumer<OnGoingListProvider>(
@@ -28,10 +27,14 @@ class OnGoingListInventory extends StatelessWidget {
 
                 },
                 child: FutureBuilder(
-                    future: value.getAllLines(id),
+                    future: value.getAllLines(),
                     builder: (context, snapshot) {
+
+
                       if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
                         List<InventoryLine> list = snapshot.data as List<InventoryLine>;
+
+
                         if(list.isNotEmpty){
                           return Container(
                             height: MediaQuery.of(context).size.height,
