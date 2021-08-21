@@ -36,6 +36,8 @@ dependencies:
   permission_handler: ^8.1.4+2
   spreadsheet_decoder: ^2.0.0
   flutter_barcode_scanner: ^2.0.0
+  syncfusion_flutter_xlsio: ^19.2.56-beta
+  open_file: ^3.2.1
 
 dev_dependencies:
   flutter_test:
