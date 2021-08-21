@@ -125,7 +125,7 @@ class MyApp extends StatelessWidget {
                                                 "/settings": (context) => Settings(),
                                                 "/logout": (context) => LogIn(),
                                                 "/search": (context) => Search(),
-                                                "/onGoingList": (context) => OnGoingLists(),
+                                                "/onGoingList": (context) => OnGoingListInventory(),
 
                                               },
                                                          );

@@ -601,7 +601,7 @@ class DBProvider {
   }
   Future<List<InventoryLine>> getAllInventoryLines(int? idInv) async {
     final db = await database;
-    var res = await db.query("InventoryLine", where: "inventoryId = ?", whereArgs: [idInv]);
+    var res = (idInv !=null) ? (await db.query("InventoryLine", where: "inventoryId = ?", whereArgs: [idInv]) ) : (await db.rawQuery("SELECT * FROM InventoryLine WHERE inventoryId IS null"));
     List<InventoryLine> list =
     res.isNotEmpty ? res.map((c) => InventoryLine.fromMap(c)).toList() : [];
     return list;

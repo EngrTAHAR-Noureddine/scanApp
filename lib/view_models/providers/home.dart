@@ -72,12 +72,13 @@ class HomeProvider extends ChangeNotifier{
 
     // put numselected
     List<dynamic> listWidgets = [
-      InventoryList(),ListItems(), //2
-      Scanner(),ImportNewerFile(), //4
-      ImportNewerFile(),Repport(), //6
-      Export(), Settings(), //8
-      ImportNewerFile(),Search(), //10
-      OnGoingLists(),ItemInfo(idProduct:(param!=null)?param:0) //11
+      InventoryList(),ListItems(), //1
+      Scanner(),ImportNewerFile(), //3
+      ImportNewerFile(),Repport(), //5
+      Export(), Settings(), //7
+      ImportNewerFile(),Search(), //9
+      OnGoingListInventory(id: param),ItemInfo(idProduct:(param!=null)?param:0), //11
+
     ];
     return listWidgets[numOfSelecter];
 
