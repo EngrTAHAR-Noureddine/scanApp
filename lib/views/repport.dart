@@ -100,7 +100,7 @@ class Repport extends StatelessWidget {
                               flex: 1,
                               child: Container(
                                 padding: EdgeInsets.only(top: 0, left: 10, right: 10, bottom: 10),
-                                child: ListView.builder(
+                                child: (list.isNotEmpty)? ListView.builder(
                                     scrollDirection: Axis.vertical,
                                     itemCount: list.length,
                                     padding: EdgeInsets.all(5),
@@ -169,7 +169,11 @@ class Repport extends StatelessWidget {
                                             onTap:null,
                                           )
                                       );
-                                    }),
+                                    }) : Container(
+                                  color:ColorsOf().backGround(),
+                                  alignment: Alignment.center,
+                                  child: Text("Vide" , style: TextStyle(color: ColorsOf().primaryBackGround(),fontSize: 20),),
+                                ),
                               ),
                             ),
                           ],

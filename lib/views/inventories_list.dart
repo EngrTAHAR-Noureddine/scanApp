@@ -6,6 +6,7 @@ import 'package:scanapp/models/database_models/inventories.dart';
 import 'package:scanapp/models/variables_define/colors.dart';
 import 'package:scanapp/models/custom_expansion_tile.dart' as custom;
 import 'package:scanapp/models/variables_define/my_flutter_app_icons.dart';
+import 'package:scanapp/view_models/providers/home.dart';
 import 'package:scanapp/view_models/providers/process_on_file.dart';
 import 'package:scanapp/view_models/providers/inventories_list.dart';
 import 'package:scanapp/views/import_new_file.dart';
@@ -77,7 +78,7 @@ class InventoryList extends StatelessWidget {
                                   title:  RichText(
                                       text: TextSpan(children: [
 
-                                        TextSpan(text:"Inventory : ",
+                                        TextSpan(text:"Inventaire : ",
                                           style: TextStyle(color : ColorsOf().profilField() ,fontSize: 18 ,fontWeight: FontWeight.bold),
                                         ),
                                         TextSpan(text:list[index].id.toString(),
@@ -270,7 +271,7 @@ class InventoryList extends StatelessWidget {
                                           hoverElevation: 0,
                                           child: Text("Parcours" , style: TextStyle(fontSize: 20, color:ColorsOf().containerThings()),),
 
-                                          onPressed:(list[index].status != "finished")? (){print("parcours");} : null,
+                                          onPressed:(list[index].status == "ongoing")? ()=>HomeProvider().setSelector(10,list[index].id) : null,
                                         ),
                                       ),
                                     )

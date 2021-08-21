@@ -69,7 +69,7 @@ class ListItems extends StatelessWidget {
                                                   TextSpan(text:"Total : ",
                                                     style: TextStyle(color : ColorsOf().borderContainer() ,fontSize: 14 ,fontWeight: FontWeight.bold),
                                                   ),
-                                                  TextSpan(text:value.total.toString(),
+                                                  TextSpan(text:(value.total!=null)?value.total.toString():"0",
                                                     style: TextStyle(color : ColorsOf().primaryForGround() ,fontSize: 14 ,fontWeight: FontWeight.bold),
                                                   ),
 
@@ -89,7 +89,7 @@ class ListItems extends StatelessWidget {
                                                   TextSpan(text:"Scan : ",
                                                     style: TextStyle(color : ColorsOf().borderContainer() ,fontSize: 14 ,fontWeight: FontWeight.bold),
                                                   ),
-                                                  TextSpan(text:value.scan.toString(),
+                                                  TextSpan(text:(value.scan!=null)?value.scan.toString():"0",
                                                     style: TextStyle(color : ColorsOf().primaryForGround() ,fontSize: 14 ,fontWeight: FontWeight.bold),
                                                   ),
 
@@ -107,7 +107,7 @@ class ListItems extends StatelessWidget {
                             flex: 1,
                             child: Container(
                               padding: EdgeInsets.only(top: 0, left: 10, right: 10, bottom: 10),
-                              child: ListView.builder(
+                              child: (list.isNotEmpty)?ListView.builder(
                                   scrollDirection: Axis.vertical,
                                   itemCount: list.length,
                                   padding: EdgeInsets.all(5),
@@ -192,7 +192,11 @@ class ListItems extends StatelessWidget {
                                           onTap:null,
                                         )
                                     );
-                                  }),
+                                  }):Container(
+                                color:ColorsOf().backGround(),
+                                alignment: Alignment.center,
+                                child: Text("Vide" , style: TextStyle(color: ColorsOf().primaryBackGround(),fontSize: 20),),
+                              ),
                             ),
                           ),
                         ],
@@ -204,12 +208,15 @@ class ListItems extends StatelessWidget {
                     return Container(
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height,
+                        child: Text("Rechercher..." , style: TextStyle(color: ColorsOf().primaryBackGround(),fontSize: 20),),
+
                         color: ColorsOf().backGround());
                   }else{
                     return Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height,
-                        color: ColorsOf().backGround());
+                      color:ColorsOf().backGround(),
+                      alignment: Alignment.center,
+                      child: Text("Vide" , style: TextStyle(color: ColorsOf().primaryBackGround(),fontSize: 20),),
+                    );
                   }
 
 

@@ -1,81 +1,160 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:scanapp/models/database_models/inventory_lines.dart';
 import 'package:scanapp/models/variables_define/colors.dart';
+import 'package:scanapp/view_models/providers/home.dart';
 import 'package:scanapp/view_models/providers/onGoing_list.dart';
 
-class OnGoingLists extends StatelessWidget {
-
-
+class OnGoingListInventory extends StatelessWidget {
+    int? id;
+    OnGoingListInventory({id});
+    
   @override
   Widget build(BuildContext context) {
     return  Consumer<OnGoingListProvider>(
         builder: (context, value, child) {
 
-          return Scaffold(
-            backgroundColor: ColorsOf().backGround(),
-            body: Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
+          return WillPopScope(
+              onWillPop: () async{
+                HomeProvider().setSelector(0);
+                return false;
+              },
 
-              child: Column(
-               children:[
-                 Container(
-                   height: 50,
-                   color: ColorsOf().backGround(),
-                   child:Container(
-                     alignment: Alignment.topLeft,
-                     padding: EdgeInsets.only(top:5,bottom: 5),
-                     child: Row(
-                       children: [
-                         Expanded(
-                           flex: 1,
-                           child: Padding(
-                             padding:EdgeInsets.only(left: 5,right: 5),
-                             child: Text("Company>Service>Bureau>Emplacement" , style: TextStyle(color : ColorsOf().importField() ,fontSize: 10 ,fontWeight: FontWeight.normal , fontStyle:FontStyle.italic),),
-                           ),
-                         ),
+            child: Scaffold(
+              backgroundColor: ColorsOf().backGround(),
+              body: RefreshIndicator(
+                onRefresh: ()async{
+                  value.setState();
 
-                       ],
-                     ),
-                   ),
-                 ),
-                 Expanded(
-                      child: Container(
-                        padding: EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 10),
-                      child: ListView.builder(
+                },
+                child: FutureBuilder(
+                    future: value.getAllLines(id),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+                        List<InventoryLine> list = snapshot.data as List<InventoryLine>;
+                        if(list.isNotEmpty){
+                          return Container(
+                            height: MediaQuery.of(context).size.height,
+                            width: MediaQuery.of(context).size.width,
 
-                          scrollDirection: Axis.vertical,
-                          itemCount: 10,
-                          padding: EdgeInsets.all(5),
-                          itemBuilder: (BuildContext context, int index){
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                              child: ListView.builder(
+                                  scrollDirection: Axis.vertical,
+                                  itemCount: list.length,
+                                  padding: EdgeInsets.all(5),
+                                  itemBuilder: (BuildContext context, int index){
 
-                            return Container(
-                              margin: EdgeInsets.all(5),
-                              child:ListTile(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                                  side: BorderSide(color:ColorsOf().primaryBackGround() ,width: 1,style: BorderStyle.solid)
-                                ),
-                                title:  RichText(
-                                    text: TextSpan(children: [
+                                    return Container(
+                                        margin: EdgeInsets.all(5),
+                                        child:ListTile(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                                              side: BorderSide(color:ColorsOf().primaryBackGround() ,width: 1,style: BorderStyle.solid)
+                                          ),
+                                          leading: Icon(Icons.inventory, color: ColorsOf().containerThings(),),
+                                          trailing:Container(
+                                            width: 30,
+                                            height: 30,
+                                            alignment: Alignment.center,
+                                            child:MaterialButton(
+                                              padding: EdgeInsets.zero,
+                                              height: 30,
+                                              minWidth: 30,
+                                              shape: CircleBorder(
+                                                  side: BorderSide(color:ColorsOf().primaryBackGround() ,width: 1,style: BorderStyle.solid)
+                                              ),
+                                              child: Icon(Icons.info, color: ColorsOf().onGoingItem(), size: 30,),
 
-                                      TextSpan(text:"Name : ",
-                                        style: TextStyle(color : ColorsOf().profilField() ,fontSize: 16 ,fontWeight: FontWeight.bold),
-                                      ),
-                                      TextSpan(text:"100",
-                                        style: TextStyle(color : ColorsOf().backGround() ,fontSize: 16 ,fontWeight: FontWeight.bold),
-                                      ),
+                                              onPressed: ()=>HomeProvider().setSelector(11,list[index].productId),
 
-                                    ])
-                                ),
-                                tileColor:ColorsOf().primaryBackGround(),
-                                onTap: (){},
-                              )
-                            );
-                          }),
-                    ),
-              ),
-          ]
+                                            ),),
+                                          title: RichText(
+                                              text: TextSpan(children: [
+
+                                                TextSpan(text:"ID : ",
+                                                  style: TextStyle(color : ColorsOf().profilField() ,fontSize: 14 ,fontWeight: FontWeight.bold),
+                                                ),
+                                                TextSpan(text:(list[index].id!=null)?list[index].id.toString():"-----",
+                                                  style: TextStyle(color : ColorsOf().backGround() ,fontSize: 14 ,fontWeight: FontWeight.bold),
+                                                ),
+
+                                              ])
+                                          ),
+                                          subtitle:Container(
+                                            alignment: Alignment.centerLeft,
+                                            margin: EdgeInsets.only(top: 10),
+                                            child:Column(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  alignment: Alignment.topLeft,
+                                                  child: RichText(
+                                                      text: TextSpan(children: [
+
+                                                        TextSpan(text:"Id Inventaire : ",
+                                                          style: TextStyle(color : ColorsOf().profilField() ,fontSize: 12 ,fontWeight: FontWeight.bold),
+                                                        ),
+                                                        TextSpan(text:(list[index].inventoryId!=null)?list[index].inventoryId.toString():"-----",
+                                                          style: TextStyle(color : ColorsOf().backGround() ,fontSize: 12 ,fontWeight: FontWeight.normal),
+                                                        ),
+
+                                                      ])
+                                                  ),
+                                                ),
+                                                SizedBox(height: 10,),
+                                                Container(
+                                                  alignment: Alignment.topLeft,
+                                                  child: RichText(
+                                                      text: TextSpan(children: [
+
+                                                        TextSpan(text:"ID d'Emplacement : ",
+                                                          style: TextStyle(color : ColorsOf().profilField() ,fontSize: 12 ,fontWeight: FontWeight.bold),
+                                                        ),
+                                                        TextSpan(text:(list[index].emplacementId!=null)?list[index].emplacementId.toString():"-----",
+                                                          style: TextStyle(color : ColorsOf().backGround() ,fontSize: 12 ,fontWeight: FontWeight.normal),
+                                                        ),
+
+                                                      ])
+                                                  ),
+                                                ),
+                                              ],
+                                            ),),
+                                          tileColor:ColorsOf().primaryBackGround(),
+                                          onTap:null,
+                                        )
+                                    );
+                                  }),
+                            ),
+                          );
+                        }else{
+                              return Container(
+                              color:ColorsOf().backGround(),
+                              alignment: Alignment.center,
+                              child: Text("Vide" , style: TextStyle(color: ColorsOf().primaryBackGround(),fontSize: 20),),
+                              );
+                              }
+
+
+
+                      }else if(snapshot.connectionState == ConnectionState.waiting){
+                        return Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height,
+                            child: Text("Rechercher..." , style: TextStyle(color: ColorsOf().primaryBackGround(),fontSize: 20),),
+
+                            color: ColorsOf().backGround());
+                      }else{
+                        return Container(
+                          color:ColorsOf().backGround(),
+                          alignment: Alignment.center,
+                          child: Text("Vide" , style: TextStyle(color: ColorsOf().primaryBackGround(),fontSize: 20),),
+                        );
+                      }
+
+
+                    }
+                ),
               ),
             ),
           );
