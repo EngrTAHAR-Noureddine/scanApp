@@ -4,6 +4,7 @@ import 'package:scanapp/data/database.dart';
 import 'package:scanapp/models/database_models/user.dart';
 import 'package:scanapp/models/variables_define/colors.dart';
 import 'package:scanapp/models/variables_define/my_flutter_app_icons.dart';
+import 'package:scanapp/view_models/providers/home.dart';
 import 'package:scanapp/view_models/providers/main.dart';
 import 'package:scanapp/views/home.dart';
 
@@ -18,25 +19,55 @@ class LogInProvider extends ChangeNotifier{
    bool _switch = false;
 /* Provider Functions  */
 
-   inputPassword(){
+   inputPassword(context){
     return Container(
       color:ColorsOf().primaryBackGround(),
-      height:50,
+      height:70,
       alignment: Alignment.center,
       padding: EdgeInsets.only(left: 10, right: 10, ),
       child: TextFormField(
+        onFieldSubmitted: (val){
+          if(this.formKey.currentState !=null){
+            if (this.formKey.currentState!.validate()) {
 
-        // focusNode: currentFocus,
-       /* validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Please enter some text';
-          }else if(SettingsProvider().user.passWord == this.passwordController.text){
-            return null;
-          }else{
-            return 'Password is incorrect';
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (BuildContext context) => Home(),
+                  fullscreenDialog: true,
+                ),
+              );
+
+            }
           }
 
-        },*/
+        },
+        // focusNode: currentFocus,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter some text';
+          }else if(_switch){
+            print(_switch);
+            print(this.passwordController.text);
+          if(MainProvider().user!.adminPassword == this.passwordController.text){
+                    HomeProvider().isStateAdmin =true;
+                    return null;
+                    }else{
+                      return 'Password is incorrect';
+                    }
+          }else if(MainProvider().user!.userPasswordActually == this.passwordController.text){
+                HomeProvider().isStateAdmin =false;
+                      return null;
+                    }else{
+                    print(MainProvider().user!.adminPassword);
+                      return 'Password is incorrect';
+                    }
+          
+          
+          
+
+        },
         textAlign: TextAlign.left,
         style: TextStyle(fontSize: 16,color:ColorsOf().backGround() ),
         maxLines: 1,
@@ -130,16 +161,6 @@ class LogInProvider extends ChangeNotifier{
           _switch = value;
           notifyListeners();
 
-
-          /*if (!value) {
-            return await SettingsProvider().showDialogToHideGoals(context);
-          } else {
-            SettingsProvider().user.hideGoal = "yes";
-            await DBProvider.db.updateUser(SettingsProvider().user);
-
-            _switches[2] = value;
-            SettingsProvider().setState();
-          }*/
         },
 
       ),
@@ -162,17 +183,21 @@ class LogInProvider extends ChangeNotifier{
         height: 50,
         child: Text("Connecter" ,style: TextStyle(color: ColorsOf().primaryBackGround() ,fontSize: 20),),
         onPressed: (){
-        // if (this.formKey.currentState.validate()) {
-            Navigator.pop(context);
-            Navigator.push(
-              context,
-              MaterialPageRoute<void>(
-                builder: (BuildContext context) => Home(),
-                fullscreenDialog: true,
-              ),
-            );
+          if(this.formKey.currentState !=null){
+            if (this.formKey.currentState!.validate()) {
 
-         // }*/
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder: (BuildContext context) => Home(),
+                            fullscreenDialog: true,
+                          ),
+                        );
+
+                    }
+          }
+         
         },
       ),
     );

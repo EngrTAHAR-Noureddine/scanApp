@@ -25,7 +25,7 @@ class LogIn extends StatelessWidget {
       statusBarIconBrightness:Theme.of(context).primaryColorBrightness,
     )
     );
-    ColorsOf().mode(context);
+    ColorsOf().mode(context: context);
     var image = base64.decode(blob);
     return Consumer<LogInProvider>(
         builder: (context, value, child) {
@@ -93,7 +93,7 @@ class LogIn extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
 
-                                      LogInProvider().inputPassword(),
+                                      LogInProvider().inputPassword(context),
                                       SizedBox(height: 10),
                                       LogInProvider().asAdminField(),
                                       SizedBox(height: 10),
