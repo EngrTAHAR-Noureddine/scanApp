@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scanapp/view_models/providers/main.dart';
 
 class ColorsOf{
   static ColorsOf? _instance;
@@ -11,9 +12,10 @@ class ColorsOf{
 
   bool? darkMode; // false ==> light , true ==> dark
 
-  void mode(context){
-    var brightness = MediaQuery.of(context).platformBrightness;
-    darkMode = brightness == Brightness.dark;
+  void mode({context,isDark}){
+
+    var brightness = (isDark==null)? MediaQuery.of(context).platformBrightness : null;
+    darkMode = (MainProvider().user!=null)?(MainProvider().user!.isDark=="dark") : brightness == Brightness.dark;
 
   }
   // FF9500 ==> FF9F0A

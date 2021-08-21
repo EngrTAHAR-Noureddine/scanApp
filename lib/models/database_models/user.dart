@@ -22,7 +22,7 @@ class User {
 
   String? userPasswordReset;
   String? userPasswordActually;
-  String? stateUser;
+  String? isDark;
   String? sitesTable;
 
   String? companyTable;
@@ -45,7 +45,7 @@ class User {
     this.userPasswordReset,
 
     this.userPasswordActually,
-    this.stateUser,
+    this.isDark, //dark - light
     this.allProductLots,
     this.sitesTable,
 
@@ -70,7 +70,7 @@ class User {
       userPasswordReset: json["userPasswordReset"],
 
       userPasswordActually: json["userPasswordActually"],
-      stateUser: json["stateUser"],
+      isDark: json["isDark"],
       allProductLots: json["allProductLots"],
       sitesTable: json["sitesTable"],
 
@@ -96,7 +96,7 @@ class User {
     "userPasswordReset": userPasswordReset,
 
     "userPasswordActually": userPasswordActually,
-    "stateUser": stateUser,
+    "isDark": isDark,
     "allProductLots": allProductLots,
     "sitesTable": sitesTable,
 

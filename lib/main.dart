@@ -111,7 +111,7 @@ class MyApp extends StatelessWidget {
                                                 }, ),
 
                                               ),
-                                              themeMode: ThemeMode.system,
+                                              themeMode:ThemeMode.system, //MainProvider().themeMode,
                                               home: GetUserInfo(),//LogIn(),
                                               routes: {
                                                 "/home": (context) => Home(),

@@ -52,7 +52,7 @@ class DBProvider {
 
               "userPasswordReset TEXT,"
               "userPasswordActually TEXT,"
-              "stateUser TEXT,"
+              "isDark TEXT,"
               "sitesTable TEXT,"
 
               "companyTable TEXT,"
@@ -76,7 +76,7 @@ class DBProvider {
             "userPasswordReset":"123456",
 
             "userPasswordActually":"123456",
-            "stateUser":"Client",
+            "isDark":"light",
             "sitesTable":"Empty",
             "companyTable":"Empty",
 

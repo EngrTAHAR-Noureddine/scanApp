@@ -17,7 +17,7 @@ class Home extends StatelessWidget {
     );
 
 
-    ColorsOf().mode(context);
+    ColorsOf().mode(context: context);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness:Theme.of(context).primaryColorBrightness,

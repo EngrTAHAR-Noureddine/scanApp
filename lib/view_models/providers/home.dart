@@ -28,6 +28,7 @@ class HomeProvider extends ChangeNotifier{
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
   bool bigger = false;
+  bool isStateAdmin = false;
 
   dynamic param;
 
@@ -191,7 +192,7 @@ class HomeProvider extends ChangeNotifier{
           children: <Widget>[
             UserAccountsDrawerHeader(
               decoration: BoxDecoration(color: ColorsOf().containerThings()),
-              accountName: Text("Abass Makinde" , style: TextStyle(color: ColorsOf().primaryBackGround()),),
+              accountName: Text((isStateAdmin)?"Administrateur":"Ouvrier" , style: TextStyle(color: ColorsOf().primaryBackGround()),),
               accountEmail: Text("abs@gmail.com",style: TextStyle(color: ColorsOf().primaryBackGround()),),
               currentAccountPicture: GestureDetector(
                 child: CircleAvatar(
