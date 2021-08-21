@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:scanapp/models/database_models/product_lots.dart';
 import 'package:scanapp/models/variables_define/colors.dart';
+import 'package:scanapp/view_models/providers/home.dart';
 import 'package:scanapp/view_models/providers/list_of_items.dart';
 
 class ListItems extends StatelessWidget {
@@ -133,7 +134,7 @@ class ListItems extends StatelessWidget {
                                               ),
                                               child: Icon(Icons.info, color: ColorsOf().onGoingItem(), size: 30,),
 
-                                              onPressed: (){},
+                                              onPressed: ()=>HomeProvider().setSelector(11,list[index].productId),
 
                                             ),),
                                           title: RichText(

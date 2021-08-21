@@ -65,7 +65,8 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider<ScannerProvider>(
             create: (context) => ScannerProvider(), ),
           ChangeNotifierProvider<ProcessFileProvider>(
-            create: (context) => ProcessFileProvider(), ),
+            create: (context) => ProcessFileProvider(), ),//ItemInfoProvider
+
 
         ],
         child: Builder(

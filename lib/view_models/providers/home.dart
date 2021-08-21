@@ -10,6 +10,7 @@ import 'package:scanapp/views/exports_list.dart';
 import 'package:scanapp/views/home.dart';
 import 'package:scanapp/views/import_new_file.dart';
 import 'package:scanapp/views/inventories_list.dart';
+import 'package:scanapp/views/item_information.dart';
 import 'package:scanapp/views/list_of_items.dart';
 import 'package:scanapp/views/log_in.dart';
 import 'package:scanapp/views/onGoingList.dart';
@@ -27,6 +28,8 @@ class HomeProvider extends ChangeNotifier{
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
   bool bigger = false;
+
+  dynamic param;
 
   TextEditingController searchItem = new TextEditingController();
 
@@ -49,8 +52,10 @@ class HomeProvider extends ChangeNotifier{
     return (num == numOfSelecter)?ColorsOf().primaryBackGround():ColorsOf().containerThings();
   }
 
-  void setSelector(num){
+  void setSelector(num,[params]){
+     print("parameter in set selector : "+params.toString());
     numOfSelecter = num;
+    param = params;
     notifyListeners();
   }
 
@@ -63,9 +68,16 @@ class HomeProvider extends ChangeNotifier{
   }
 
   Widget changeSelecterActivity(){
+
     // put numselected
-    List<dynamic> listWidgets = [InventoryList(),ListItems(),Scanner(),ImportNewerFile(),ImportNewerFile(),Repport(),Export(),
-    Settings(),ImportNewerFile(),Search(),OnGoingLists()];
+    List<dynamic> listWidgets = [
+      InventoryList(),ListItems(), //2
+      Scanner(),ImportNewerFile(), //4
+      ImportNewerFile(),Repport(), //6
+      Export(), Settings(), //8
+      ImportNewerFile(),Search(), //10
+      OnGoingLists(),ItemInfo(idProduct:(param!=null)?param:0) //11
+    ];
     return listWidgets[numOfSelecter];
 
 
