@@ -94,8 +94,8 @@ class ScannerProvider extends ChangeNotifier{
      if(emplacement!=null){
        idEmplacement = emplacement.id;
        nameEmplacement = emplacement.nom;
-     }
-      if(productLot != null){
+       barCode = null;
+     }else if(productLot != null){
         findIt = true;
       //  print("findIt of future : "+findIt.toString());
         idProduct = productLot.productId;
@@ -128,6 +128,7 @@ class ScannerProvider extends ChangeNotifier{
   }
 
   Future<void> validation()async{
+    _switch = false;
     //keyBoardToggle(false);
     SystemChannels.textInput.invokeMethod('TextInput.hide');
     if(newLine != null){
@@ -189,6 +190,7 @@ class ScannerProvider extends ChangeNotifier{
       alignment: Alignment.center,
       padding: EdgeInsets.only(left: 10, right: 10, ),
       child: TextFormField(
+        enabled: !didFinished,
         onTap: (){
           showKeyBoard = true;
         },
