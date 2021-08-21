@@ -219,6 +219,22 @@ class DBProvider {
   }
 
   /* Delete */
+  Future<void> clearStockCounet()async{
+    final db = await database;
+    //db.rawDelete("Delete * from History");
+    try{
+      await db.transaction((txn) async {
+        var batch = txn.batch();
+
+        batch.delete("StocksCounter");
+
+        await batch.commit();
+      });
+    } catch(error){
+      throw Exception('DbBase.cleanDatabase: ' + error.toString());
+    }
+  }
+
   Future<void> clearAllTables() async {
     final db = await database;
     //db.rawDelete("Delete * from History");
@@ -236,6 +252,7 @@ class DBProvider {
 
         batch.delete("ProductCategory");
         batch.delete("ProductLot");
+        batch.delete("StocksCounter");
 
         await batch.commit();
       });
@@ -292,13 +309,15 @@ class DBProvider {
     if(res.isNotEmpty) stockEntrepot = StockEntrepot.fromMap(res.first);
     return stockEntrepot;
   }
-  Future<Emplacement?> getEmplacement(int id) async {
+
+  Future<Emplacement?> getEmplacement(int? id) async {
     final db = await database;
-    var res =await  db.query("Emplacement", where: "id = ?", whereArgs: [id]);
+    var res =(id!=null)? (await  db.query("Emplacement", where: "id = ?", whereArgs: [id])) : (await db.rawQuery("SELECT * FROM Emplacement WHERE id IS null")) ;
     Emplacement? one;
     if(res.isNotEmpty) one = Emplacement.fromMap(res.first);
     return one;
   }
+
   Future<StockSystem?> getStockSystem(int id) async {
     final db = await database;
     var res =await  db.query("StockSystem", where: "id = ?", whereArgs: [id]);
@@ -346,7 +365,7 @@ class DBProvider {
   /* Count  */
   Future<List<StocksCounter>> saveStocksOfEmplacement() async {
     final db = await database;
-    var res = await db.rawQuery("SELECT  emplacementId,COUNT(id) FROM StockSystem GROUP BY emplacementId");
+    var res = await db.rawQuery("SELECT  emplacementId , COUNT(id) FROM StockSystem GROUP BY emplacementId");
     List<StocksCounter> list =
     res.isNotEmpty ? res.map((c) => StocksCounter.fromMap(c)).toList() : [];
 
@@ -360,6 +379,14 @@ class DBProvider {
     }
     return list;
   }
+  Future<List<StocksCounter>> getEachEmplacementStocks() async {
+    final db = await database;
+    var res = await db.rawQuery("SELECT  emplacementId , COUNT(id) FROM InventoryLine GROUP BY emplacementId");
+    List<StocksCounter> list =
+    res.isNotEmpty ? res.map((c) => StocksCounter.fromMap(c)).toList() : [];
+    return list;
+  }
+
 
 
   /* get for update database */
