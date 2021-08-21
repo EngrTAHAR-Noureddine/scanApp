@@ -105,7 +105,7 @@ class Scanner extends StatelessWidget {
                      children: [
 
                        Container(
-                         height: MediaQuery.of(context).size.height * 0.8 ,
+                         height: MediaQuery.of(context).size.height * 0.85 ,
                          width: MediaQuery.of(context).size.width ,
                          padding: EdgeInsets.only(top: 50),
 
@@ -125,8 +125,11 @@ class Scanner extends StatelessWidget {
                                    mainAxisAlignment: MainAxisAlignment.center,
                                    children: [
                                      value.dialogBox(context, findIt),
+
                                      value.inputBarCode(context),
+
                                      SizedBox(height: 10),
+
                                      Container(
                                        width: MediaQuery.of(context).size.width,
                                        decoration: BoxDecoration(
@@ -183,6 +186,7 @@ class Scanner extends StatelessWidget {
                                          ],
                                        ),
                                      ),
+
                                      SizedBox(height: 20),
 
                                      Container(
@@ -242,7 +246,7 @@ class Scanner extends StatelessWidget {
                                                onTap:null,
                                              ),
                                            ),
-                                           value.setIsGood(),
+                                           value.setIsGood(context),
 
                                          ],
                                        ),

@@ -29,7 +29,7 @@ class ScannerProvider extends ChangeNotifier{
   int? idEmplacement;
   int? idProduct;
   String? nameEmplacement;
-  String? quality;
+  String? quality = "Bon";
   InventoryLine? newLine;
   Inventory? incompleteInventory;
   bool showKeyBoard = false;
@@ -50,6 +50,7 @@ class ScannerProvider extends ChangeNotifier{
     quality= null;
     newLine= null;
     _switch = false;
+    asDefault = false;
     incompleteInventory = null;
   }
 
@@ -110,7 +111,9 @@ class ScannerProvider extends ChangeNotifier{
           quantity: 1,
           quantitySystem: 1
                 );
-      }else{findIt = false;}
+      }else if(MainProvider().user!.productLotsTable == "Empty"){
+       findIt = null;
+     }else{findIt = false;}
 
     }
     if(didFinished){
@@ -287,30 +290,80 @@ class ScannerProvider extends ChangeNotifier{
 
 
   bool _switch = false;
-  setIsGood(){
-    String text =(quality!=null) ? "Etat : "+quality.toString() : "Etat : -----";
+  bool asDefault = false;
+
+  setIsGood(context){
+    String text =(quality!=null) ? "Etat :\n\n"+quality.toString() : "Etat :\n\n Pas Bon";
+    String text2 ="Par défaut :\n\n Bon" ;
     return Container(
       color:Colors.transparent,//ColorsOf().primaryBackGround(),
-      height:50,
+      height:80,
+      padding: EdgeInsets.all(5),
+      //width: 100,
       alignment: Alignment.center,
-      child: SwitchListTile(
-        activeColor: Colors.blue,
-        inactiveThumbColor: Colors.grey,
-        inactiveTrackColor: Colors.grey,
-        activeTrackColor: Colors.blue,
-        title: Text(
-          text, style: TextStyle(color:ColorsOf().primaryBackGround() ,fontSize: 16,fontWeight: FontWeight.bold),
-        ),
+      child: Row(
 
-        value: _switch,
-        onChanged: (bool value) async {
-          print(value);
-          _switch = value;
-          quality = (_switch)?"Bon":"Pas Bon";
-          notifyListeners();
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
 
-        },
+            width: MediaQuery.of(context).size.width*0.4,
+            child: SwitchListTile(
+              contentPadding: EdgeInsets.all(0),
+              activeColor: Colors.blue,
+              inactiveThumbColor: Colors.grey,
+              inactiveTrackColor: Colors.grey,
+              activeTrackColor: Colors.blue,
+              title: Text(
+                text, style: TextStyle(color:ColorsOf().primaryBackGround() ,fontSize: 14,fontWeight: FontWeight.bold),
+              ),
 
+              value: (asDefault)?true:_switch,
+              onChanged: (bool value) async {
+                print(value);
+                _switch = value;
+                if(!_switch) asDefault = false;
+                quality =(asDefault)? "Bon" :(_switch)?"Bon":"Pas Bon";
+                notifyListeners();
+
+              },
+
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Container(
+              width: 2,
+              color: ColorsOf().borderContainer(),
+
+            ),
+          ),
+          Container(
+
+            width: MediaQuery.of(context).size.width*0.4,
+            child: SwitchListTile(
+              contentPadding: EdgeInsets.all(0),
+              activeColor: Colors.blue,
+              inactiveThumbColor: Colors.grey,
+              inactiveTrackColor: Colors.grey,
+              activeTrackColor: Colors.blue,
+              title: Text(
+                text2, style: TextStyle(color:ColorsOf().primaryBackGround() ,fontSize: 14,fontWeight: FontWeight.bold),
+              ),
+
+              value: asDefault,
+              onChanged: (bool value) async {
+                print(value);
+                asDefault = value;
+                if(asDefault) quality = "Bon";
+
+                notifyListeners();
+
+              },
+
+            ),
+          ),
+        ],
       ),
     );
   }
