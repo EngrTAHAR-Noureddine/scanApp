@@ -215,7 +215,7 @@ class HomeProvider extends ChangeNotifier{
                 leading: Icon(Icons.format_list_bulleted_rounded, size: 20,color: colorText(1),),
                 title: Align(
                     alignment: Alignment(-1.2, -0.1),
-                    child: Text("Afficher List", style: TextStyle(color:colorText(1),fontSize: 14 ),)),
+                    child: Text("Afficher Les Produits", style: TextStyle(color:colorText(1),fontSize: 14 ),)),
               ),
             ),
             Container(
