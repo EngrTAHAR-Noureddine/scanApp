@@ -3,6 +3,8 @@
    <application
         android:label="scanapp"
         android:icon="@mipmap/ic_launcher"
+        android:requestLegacyExternalStorage="true"
+       android:preserveLegacyExternalStorage="true"
         android:name="androidx.multidex.MultiDexApplication">
         <activity
             android:name=".MainActivity"
@@ -39,6 +41,7 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 </manifest>
