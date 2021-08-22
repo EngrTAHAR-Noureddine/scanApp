@@ -74,7 +74,7 @@ class MyApp extends StatelessWidget {
                 return Consumer<MainProvider>(
                         builder: (context, value, child) {
                                     return MaterialApp(
-                                              title: 'Flutter Demo',
+                                              title: 'Fecom Scanner',
                                               debugShowCheckedModeBanner: false,
                                               theme: ThemeData(
                                                 primaryColorBrightness: Brightness.dark,

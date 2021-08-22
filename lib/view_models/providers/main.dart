@@ -18,6 +18,9 @@ class MainProvider extends ChangeNotifier{
   saveUser(User? user){
     this.user = user;
   }
+  setState(){
+    notifyListeners();
+  }
 
   Future<User?> getUser()async{
     user = await DBProvider.db.getUser(1);
@@ -37,9 +40,10 @@ class MainProvider extends ChangeNotifier{
     notifyListeners();
   }
 
-  Future<void> createUser()async{
+  Future<User?> createUser()async{
     user = await DBProvider.db.getUser(1);
     if(user!=null) ColorsOf().mode(isDark: (user!.isDark == "dark"));
+    return user;
   }
 
   Future<void> updateUser(String password, bool isAdmin)async{
