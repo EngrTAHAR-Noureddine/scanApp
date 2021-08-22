@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scanapp/data/database.dart';
 import 'package:scanapp/models/database_models/counter_stocks_in_emplacement.dart';
-import 'package:scanapp/models/database_models/inventories.dart';
-import 'package:scanapp/models/database_models/inventory_lines.dart';
+
 
 class RepportProvider extends ChangeNotifier{
 
