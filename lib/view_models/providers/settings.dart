@@ -410,8 +410,7 @@ class SettingsProvider extends ChangeNotifier{
         onPressed: ()async{
           if(this.formKeyAdmin.currentState != null){
             if (this.formKeyAdmin.currentState!.validate()) {
-              print("button : "+this.CurrentPasswordControllerAdmin.text +"--"+this.NewPasswordControllerAdmin.text+"---"+this.rewritePasswordControllerAdmin.text);
-                  await MainProvider().updateUser(this.NewPasswordControllerAdmin.text,true);
+                await MainProvider().updateUser(this.NewPasswordControllerAdmin.text,true);
               this.CurrentPasswordControllerAdmin.clear();
               this.rewritePasswordControllerAdmin.clear();
               this.NewPasswordControllerAdmin.clear();

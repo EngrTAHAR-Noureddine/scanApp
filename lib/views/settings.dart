@@ -95,7 +95,7 @@ class Settings extends StatelessWidget {
                       headerBackgroundColor:ColorsOf().backGround(),
                       leading: Icon(Icons.lock , color: ColorsOf().primaryBackGround(),),
 
-                      title:  Text("Changer mot de passe de client", style: TextStyle(color: ColorsOf().primaryBackGround())),
+                      title:  Text("Changer mot de passe de ouvrier", style: TextStyle(color: ColorsOf().primaryBackGround())),
                       children: <Widget>[
                         Form(
                           key: value.formKeyClient,
