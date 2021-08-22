@@ -6,6 +6,7 @@ import 'package:scanapp/models/database_models/inventories.dart';
 import 'package:scanapp/models/variables_define/colors.dart';
 import 'package:scanapp/models/custom_expansion_tile.dart' as custom;
 import 'package:scanapp/models/variables_define/my_flutter_app_icons.dart';
+import 'package:scanapp/view_models/providers/exports_list.dart';
 import 'package:scanapp/view_models/providers/home.dart';
 import 'package:scanapp/view_models/providers/onGoing_list.dart';
 import 'package:scanapp/view_models/providers/process_on_file.dart';
@@ -172,7 +173,7 @@ class InventoryList extends StatelessWidget {
                                                         size: 25,
                                                         ),
 
-                                                        onPressed:(list[index].status=="ongoing")? ()=>value.finishButon(context,list[index]):null,
+                                                        onPressed: (list[index].status=="ongoing")? ()=>value.showDialogOfButtons(context, list[index],"Terminer Inventaire","êtes-vous sûr de terminer l'inventaire ?","Terminer"):null,
                                                         )
                                               ),
                                           Container(
@@ -244,7 +245,15 @@ class InventoryList extends StatelessWidget {
                                                   size: 25,
                                                 ),
 
-                                                onPressed:(list[index].status != "begin")? (){print("export");}:null,
+                                                onPressed:(list[index].status != "begin")? (){
+                                                      //  Navigator.pop(context);
+                                                      Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                      builder: (context) => ExportProvider().processSaving(context,list[index].id),
+                                                      ),
+                                                      );
+                                                      }:null,
                                               )
                                           ),
 

@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.scanapp">
    <application
-        android:label="scanapp"
+        android:label="Fecom Scanner"
         android:icon="@mipmap/ic_launcher"
         android:requestLegacyExternalStorage="true"
        android:preserveLegacyExternalStorage="true"
