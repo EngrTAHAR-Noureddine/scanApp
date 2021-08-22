@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scanapp/models/variables_define/colors.dart';
@@ -186,6 +188,8 @@ class HomeProvider extends ChangeNotifier{
   }
 
   Drawer customDrawer(context){
+    var image =(MainProvider().user!=null && MainProvider().user!.logoImage != null && MainProvider().user!.logoImage != "Empty")? MainProvider().user!.logoImage : null;
+
     return Drawer(
       child: Container(
         color: ColorsOf().primaryBackGround(),
@@ -195,17 +199,11 @@ class HomeProvider extends ChangeNotifier{
             UserAccountsDrawerHeader(
               decoration: BoxDecoration(color: ColorsOf().containerThings()),
               accountName: Text((isStateAdmin)?"Administrateur":"Ouvrier" , style: TextStyle(color: ColorsOf().primaryBackGround()),),
-              accountEmail: Text("abs@gmail.com",style: TextStyle(color: ColorsOf().primaryBackGround()),),
+              accountEmail: Text(((MainProvider().user!=null && MainProvider().user!.logoName!=null)?MainProvider().user!.logoName.toString():""),style: TextStyle(color: ColorsOf().primaryBackGround()),),
               currentAccountPicture: GestureDetector(
                 child: CircleAvatar(
-                  child: Text(
-                    "AM",
-                    style: TextStyle(
-                        color: Colors.pink,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  backgroundColor: Colors.white,
+                  child: (image!=null)? new Image.memory(image):Container(),
+                  backgroundColor:(image!=null)? Colors.transparent :  ColorsOf().primaryBackGround(),
                 ),
               ),
             ),
@@ -329,7 +327,7 @@ class HomeProvider extends ChangeNotifier{
            side:BorderSide(color: ColorsOf().primaryBackGround(),width: 1,style:BorderStyle.solid)),
 
        child: Icon(MyFlutterApp.qr_code,size: 30,color: ColorsOf().primaryBackGround(),),
-       onPressed: ()=>this.changeSelecter(2, context,"/scanner"),
+       onPressed:()=>this.changeSelecter(2, context,"/scanner"),
      );
   }
 
