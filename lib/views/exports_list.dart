@@ -54,7 +54,15 @@ class Export extends StatelessWidget {
                                           ),
                                           child: Text("Export",style: TextStyle(fontSize: 16, color: ColorsOf().primaryBackGround()),),
 
-                                          onPressed:()=>value.getInventoryLines(list[index].id),
+                                          onPressed:(){
+                                          //  Navigator.pop(context);
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => value.processSaving(context,list[index].id),
+                                              ),
+                                            );
+                                          },//()=>value.processSaving(context,list[index].id),
 
                                         ),),
                                       title: RichText(

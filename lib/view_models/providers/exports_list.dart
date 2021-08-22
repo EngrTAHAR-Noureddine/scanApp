@@ -1,18 +1,24 @@
 import 'dart:io';
-
+import 'package:scanapp/view_models/providers/home.dart';
+import 'package:scanapp/views/home.dart';
+import 'package:syncfusion_flutter_xlsio/xlsio.dart' as xlsio;
 import 'package:flutter/material.dart';
+
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:scanapp/data/database.dart';
 import 'package:scanapp/models/database_models/inventories.dart';
 import 'package:scanapp/models/database_models/inventory_lines.dart';
-import 'package:syncfusion_flutter_xlsio/xlsio.dart';
+import 'package:scanapp/models/variables_define/colors.dart';
+
 
 class ExportProvider extends ChangeNotifier{
   static ExportProvider? _instance;
   ExportProvider._();
   factory ExportProvider() => _instance ??=ExportProvider._();
+
+  String filePath = "/";
 
   Future<bool> _requestPermission(Permission per) async{
 
@@ -25,11 +31,12 @@ class ExportProvider extends ChangeNotifier{
 
   }
 
-  Future<void> saveInFile(List<InventoryLine> inventoryLines,String fileName)async{ // notnull
+  Future<bool> saveInFile(List<InventoryLine> inventoryLines,String fileName)async{ // notnull
     /* variables  */
     fileName = fileName + '.xlsx';
     String newPath ="";
     File file;
+    bool isFinish = false;
 
     /* instructors  */
 
@@ -61,11 +68,19 @@ class ExportProvider extends ChangeNotifier{
                   /* write here */
 
                   try {
-                    final Workbook workbook = Workbook();
-                    final Worksheet sheet = workbook.worksheets[0];
+                    final xlsio.Workbook workbook = xlsio.Workbook();
+                    final xlsio.Worksheet sheet = workbook.worksheets[0];
 
-                        int row =0;
-                        final List<Object> firstLine = ["id", "Id_inventory", "Id_Produit", "Id_Emplacement","Id_productLot","quantity","quantitySystem","difference","quality"];
+                        int row =1;
+                        final List<Object> firstLine = ['id',
+                          'Id_inventory',
+                          'Id_Produit',
+                          'Id_Emplacement',
+                          'Id_productLot',
+                          'quantity',
+                          'quantitySystem',
+                          'difference',
+                          'quality'];
                         sheet.importList(firstLine, row, 1, false);
 
                         inventoryLines.forEach((element) {
@@ -84,8 +99,8 @@ class ExportProvider extends ChangeNotifier{
                         final List<int> bytes = workbook.saveAsStream();
                         await file.writeAsBytes(bytes, flush: true);
                         workbook.dispose();
-                        OpenFile.open(file.path);
-
+                        filePath = file.path;
+                    isFinish = true;
                       } catch (e) {
                         print(e);
                       }
@@ -101,7 +116,7 @@ class ExportProvider extends ChangeNotifier{
         }//else throw "permission";
       }else print("the platform is not ios");
     }catch(e){ print("catch error : "+e.toString());}
-
+return isFinish;
   }
 
   Future<List<Inventory>> getAllInventory()async{
@@ -119,16 +134,131 @@ class ExportProvider extends ChangeNotifier{
     return (anotherList.isNotEmpty)?anotherList:[];
   }
 
-  Future<void> getInventoryLines(int? id)async{
-
+  Future<bool> getInventoryLines(int? id)async{
+    bool bol = false;
     List<InventoryLine>? list = await DBProvider.db.getAllInventoryLines(id);
-    String name = 'inventory'+id.toString()+"_"+DateTime.now().toString();
+    String name = 'inventory '+id.toString()+"_"+DateTime.now().year.toString()+DateTime.now().month.toString()+DateTime.now().day.toString()+"T"+DateTime.now().hour.toString()+DateTime.now().minute.toString();
 
 
     if(list!=null){
-      await saveInFile(list ,name );
+     bol =  await saveInFile(list ,name );
+      //processSaving(context,list ,name);
     }
+  return bol;
+  }
 
+
+  Widget processSaving(context,int? id){
+
+    String meg ="Exporter.....";
+
+    return Scaffold(
+      backgroundColor: ColorsOf().backGround(),
+      body: FutureBuilder(
+          future: getInventoryLines(id),
+          builder: (context, snapshot) {
+            print(snapshot);
+
+            if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+
+
+              String res =  (snapshot.data == true)?"Success":"Failed";
+             // Navigator.pop(context);
+              return whenFinishProcess(context, res);
+
+            }else if(snapshot.hasError){
+
+              String res = "Failed";
+             // Navigator.pop(context);
+              return whenFinishProcess(context, res);
+            }
+
+            return Container(
+              color: ColorsOf().backGround(),
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              alignment: Alignment.center,
+              child: Container(
+                alignment: Alignment.center,
+                color: Colors.transparent,
+                width: 200,
+                height: 200,
+                child: Column(
+                  children: [
+                    CircleAvatar(
+                        backgroundColor: Colors.transparent,
+                        radius: 50,
+                        child: CircularProgressIndicator(color:ColorsOf().primaryBackGround()  ,backgroundColor: Colors.transparent,)
+                    ),
+                    SizedBox(height: 20,),
+                    Text(meg, style: TextStyle(fontSize: 16 , color: ColorsOf().primaryBackGround(),),)
+                  ],
+                ),
+
+              ),
+            );
+          }
+      ),
+    );
+  }
+
+  Widget whenFinishProcess(context,isSuccess){
+    String msg = (isSuccess == "Success")? "le processus est terminé avec succès":"le processus a échoué";
+    Color aColor =  (isSuccess == "Success")? ColorsOf().finisheItem():ColorsOf().deleteItem();
+    Color textColor = (isSuccess == "Success")? ColorsOf().borderContainer():ColorsOf().backGround();
+
+    String msg2 = (isSuccess == "Success")?"Afiicher le fichier ! ":"Retournez à la page d'accueil";
+
+    return Scaffold(
+
+      backgroundColor: ColorsOf().backGround(),
+      body: Container(
+        color: ColorsOf().backGround(),
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        alignment: Alignment.center,
+        child: Container(
+          alignment: Alignment.center,
+          width: 200,
+          height: 200,
+          child: Column(
+            children: [
+
+              Text(msg, style: TextStyle(fontSize: 16 ,fontWeight: FontWeight.bold, color: ColorsOf().primaryBackGround(),),),
+              SizedBox(height: 50,),
+              MaterialButton(
+                height: 50,
+                minWidth: 200,
+                color: aColor ,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: EdgeInsets.all(0),
+                child: Text(msg2 ,style: TextStyle(color:textColor ),),
+
+
+                onPressed: (){
+                  if(isSuccess == "Success"){
+                    OpenFile.open(filePath);
+
+                  }
+                      else{
+                        HomeProvider().changeSelecter(0, context, "/inventoryList");
+                        Navigator.pop(context);
+                      }
+
+
+                },
+
+
+              ),
+
+            ],
+          ),
+
+        ),
+      ),
+    );
   }
 
 
