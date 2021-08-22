@@ -20,6 +20,7 @@ class LogInProvider extends ChangeNotifier{
 /* Provider Functions  */
 
    inputPassword(context){
+     print("passwording:"+MainProvider().user!.adminPassword.toString());
     return Container(
       color:ColorsOf().primaryBackGround(),
       height:70,
@@ -29,7 +30,9 @@ class LogInProvider extends ChangeNotifier{
         onFieldSubmitted: (val){
           if(this.formKey.currentState !=null){
             if (this.formKey.currentState!.validate()) {
-
+              passwordController.clear();
+              _switch = false;
+              HomeProvider().setSelector(0);
               Navigator.pop(context);
               Navigator.push(
                 context,
@@ -49,7 +52,7 @@ class LogInProvider extends ChangeNotifier{
             return 'Please enter some text';
           }else if(_switch){
             print(_switch);
-            print(this.passwordController.text);
+            print("pass ctrl : "+this.passwordController.text);
           if(MainProvider().user!.adminPassword == this.passwordController.text){
                     HomeProvider().isStateAdmin =true;
                     return null;
@@ -185,7 +188,9 @@ class LogInProvider extends ChangeNotifier{
         onPressed: (){
           if(this.formKey.currentState !=null){
             if (this.formKey.currentState!.validate()) {
-
+              passwordController.clear();
+              _switch = false;
+              HomeProvider().setSelector(0);
                         Navigator.pop(context);
                         Navigator.push(
                           context,
