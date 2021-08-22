@@ -61,7 +61,7 @@ class Search extends StatelessWidget {
                                         ),
                                         child: Icon(Icons.info, color: ColorsOf().onGoingItem(), size: 30,),
 
-                                        onPressed: (){},
+                                        onPressed: ()=>HomeProvider().setSelector(11,list[index].productId),
 
                                       ),),
                                     title: RichText(
