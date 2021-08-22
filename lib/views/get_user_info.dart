@@ -10,8 +10,10 @@ class GetUserInfo extends StatelessWidget {
     return FutureBuilder(
         future: MainProvider().createUser(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-
+          print(snapshot.data);
+          print(snapshot.error);
+          if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+           // print("in get user : "+MainProvider().user!.adminPassword.toString());
             return LogIn();
 
 
