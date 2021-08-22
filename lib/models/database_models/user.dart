@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'dart:typed_data';
+
 User userFromJson(String str) {
   final jsonData = json.decode(str);
   return User.fromMap(jsonData);
@@ -13,25 +15,19 @@ String userToJson(User data) {
 class User {
   int? id;
   int? allProductLots;
+
   String? logoName;
-  String? logoImage;
+  Uint8List? logoImage;
 
   String? phoneEnterprise;
   String? addressEnterprise;
-  String? adminPassword;
 
+  String? adminPassword;
   String? userPasswordReset;
+
   String? userPasswordActually;
   String? isDark;
-  String? sitesTable;
 
-  String? companyTable;
-  String? stockEnterpriseTable;
-  String? stockSystemTable;
-  String? bureauxTable;
-
-  String? produitsTable;
-  String? categoriesTable;
   String? productLotsTable;
 
   User({
@@ -47,15 +43,6 @@ class User {
     this.userPasswordActually,
     this.isDark, //dark - light
     this.allProductLots,
-    this.sitesTable,
-
-    this.companyTable,
-    this.stockEnterpriseTable,
-    this.stockSystemTable,
-    this.bureauxTable,
-
-    this.produitsTable,
-    this.categoriesTable,
     this.productLotsTable
   });
 
@@ -72,15 +59,7 @@ class User {
       userPasswordActually: json["userPasswordActually"],
       isDark: json["isDark"],
       allProductLots: json["allProductLots"],
-      sitesTable: json["sitesTable"],
 
-      companyTable: json["companyTable"],
-      stockEnterpriseTable: json["stockEnterpriseTable"],
-      stockSystemTable: json["stockSystemTable"],
-      bureauxTable: json["bureauxTable"],
-
-      produitsTable: json["produitsTable"],
-      categoriesTable: json["categoriesTable"],
       productLotsTable: json["productLotsTable"],
 
   );
@@ -98,15 +77,6 @@ class User {
     "userPasswordActually": userPasswordActually,
     "isDark": isDark,
     "allProductLots": allProductLots,
-    "sitesTable": sitesTable,
-
-    "companyTable": companyTable,
-    "stockEnterpriseTable": stockEnterpriseTable,
-    "stockSystemTable": stockSystemTable,
-    "bureauxTable": bureauxTable,
-
-    "produitsTable": produitsTable,
-    "categoriesTable": categoriesTable,
     "productLotsTable": productLotsTable,
 
   };

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
@@ -6,14 +7,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:scanapp/data/database.dart';
-import 'package:scanapp/models/database_models/Companies.dart';
 import 'package:scanapp/models/database_models/emplacements.dart';
 import 'package:scanapp/models/database_models/inventories.dart';
-import 'package:scanapp/models/database_models/product_categories.dart';
 import 'package:scanapp/models/database_models/product_lots.dart';
 import 'package:scanapp/models/database_models/products.dart';
-import 'package:scanapp/models/database_models/sites.dart';
-import 'package:scanapp/models/database_models/stock_entrepots.dart';
 import 'package:scanapp/models/database_models/stock_systems.dart';
 import 'package:scanapp/models/database_models/user.dart';
 import 'package:scanapp/models/variables_define/colors.dart';
@@ -264,8 +261,9 @@ class ProcessFileProvider extends ChangeNotifier{
                     child: Text("Retournez à la page d'accueil" ,style: TextStyle(color:textColor ),),
 
 
-                    onPressed: (){
+                    onPressed: ()async{
                       HomeProvider().changeSelecter(0, context, "/inventoryList");
+                      await MainProvider().getUser();
                       Navigator.pop(context);
                       //Navigator.pushNamed(context, "/home");
                     },
@@ -303,16 +301,25 @@ class ProcessFileProvider extends ChangeNotifier{
 
 
   Future<void> backgroundFunction(bool isImporting)async {
+
     List<String> filesName = [
-      "Site",
-      "Company",
-      "Entrepot",
+      "information",
       "Emplacement",
       "StockSystem",
       "Product",
       "Lot",
-      "Category",
     ];
+
+    List<List<String>> columnSheet = [
+      ["logo","nom_entreprise","num_telephone","adresse"],
+      ["id","nom","enterpot-id","barcodeemp"],
+      ["id","EmplacmentId","ProductId","ProductLotId","Quantity"],
+      ["id","code","nom","categoryId","gestionLot","producttype"],
+      ["id","immatriculation","num_serie","num_lot","product_id"]
+    ];
+
+
+    User? myUser = await DBProvider.db.getUser(1);
 
 
 
@@ -323,118 +330,53 @@ class ProcessFileProvider extends ChangeNotifier{
     if (bytes != null) {
       excel = SpreadsheetDecoder.decodeBytes(bytes, update: true);
       if (excel != null) {
-        /*  Site */
+
+        /* User Info */
         if (excel.tables.keys.contains(filesName[0])) {
-          List<dynamic> firstSite;
-          firstSite = excel.tables[filesName[0]].rows.first;
+          List<dynamic> firstRow;
+          firstRow = excel.tables[filesName[0]].rows.first;
 
           for (var row in excel.tables[filesName[0]].rows) {
             print(row);
-            if (!row.contains("id")) {
-              Site site;
-              site = new Site(
-                  id: (firstSite.indexOf("id") < 0) ? null : row[firstSite
-                      .indexOf("id")],
-                  nom: (firstSite.indexOf("nom") < 0) ? null : (row[firstSite
-                      .indexOf("nom")] != null) ? row[firstSite.indexOf("nom")]
-                      .toString()
-                      .replaceAll(RegExp('[\',\"]'), "''") : null
-              );
+            if (!row.contains(columnSheet[0][0])) {
 
-              //  await DBProvider.db.checkSite(site);
-              if(isImporting == true ){
-                await DBProvider.db.newSite(site);
-              }else{
-                if ((await DBProvider.db.checkSite(site)) == null) {
-                  await DBProvider.db.newSite(site);
-                }
+              try{
+                if(myUser!=null){
+
+                  myUser.logoImage = (firstRow.indexOf(columnSheet[0][0]) < 0) ? null : (row[firstRow.indexOf(columnSheet[0][0])] != null) ? base64.decode(row[firstRow.indexOf(columnSheet[0][0])].toString()) : null;
+                  myUser.logoName = (firstRow.indexOf(columnSheet[0][1]) < 0) ? null : (row[firstRow.indexOf(columnSheet[0][1])] != null) ? row[firstRow.indexOf(columnSheet[0][1])].toString().replaceAll(RegExp('[\',\"]'), "''") : null;
+
+                  myUser.phoneEnterprise = (firstRow.indexOf(columnSheet[0][2]) < 0) ?
+                  null : (row[firstRow.indexOf(columnSheet[0][2])] != null) ?
+                  row[firstRow.indexOf(columnSheet[0][2])].toString().replaceAll(RegExp('[\',\"]'), "''") : null;
+
+                  myUser.addressEnterprise = (firstRow.indexOf(columnSheet[0][3]) < 0) ?
+                  null : (row[firstRow.indexOf(columnSheet[0][3])] != null) ?
+                  row[firstRow.indexOf(columnSheet[0][3])].toString().replaceAll(RegExp('[\',\"]'), "''") : null;
+
+                  }
+
+
+              }catch(e){
+
               }
+                  if(myUser!=null){
+                        myUser.logoName = (firstRow.indexOf(columnSheet[0][1]) < 0) ? null : (row[firstRow.indexOf(columnSheet[0][1])] != null) ? row[firstRow.indexOf(columnSheet[0][1])].toString().replaceAll(RegExp('[\',\"]'), "''") : null;
 
-            }
-          }
-        }
+                        myUser.phoneEnterprise = (firstRow.indexOf(columnSheet[0][2]) < 0) ?
+                        null : (row[firstRow.indexOf(columnSheet[0][2])] != null) ?
+                        row[firstRow.indexOf(columnSheet[0][2])].toString().replaceAll(RegExp('[\',\"]'), "''") : null;
 
-        /* Company */
-        if (excel.tables.keys.contains(filesName[1])) {
-          List<dynamic> firstCompany;
-          firstCompany = excel.tables[filesName[1]].rows.first;
-          for (var row in excel.tables[filesName[1]].rows) {
-            print(row);
-            if (!row.contains("id")) {
-              Company company;
-              company = new Company(
-                id: (firstCompany.indexOf("id") < 0) ? null : row[firstCompany
-                    .indexOf("id")],
-                nom: (firstCompany.indexOf("nom") < 0)
-                    ? null
-                    : (row[firstCompany.indexOf("nom")] != null)
-                    ? row[firstCompany.indexOf("nom")].toString().replaceAll(
-                    RegExp('[\',\"]'), "''")
-                    : null,
+                        myUser.addressEnterprise = (firstRow.indexOf(columnSheet[0][3]) < 0) ?
+                        null : (row[firstRow.indexOf(columnSheet[0][3])] != null) ?
+                        row[firstRow.indexOf(columnSheet[0][3])].toString().replaceAll(RegExp('[\',\"]'), "''") : null;
+                        print(myUser.logoName);
+                        await DBProvider.db.updateUser(myUser);
+                  }
 
-                siteId: (firstCompany.indexOf("site_id") < 0)
-                    ? null
-                    : row[firstCompany.indexOf("site_id")],
 
-                logo: (firstCompany.indexOf("logo") < 0)
-                    ? null
-                    : (row[firstCompany.indexOf("logo")] != null)
-                    ? row[firstCompany.indexOf("logo")].toString().replaceAll(
-                    RegExp('[\',\"]'), "''")
-                    : null,
-
-              );
-              //await DBProvider.db.checkCompany(company);
-              if(isImporting == true ){
-                await DBProvider.db.newCompany(company);
-              }else{
-                if ((await DBProvider.db.checkCompany(company)) == null) {
-                  await DBProvider.db.newCompany(company);
-                }
-              }
-
-            }
-          }
-        }
-
-        /* Entrepot */
-        if (excel.tables.keys.contains(filesName[2])) {
-          List<dynamic> firstStock;
-          firstStock = excel.tables[filesName[2]].rows.first;
-
-          for (var row in excel.tables[filesName[2]].rows) {
-            print(row);
-            if (!row.contains("id")) {
-              StockEntrepot stockEntrepot;
-              stockEntrepot = new StockEntrepot(
-                id: (firstStock.indexOf("id") < 0) ? null : row[firstStock
-                    .indexOf("id")],
-                directionType: (firstStock.indexOf("DirectionType") < 0)
-                    ? null
-                    : (row[firstStock.indexOf("DirectionType")] != null)
-                    ? row[firstStock.indexOf("DirectionType")]
-                    .toString()
-                    .replaceAll(RegExp('[\',\"]'), "''")
-                    : null,
-                companyId: (firstStock.indexOf("CompanyId") < 0)
-                    ? null
-                    : row[firstStock.indexOf("CompanyId")],
-                directionId: (firstStock.indexOf("DirectionId") < 0)
-                    ? null
-                    : row[firstStock.indexOf("DirectionId")],
-                nom: (firstStock.indexOf("nom") < 0) ? null : (row[firstStock
-                    .indexOf("nom")] != null) ? row[firstStock.indexOf("nom")]
-                    .toString()
-                    .replaceAll(RegExp('[\',\"]'), "''") : null,
-              );
-              //  await DBProvider.db.checkStockEntrepot(stockEntrepot);
-
-              if(isImporting == true ){
-                await DBProvider.db.newStockEntrepot(stockEntrepot);
-              }else{
-                if ((await DBProvider.db.checkStockEntrepot(stockEntrepot)) == null) {
-                  await DBProvider.db.newStockEntrepot(stockEntrepot);
-                }
+              User? userr = await DBProvider.db.getUser(1);
+                print(userr?.logoName);
               }
 
             }
@@ -442,31 +384,31 @@ class ProcessFileProvider extends ChangeNotifier{
         }
 
         /* Emplacement */
-        if (excel.tables.keys.contains(filesName[3])) {
+        if (excel.tables.keys.contains(filesName[1])) {
           List<dynamic> firstEmplacement;
-          firstEmplacement = excel.tables[filesName[3]].rows.first;
+          firstEmplacement = excel.tables[filesName[1]].rows.first;
 
-          for (var row in excel.tables[filesName[3]].rows) {
+          for (var row in excel.tables[filesName[1]].rows) {
             print(row);
-            if (!row.contains("id")) {
+            if (!row.contains(columnSheet[1][0])) {
               Emplacement emplacement = new Emplacement(
-                id: (firstEmplacement.indexOf("id") < 0)
+                id: (firstEmplacement.indexOf(columnSheet[1][0]) < 0)
                     ? null
-                    : row[firstEmplacement.indexOf("id")],
-                nom: (firstEmplacement.indexOf("nom") < 0)
+                    : row[firstEmplacement.indexOf(columnSheet[1][0])],
+                nom: (firstEmplacement.indexOf(columnSheet[1][1]) < 0)
                     ? null
-                    : (row[firstEmplacement.indexOf("nom")] != null)
-                    ? row[firstEmplacement.indexOf("nom")]
+                    : (row[firstEmplacement.indexOf(columnSheet[1][1])] != null)
+                    ? row[firstEmplacement.indexOf(columnSheet[1][1])]
                     .toString()
                     .replaceAll(RegExp('[\',\"]'), "''")
                     : null,
-                entrepotId: (firstEmplacement.indexOf("enterpot-id") < 0)
+                entrepotId: (firstEmplacement.indexOf(columnSheet[1][2]) < 0)
                     ? null
-                    : row[firstEmplacement.indexOf("enterpot-id")],
-                barCodeEmp: (firstEmplacement.indexOf("barcodeemp") < 0)
+                    : row[firstEmplacement.indexOf(columnSheet[1][2])],
+                barCodeEmp: (firstEmplacement.indexOf(columnSheet[1][2]) < 0)
                     ? null
-                    : (row[firstEmplacement.indexOf("barcodeemp")] != null)
-                    ? row[firstEmplacement.indexOf("barcodeemp")]
+                    : (row[firstEmplacement.indexOf(columnSheet[1][3])] != null)
+                    ? row[firstEmplacement.indexOf(columnSheet[1][3])]
                     .toString()
                     .replaceAll(RegExp('[\',\"]'), "''")
                     : null,
@@ -486,28 +428,27 @@ class ProcessFileProvider extends ChangeNotifier{
         }
 
         /* StockSys */
-        if (excel.tables.keys.contains(filesName[4])) {
+        if (excel.tables.keys.contains(filesName[2])) {
           List<dynamic> firstStockSys;
-          firstStockSys = excel.tables[filesName[4]].rows.first;
+          firstStockSys = excel.tables[filesName[2]].rows.first;
 
-          for (var row in excel.tables[filesName[4]].rows) {
+          for (var row in excel.tables[filesName[2]].rows) {
             print(row);
-            if (!row.contains("id")) {
+            if (!row.contains(columnSheet[2][0])) {
               StockSystem stockSystem = new StockSystem(
-                id: (firstStockSys.indexOf("id") < 0) ? null : row[firstStockSys
-                    .indexOf("id")],
-                emplacementId: (firstStockSys.indexOf("EmplacmentId") < 0)
+                id: (firstStockSys.indexOf(columnSheet[2][0]) < 0) ? null : row[firstStockSys.indexOf(columnSheet[2][0])],
+
+                emplacementId: (firstStockSys.indexOf(columnSheet[2][1]) < 0) ? null : row[firstStockSys.indexOf(columnSheet[2][1])],
+
+                productId: (firstStockSys.indexOf(columnSheet[2][2]) < 0) ? null : row[firstStockSys.indexOf(columnSheet[2][2])],
+
+                productLotId: (firstStockSys.indexOf(columnSheet[2][3]) < 0)
                     ? null
-                    : row[firstStockSys.indexOf("EmplacmentId")],
-                productId: (firstStockSys.indexOf("ProductId") < 0)
+                    : row[firstStockSys.indexOf(columnSheet[2][3])],
+
+                quantity: (firstStockSys.indexOf(columnSheet[2][4]) < 0)
                     ? null
-                    : row[firstStockSys.indexOf("ProductId")],
-                productLotId: (firstStockSys.indexOf("ProductLotId") < 0)
-                    ? null
-                    : row[firstStockSys.indexOf("ProductLotId")],
-                quantity: (firstStockSys.indexOf("Quantity") < 0)
-                    ? null
-                    : row[firstStockSys.indexOf("Quantity")],
+                    : row[firstStockSys.indexOf(columnSheet[2][4])],
               );
               // await DBProvider.db.checkStockSystem(stockSystem);
               if(isImporting == true ){
@@ -523,41 +464,45 @@ class ProcessFileProvider extends ChangeNotifier{
         }
 
         /* Product */
-        if (excel.tables.keys.contains(filesName[5])) {
+        if (excel.tables.keys.contains(filesName[3])) {
           List<dynamic> firstProduct;
-          firstProduct = excel.tables[filesName[5]].rows.first;
+          firstProduct = excel.tables[filesName[3]].rows.first;
 
-          for (var row in excel.tables[filesName[5]].rows) {
+          for (var row in excel.tables[filesName[3]].rows) {
             print(row);
-            if (!row.contains("id")) {
+            if (!row.contains(columnSheet[3][0])) {
               Product product = new Product(
-                id: (firstProduct.indexOf("id") < 0) ? null : row[firstProduct
-                    .indexOf("id")],
-                productCode: (firstProduct.indexOf("code") < 0)
+                id: (firstProduct.indexOf(columnSheet[3][0]) < 0) ? null : row[firstProduct
+                    .indexOf(columnSheet[3][0])],
+
+                productCode: (firstProduct.indexOf(columnSheet[3][1]) < 0)
                     ? null
-                    : (row[firstProduct.indexOf("code")] != null)
-                    ? row[firstProduct.indexOf("code")].toString().replaceAll(
+                    : (row[firstProduct.indexOf(columnSheet[3][1])] != null)
+                    ? row[firstProduct.indexOf(columnSheet[3][1])].toString().replaceAll(
                     RegExp('[\',\"]'), "''")
                     : null,
-                nom: (firstProduct.indexOf("nom") < 0)
+
+                nom: (firstProduct.indexOf(columnSheet[3][2]) < 0)
                     ? null
-                    : (row[firstProduct.indexOf("nom")] != null)
-                    ? row[firstProduct.indexOf("nom")].replaceAll("'", "''")
+                    : (row[firstProduct.indexOf(columnSheet[3][2])] != null)
+                    ? row[firstProduct.indexOf(columnSheet[3][2])].replaceAll("'", "''")
                     : null,
-                categoryId: (firstProduct.indexOf("categoryId") < 0)
+
+                categoryId: (firstProduct.indexOf(columnSheet[3][3]) < 0)
                     ? null
-                    : row[firstProduct.indexOf("categoryId")],
-                gestionLot: (firstProduct.indexOf("gestionLot") < 0)
+                    : row[firstProduct.indexOf(columnSheet[3][3])],
+
+                gestionLot: (firstProduct.indexOf(columnSheet[3][4]) < 0)
                     ? null
-                    : (row[firstProduct.indexOf("gestionLot")] != null)
-                    ? row[firstProduct.indexOf("gestionLot")]
+                    : (row[firstProduct.indexOf(columnSheet[3][4])] != null)
+                    ? row[firstProduct.indexOf(columnSheet[3][4])]
                     .toString()
                     .replaceAll(RegExp('[\',\"]'), "''")
                     : null,
-                productType: (firstProduct.indexOf("producttype") < 0)
+                productType: (firstProduct.indexOf(columnSheet[3][5]) < 0)
                     ? null
-                    : (row[firstProduct.indexOf("producttype")] != null)
-                    ? row[firstProduct.indexOf("producttype")]
+                    : (row[firstProduct.indexOf(columnSheet[3][5])] != null)
+                    ? row[firstProduct.indexOf(columnSheet[3][5])]
                     .toString()
                     .replaceAll(RegExp('[\',\"]'), "''")
                     : null,
@@ -576,40 +521,44 @@ class ProcessFileProvider extends ChangeNotifier{
         }
 
         /* ProductLot */
-        if (excel.tables.keys.contains(filesName[6])) {
+        if (excel.tables.keys.contains(filesName[4])) {
           List<dynamic> firstProductLot;
-          firstProductLot = excel.tables[filesName[6]].rows.first;
+          firstProductLot = excel.tables[filesName[4]].rows.first;
 
-          for (var row in excel.tables[filesName[6]].rows) {
+          for (var row in excel.tables[filesName[4]].rows) {
             print(row);
 
-            if (!row.contains("id")) {
+            if (!row.contains(columnSheet[4][0])) {
               ProductLot productLot = new ProductLot(
-                id: (firstProductLot.indexOf("id") < 0)
+                id: (firstProductLot.indexOf(columnSheet[4][0]) < 0)
                     ? null
-                    : row[firstProductLot.indexOf("id")],
-                immatriculation: (firstProductLot.indexOf("immatriculation") <
+                    : row[firstProductLot.indexOf(columnSheet[4][0])],
+
+                immatriculation: (firstProductLot.indexOf(columnSheet[4][1]) <
                     0) ? null : (row[firstProductLot.indexOf(
-                    "immatriculation")] != null) ? row[firstProductLot.indexOf(
-                    "immatriculation")].toString().replaceAll(
+                    columnSheet[4][1])] != null) ? row[firstProductLot.indexOf(
+                    columnSheet[4][1])].toString().replaceAll(
                     RegExp('[\',\"]'), "''") : null,
-                numSerie: (firstProductLot.indexOf("num_serie") < 0)
+
+                numSerie: (firstProductLot.indexOf(columnSheet[4][2]) < 0)
                     ? null
-                    : (row[firstProductLot.indexOf("num_serie")] != null)
-                    ? row[firstProductLot.indexOf("num_serie")]
+                    : (row[firstProductLot.indexOf(columnSheet[4][2])] != null)
+                    ? row[firstProductLot.indexOf(columnSheet[4][2])]
                     .toString()
                     .replaceAll(RegExp('[\',\"]'), "''")
                     : null,
-                numLot: (firstProductLot.indexOf("num_lot") < 0)
+
+                numLot: (firstProductLot.indexOf(columnSheet[4][3]) < 0)
                     ? null
-                    : (row[firstProductLot.indexOf("num_lot")] != null)
-                    ? row[firstProductLot.indexOf("num_lot")]
+                    : (row[firstProductLot.indexOf(columnSheet[4][3])] != null)
+                    ? row[firstProductLot.indexOf(columnSheet[4][3])]
                     .toString()
                     .replaceAll(RegExp('[\',\"]'), "''")
                     : null,
-                productId: (firstProductLot.indexOf("product_id") < 0)
+
+                productId: (firstProductLot.indexOf(columnSheet[4][4]) < 0)
                     ? null
-                    : row[firstProductLot.indexOf("product_id")],
+                    : row[firstProductLot.indexOf(columnSheet[4][4])],
               );
               //await DBProvider.db.checkProductLot(productLot);
               if(isImporting == true ){
@@ -624,58 +573,9 @@ class ProcessFileProvider extends ChangeNotifier{
           }
         }
 
-        /* Product category  */
-        if (excel.tables.keys.contains(filesName[7])) {
-          List<dynamic> firstProductCategory;
-          firstProductCategory = excel.tables[filesName[7]].rows.first;
-
-          for (var row in excel.tables[filesName[7]].rows) {
-            print(row);
-            if (!row.contains("id")) {
-              ProductCategory productCategory = new ProductCategory(
-                id: (firstProductCategory.indexOf("id") < 0)
-                    ? null
-                    : row[firstProductCategory.indexOf("id")],
-                categoryName: (firstProductCategory.indexOf("nom") < 0)
-                    ? null
-                    : (row[firstProductCategory.indexOf("nom")] != null)
-                    ? row[firstProductCategory.indexOf("nom")]
-                    .toString()
-                    .replaceAll(RegExp('[\',\"]'), "''")
-                    : null,
-                categoryCode: (firstProductCategory.indexOf("code") < 0)
-                    ? null
-                    : (row[firstProductCategory.indexOf("code")] != null)
-                    ? row[firstProductCategory.indexOf("code")]
-                    .toString()
-                    .replaceAll(RegExp('[\',\"]'), "''")
-                    : null,
-                parentId: (firstProductCategory.indexOf("parentId") < 0)
-                    ? null
-                    : row[firstProductCategory.indexOf("parentId")],
-                parentPath: (firstProductCategory.indexOf("parentPath") < 0)
-                    ? null
-                    : (row[firstProductCategory.indexOf("parentPath")] != null)
-                    ? row[firstProductCategory.indexOf("parentPath")]
-                    .toString()
-                    .replaceAll(RegExp('[\',\"]'), "''")
-                    : null,
-              );
-              //await DBProvider.db.checkProductCategory(productCategory);
-              if(isImporting == true ){
-                await DBProvider.db.newProductCategory(productCategory);
-              }else{
-                if ((await DBProvider.db.checkProductCategory(productCategory)) == null) {
-                  await DBProvider.db.newProductCategory(productCategory);
-                }
-              }
-
-            }
-          }
-        }
       }
     }
-  }
+
   
 
   Future<bool> importInDataBase()async{
@@ -683,7 +583,7 @@ class ProcessFileProvider extends ChangeNotifier{
 
 
     //bool loading = false;
-    List<String?> listing = ["Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty"];
+    String? listing = "Empty";
     int totalProductLots =0;
 
 
@@ -701,36 +601,22 @@ class ProcessFileProvider extends ChangeNotifier{
 
                 }else{ throw "we haven't a file";}
 
-                /* check site  */
-                if((await DBProvider.db.getAllSites()).isNotEmpty){listing[0] = "Done";} else listing[0] = "Empty";
 
-                /* check company  */
-                if((await DBProvider.db.getAllCompanies()).isNotEmpty){listing[1] = "Done";} else listing[1] = "Empty";
 
-                /* check entrepot */
-                if((await DBProvider.db.getAllStockEntrepots()).isNotEmpty){listing[2] = "Done";} else listing[2] = "Empty";
 
                 /* stock system  */
-                if((await DBProvider.db.getAllStockSystems()).isNotEmpty){
-                  listing[4] = "Done";
-                  
+
                   await DBProvider.db.saveStocksOfEmplacement();
 
 
-                }else{listing[4] = "Empty"; totalProductLots = 0;}
 
-                /*Emplacement */
-                if((await DBProvider.db.getAllEmplacements()).isNotEmpty){listing[3] = "Done";} else listing[3] = "Empty";
-
-                /* products  */
-                if((await DBProvider.db.getAllProducts()).isNotEmpty){listing[5] = "Done";} else listing[5] = "Empty";
-
-                /* product category  */
-                if((await DBProvider.db.getAllProductCategories()).isNotEmpty){listing[7] = "Done";} else listing[7] = "Empty";
                 /* product lot  */
                 if((await DBProvider.db.getAllProductLots()).isNotEmpty){
-                  listing[6] = "Done";
+
+                  listing = "Done";
+
                   totalProductLots = (await DBProvider.db.getAllProductLots()).length;
+
                   DateTime dateTime =  DateTime(2000,1,1);
                   String oldDate = dateTime.toIso8601String();
 
@@ -742,7 +628,7 @@ class ProcessFileProvider extends ChangeNotifier{
 
 
 
-                }else{ listing[6] = "Empty"; throw "il n'y a pas des lots"; }
+                }else{ listing = "Empty"; totalProductLots = 0; throw "il n'y a pas des lots"; }
 
 
               }catch(e){ throw "catch error : "+e.toString(); }
@@ -753,21 +639,14 @@ class ProcessFileProvider extends ChangeNotifier{
                })
         .catchError((err)=>throw err);
 
-    print(listing[6]);
-    print(totalProductLots);
-await DBProvider.db.updateUser( User(
-  id: 1,
-  allProductLots: totalProductLots,
-  sitesTable: listing[0],
-  companyTable: listing[1],
-  stockEnterpriseTable: listing[2],
-  bureauxTable: listing[3],
-  stockSystemTable: listing[4],
-  produitsTable: listing[5],
-  productLotsTable: listing[6],
-  categoriesTable: listing[7],
+User? user = await DBProvider.db.getUser(1);
+    if(user!=null){
+      user.allProductLots = totalProductLots;
+        user.productLotsTable = listing;
+      await DBProvider.db.updateUser(user );
+    }
 
-));
+
 
     await MainProvider().getUser();
 
@@ -777,8 +656,9 @@ await DBProvider.db.updateUser( User(
 
   Future<bool> updateDataBase()async{
     //bool loading = false;
-    List<String> listing = ["Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty"];
-    int totalStockSys =0;
+    String listing = "Empty";
+
+    int totalProductLots =0;
 
     try{
 
@@ -788,56 +668,27 @@ await DBProvider.db.updateUser( User(
 
       }else{ throw "we haven't a file";}
 
-      /* check site  */
-      if((await DBProvider.db.getAllSites()).isNotEmpty){listing[0] = "Done";} else listing[0] = "Empty";
 
-      /* check company  */
-      if((await DBProvider.db.getAllCompanies()).isNotEmpty){listing[1] = "Done";} else listing[1] = "Empty";
-
-      /* check entrepot */
-      if((await DBProvider.db.getAllStockEntrepots()).isNotEmpty){listing[2] = "Done";} else listing[2] = "Empty";
-
-      /* stock system  */
-      if((await DBProvider.db.getAllStockSystems()).isNotEmpty){
-        listing[4] = "Done";
-        totalStockSys = (await DBProvider.db.getAllStockSystems()).length;
         await DBProvider.db.saveStocksOfEmplacement();
 
 
-      }else{listing[4] = "Empty"; totalStockSys = 0;}
-
-      /*Emplacement */
-      if((await DBProvider.db.getAllEmplacements()).isNotEmpty){listing[3] = "Done";} else listing[3] = "Empty";
-
-      /* products  */
-      if((await DBProvider.db.getAllProducts()).isNotEmpty){listing[5] = "Done";} else listing[5] = "Empty";
-
-      /* product category  */
-      if((await DBProvider.db.getAllProductCategories()).isNotEmpty){listing[7] = "Done";} else listing[7] = "Empty";
       /* product lot  */
       if((await DBProvider.db.getAllProductLots()).isNotEmpty){
-        listing[6] = "Done";
+        totalProductLots = (await DBProvider.db.getAllProductLots()).length;
+        listing = "Done";
 
-      }else{ listing[6] = "Empty"; throw "il n'y a pas des lots"; }
+      }else{ listing = "Empty"; totalProductLots = 0; throw "il n'y a pas des lots"; }
 
 
     }catch(e){ throw "catch error : "+e.toString(); }
 
-    print(listing[6]);
-    await DBProvider.db.updateUser(User(
-      id: 1,
-      allProductLots: totalStockSys,
-      sitesTable: listing[0],
-      companyTable: listing[1],
-      stockEnterpriseTable: listing[2],
-      bureauxTable: listing[3],
-      stockSystemTable: listing[4],
-      produitsTable: listing[5],
-      productLotsTable: listing[6],
-      categoriesTable: listing[7],
 
-    ));
-
+    User? user = await DBProvider.db.getUser(1);
+    if(user!=null){
+      user.allProductLots = totalProductLots;
+      user.productLotsTable = listing;
+      await DBProvider.db.updateUser(user );
+    }
 
     await MainProvider().getUser();
     return ((await DBProvider.db.getAllProductLots()).isNotEmpty)?true:false;
