@@ -11,10 +11,9 @@ import 'package:scanapp/view_models/providers/home.dart';
 import 'package:scanapp/view_models/providers/onGoing_list.dart';
 import 'package:scanapp/view_models/providers/process_on_file.dart';
 import 'package:scanapp/view_models/providers/inventories_list.dart';
-import 'package:scanapp/view_models/providers/search.dart';
 import 'package:scanapp/views/import_new_file.dart';
 import 'package:scanapp/views/onGoingList.dart';
-import 'package:scanapp/views/search.dart';
+
 
 class InventoryList extends StatelessWidget {
 

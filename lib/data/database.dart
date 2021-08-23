@@ -314,9 +314,9 @@ class DBProvider {
     if(res.isNotEmpty) one = StockSystem.fromMap(res.first);
     return one;
   }
-  Future<Product?> getProduct(int id) async {
+  Future<Product?> getProduct(int? id) async {
     final db = await database;
-    var res =await  db.query("Product", where: "id = ?", whereArgs: [id]);
+    var res = (id!=null)?(await  db.query("Product", where: "id = ?", whereArgs: [id])):(await db.rawQuery("SELECT * FROM Product WHERE id IS null"));
     Product? one;
     if(res.isNotEmpty) one = Product.fromMap(res.first);
     return one;

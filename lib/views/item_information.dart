@@ -9,8 +9,8 @@ import 'package:scanapp/view_models/providers/home.dart';
 
 
 class ItemInfo extends StatelessWidget {
-  int idProduct;
-  ItemInfo({required this.idProduct});
+  int? idProduct;
+  ItemInfo({this.idProduct});
 
   TextEditingController addCodeBar = TextEditingController();
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
