@@ -61,6 +61,12 @@ class DBProvider {
               "userPasswordActually TEXT,"
               "isDark TEXT,"
 
+              "siteTable TEXT,"
+              "companyTable TEXT,"
+              "entrePotTable TEXT,"
+              "stockSysTable TEXT,"
+              "emplacementTable TEXT,"
+
               "productLotsTable TEXT"
               ")");
           await db.insert("User", {
@@ -69,15 +75,18 @@ class DBProvider {
             "logoName":"Fecom IT",
             "logoImage":unit8List,
             "phoneEnterprise":"023 56 41 40",
-
             "addressEnterprise":"09, Coopérative El Moustakbel, Birkhadem. Alger, Algérie",
             "adminPassword":"123456",
             "userPasswordReset":"123456",
-
             "userPasswordActually":"123456",
             "isDark":"light",
-
             "productLotsTable":"Empty",
+
+            "siteTable":"Empty",
+            "companyTable":"Empty",
+            "entrePotTable":"Empty",
+            "stockSysTable":"Empty",
+            "emplacementTable":"Empty",
 
           });
           await db.execute("CREATE TABLE Site ("

@@ -752,7 +752,9 @@ class ProcessFileProvider extends ChangeNotifier{
 
   Future<bool> importInDataBase()async{
 
-    String? listing = "Empty";
+    String? lotTable = "Empty";
+    List<String> tables =["Empty","Empty","Empty","Empty","Empty"];
+
     int totalProductLots =0;
 
 
@@ -777,12 +779,27 @@ class ProcessFileProvider extends ChangeNotifier{
 
                   await DBProvider.db.saveStocksOfEmplacement();
 
+                  /* Site */
+                if((await DBProvider.db.getAllSites()).isNotEmpty)tables[0] = "Done";
+
+                /* Company */
+                if((await DBProvider.db.getAllCompanies()).isNotEmpty)tables[1] = "Done";
+
+                /* StockEntrepot */
+                if((await DBProvider.db.getAllStockEntrepots()).isNotEmpty)tables[2] = "Done";
+
+                /* Emplacement */
+                if((await DBProvider.db.getAllEmplacements()).isNotEmpty)tables[3] = "Done";
+
+                /* StockSys */
+                if((await DBProvider.db.getAllStockSystems()).isNotEmpty)tables[4] = "Done";
+
 
 
                 /* product lot  */
                 if((await DBProvider.db.getAllProductLots()).isNotEmpty){
 
-                  listing = "Done";
+                  lotTable = "Done";
 
                   totalProductLots = (await DBProvider.db.getAllProductLots()).length;
 
@@ -797,7 +814,7 @@ class ProcessFileProvider extends ChangeNotifier{
 
 
 
-                }else{ listing = "Empty"; totalProductLots = 0; throw "il n'y a pas des lots"; }
+                }else{ lotTable = "Empty"; totalProductLots = 0; throw "il n'y a pas des lots"; }
 
 
               }catch(e){ throw "catch error : "+e.toString(); }
@@ -811,7 +828,12 @@ class ProcessFileProvider extends ChangeNotifier{
 User? user = await DBProvider.db.getUser(1);
     if(user!=null){
       user.allProductLots = totalProductLots;
-        user.productLotsTable = listing;
+        user.productLotsTable = lotTable;
+        user.siteTable = tables[0];
+        user.companyTable = tables[1];
+        user.entrePotTable = tables[2];
+        user.emplacementTable = tables[3];
+        user.stockSysTable = tables[4];
       await DBProvider.db.updateUser(user );
     }
 
@@ -824,7 +846,8 @@ User? user = await DBProvider.db.getUser(1);
   }
 
   Future<bool> updateDataBase()async{
-    String listing = "Empty";
+    String lotTable = "Empty";
+    List<String> tables =["Empty","Empty","Empty","Empty","Empty"];
 
     int totalProductLots =0;
 
@@ -840,12 +863,28 @@ User? user = await DBProvider.db.getUser(1);
         await DBProvider.db.saveStocksOfEmplacement();
 
 
+      /* Site */
+      if((await DBProvider.db.getAllSites()).isNotEmpty)tables[0] = "Done";
+
+      /* Company */
+      if((await DBProvider.db.getAllCompanies()).isNotEmpty)tables[1] = "Done";
+
+      /* StockEntrepot */
+      if((await DBProvider.db.getAllStockEntrepots()).isNotEmpty)tables[2] = "Done";
+
+      /* Emplacement */
+      if((await DBProvider.db.getAllEmplacements()).isNotEmpty)tables[3] = "Done";
+
+      /* StockSys */
+      if((await DBProvider.db.getAllStockSystems()).isNotEmpty)tables[4] = "Done";
+
+
       /* product lot  */
       if((await DBProvider.db.getAllProductLots()).isNotEmpty){
         totalProductLots = (await DBProvider.db.getAllProductLots()).length;
-        listing = "Done";
+        lotTable = "Done";
 
-      }else{ listing = "Empty"; totalProductLots = 0; throw "il n'y a pas des lots"; }
+      }else{ lotTable = "Empty"; totalProductLots = 0; throw "il n'y a pas des lots"; }
 
 
     }catch(e){ throw "catch error : "+e.toString(); }
@@ -854,7 +893,12 @@ User? user = await DBProvider.db.getUser(1);
     User? user = await DBProvider.db.getUser(1);
     if(user!=null){
       user.allProductLots = totalProductLots;
-      user.productLotsTable = listing;
+      user.productLotsTable = lotTable;
+        user.siteTable = tables[0];
+        user.companyTable = tables[1];
+        user.entrePotTable = tables[2];
+        user.emplacementTable = tables[3];
+        user.stockSysTable = tables[4];
       await DBProvider.db.updateUser(user );
     }
 
