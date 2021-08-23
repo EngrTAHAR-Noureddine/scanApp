@@ -6,12 +6,16 @@ import 'dart:typed_data';
 
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:scanapp/models/database_models/company.dart';
 import 'package:scanapp/models/database_models/counter_stocks_in_emplacement.dart';
 import 'package:scanapp/models/database_models/emplacements.dart';
 import 'package:scanapp/models/database_models/inventories.dart';
 import 'package:scanapp/models/database_models/inventory_lines.dart';
+import 'package:scanapp/models/database_models/product_category.dart';
 import 'package:scanapp/models/database_models/product_lots.dart';
 import 'package:scanapp/models/database_models/products.dart';
+import 'package:scanapp/models/database_models/site.dart';
+import 'package:scanapp/models/database_models/stock_entre_pot.dart';
 import 'package:scanapp/models/database_models/stock_systems.dart';
 import 'package:scanapp/models/database_models/user.dart';
 import 'package:sqflite/sqflite.dart';
@@ -76,8 +80,30 @@ class DBProvider {
             "productLotsTable":"Empty",
 
           });
-
-
+          await db.execute("CREATE TABLE Site ("
+              "id INTEGER PRIMARY KEY,"
+              "nom TEXT"
+              ")");
+          await db.execute("CREATE TABLE Company ("
+              "id INTEGER PRIMARY KEY,"
+              "nom TEXT,"
+              "siteId INTEGER,"
+              "logo TEXT"
+              ")");
+          await db.execute("CREATE TABLE StockEntrepot ("
+              "id INTEGER PRIMARY KEY,"
+              "nom TEXT,"
+              "companyId INTEGER,"
+              "directionType TEXT,"
+              "directionId INTEGER"
+              ")");
+          await db.execute("CREATE TABLE ProductCategory ("
+              "id INTEGER PRIMARY KEY,"
+              "categoryName TEXT,"
+              "categoryCode TEXT,"
+              "parentId INTEGER,"
+              "parentPath TEXT"
+              ")");
 
           await db.execute("CREATE TABLE StockSystem ("
               "id INTEGER PRIMARY KEY,"
@@ -132,7 +158,26 @@ class DBProvider {
         });
   }
 
-
+  newSite(Site newSite) async {
+    final db = await database;
+    var res = await db.insert("Site", newSite.toMap());
+    return res;
+  }
+  newCompany(Company newCompany) async {
+    final db = await database;
+    var res = await db.insert("Company", newCompany.toMap());
+    return res;
+  }
+  newStockEntrepot(StockEntrepot newStockEntrepot) async {
+    final db = await database;
+    var res = await db.insert("StockEntrepot", newStockEntrepot.toMap());
+    return res;
+  }
+  newProductCategory(ProductCategory newProductCategory) async {
+    final db = await database;
+    var res = await db.insert("ProductCategory", newProductCategory.toMap());
+    return res;
+  }
   newEmplacement(Emplacement newEmplacement) async {
     final db = await database;
     var res = await db.insert("Emplacement", newEmplacement.toMap());
@@ -189,11 +234,13 @@ class DBProvider {
       await db.transaction((txn) async {
         var batch = txn.batch();
 
+        batch.delete("Site");
+        batch.delete("Company");
+        batch.delete("StockEntrepot");
         batch.delete("StockSystem");
-
         batch.delete("Emplacement");
         batch.delete("Product");
-
+        batch.delete("ProductCategory");
         batch.delete("ProductLot");
         batch.delete("StocksCounter");
 
@@ -239,7 +286,27 @@ class DBProvider {
     if(res.isNotEmpty) one = Emplacement.fromMap(res.first);
     return one;
   }
-
+  Future<Site?> getSite(int id) async {
+    final db = await database;
+    var res =await  db.query("Site", where: "id = ?", whereArgs: [id]);
+    Site? site;
+    if(res.isNotEmpty) site = Site.fromMap(res.first);
+    return site;
+  }
+  Future<Company?> getCompany(int id) async {
+    final db = await database;
+    var res =await  db.query("Company", where: "id = ?", whereArgs: [id]);
+    Company? company;
+    if(res.isNotEmpty) company = Company.fromMap(res.first);
+    return company;
+  }
+  Future<StockEntrepot?> getStockEntrepot(int id) async {
+    final db = await database;
+    var res =await  db.query("StockEntrepot", where: "id = ?", whereArgs: [id]);
+    StockEntrepot? stockEntrepot;
+    if(res.isNotEmpty) stockEntrepot = StockEntrepot.fromMap(res.first);
+    return stockEntrepot;
+  }
   Future<StockSystem?> getStockSystem(int id) async {
     final db = await database;
     var res =await  db.query("StockSystem", where: "id = ?", whereArgs: [id]);
@@ -261,7 +328,13 @@ class DBProvider {
     if(res.isNotEmpty) one = ProductLot.fromMap(res.first);
     return one;
   }
-
+  Future<ProductCategory?> getProductCategory(int id) async {
+    final db = await database;
+    var res =await  db.query("ProductCategory", where: "id = ?", whereArgs: [id]);
+    ProductCategory? one;
+    if(res.isNotEmpty) one = ProductCategory.fromMap(res.first);
+    return one;
+  }
 
   Future<Inventory?> getInventory(int id) async {
     final db = await database;
@@ -306,7 +379,60 @@ class DBProvider {
 
 
   /* get for update database */
+  Future<Site?> checkSite(Site check) async {
 
+    final db = await database;
+    List<dynamic> myVaribles = [
+      (check.nom == null)?"IS null ":"= '${check.nom}'",
+    ];
+    var res = await db.rawQuery("SELECT * FROM Site WHERE nom ${myVaribles[0]}");
+
+    // var res = await  db.query("Site", where: "nom ${myVaribles[0]} ?", whereArgs: [check.nom]);
+
+    Site? site;
+    if((res != null) && (res.isNotEmpty)) {
+      site = Site.fromMap(res.first);
+    }
+    return site;
+  }
+  Future<Company?> checkCompany(Company check) async {
+    final db = await database;
+
+
+    List<dynamic> myVaribles =[
+      (check.nom == null)?"IS null ":"= '${check.nom}'",
+      (check.logo == null)?"IS null ":"= '${check.logo}'",
+      (check.siteId == null)?"IS null ":"= '${check.siteId}'",
+    ];
+
+    var res = await db.rawQuery("SELECT * FROM Company WHERE nom ${myVaribles[0]} and logo ${myVaribles[1]} and siteId ${myVaribles[2]}");
+
+    Company? someth;
+
+    if(res.isNotEmpty) someth = Company.fromMap(res.first);
+
+
+    return someth;
+  }
+  Future<StockEntrepot?> checkStockEntrepot(StockEntrepot check) async {
+    final db = await database;
+    List<dynamic> myVaribles =[
+      (check.nom == null)?"IS null ":"= '${check.nom}'",
+      (check.companyId == null)?"IS null ":"= '${check.companyId}'",
+      (check.directionId == null)?"IS null ":"= '${check.directionId}'",
+      (check.directionType == null)?"IS null ":"= '${check.directionType}'",
+    ];
+    var res = await db.rawQuery("SELECT * FROM StockEntrepot WHERE nom ${myVaribles[0]} and companyId ${myVaribles[1]} and directionId ${myVaribles[2]} and directionType ${myVaribles[3]}");
+
+
+
+    StockEntrepot? someth;
+
+    if(res.isNotEmpty) someth = StockEntrepot.fromMap(res.first);
+
+
+    return someth;
+  }
   Future<Emplacement?> checkEmplacement(Emplacement check) async {
     final db = await database;
     List<dynamic> myVaribles =[
@@ -339,6 +465,21 @@ class DBProvider {
       if(res.isNotEmpty) someth = StockSystem.fromMap(res.first);
 
 
+    return someth;
+  }
+  Future<ProductCategory?> checkProductCategory(ProductCategory check) async {
+    final db = await database;
+    List<dynamic> myVaribles =[
+      (check.categoryCode == null)?"IS null ":"= '${check.categoryCode}'",
+      (check.categoryName == null)?"IS null ":"= '${check.categoryName}'",
+      (check.parentId == null)?"IS null ":"= '${check.parentId}'",
+      (check.parentPath == null)?"IS null ":"= '${check.parentPath}'",
+    ];
+    var res = await db.rawQuery("SELECT * FROM ProductCategory WHERE categoryCode ${myVaribles[0]} and categoryName ${myVaribles[1]} and parentId ${myVaribles[2]} and parentPath ${myVaribles[3]}");
+
+    ProductCategory? someth;
+
+    if(res.isNotEmpty) someth = ProductCategory.fromMap(res.first);
     return someth;
   }
   Future<Product?> checkProduct(Product check) async {
@@ -380,7 +521,34 @@ class DBProvider {
   /* *************************************** */
 
   /* Get ALL */
-
+  Future<List<Site>> getAllSites() async {
+    final db = await database;
+    var res = await db.rawQuery("SELECT * FROM Site");
+    List<Site> list =
+    res.isNotEmpty ? res.map((c) => Site.fromMap(c)).toList() : [];
+    return list;
+  }
+  Future<List<Company>> getAllCompanies() async {
+    final db = await database;
+    var res = await db.rawQuery("SELECT * FROM Company");
+    List<Company> list =
+    res.isNotEmpty ? res.map((c) => Company.fromMap(c)).toList() : [];
+    return list;
+  }
+  Future<List<StockEntrepot>> getAllStockEntrepots() async {
+    final db = await database;
+    var res = await db.rawQuery("SELECT * FROM StockEntrepot");
+    List<StockEntrepot> list =
+    res.isNotEmpty ? res.map((c) => StockEntrepot.fromMap(c)).toList() : [];
+    return list;
+  }
+  Future<List<ProductCategory>> getAllProductCategories() async {
+    final db = await database;
+    var res = await db.rawQuery("SELECT * FROM ProductCategory");
+    List<ProductCategory> list =
+    res.isNotEmpty ? res.map((c) => ProductCategory.fromMap(c)).toList() : [];
+    return list;
+  }
   Future<List<Emplacement>> getAllEmplacements() async {
     final db = await database;
     var res = await db.rawQuery("SELECT * FROM Emplacement");

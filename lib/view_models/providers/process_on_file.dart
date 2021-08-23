@@ -7,10 +7,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:scanapp/data/database.dart';
+import 'package:scanapp/models/database_models/company.dart';
 import 'package:scanapp/models/database_models/emplacements.dart';
 import 'package:scanapp/models/database_models/inventories.dart';
+import 'package:scanapp/models/database_models/product_category.dart';
 import 'package:scanapp/models/database_models/product_lots.dart';
 import 'package:scanapp/models/database_models/products.dart';
+import 'package:scanapp/models/database_models/site.dart';
+import 'package:scanapp/models/database_models/stock_entre_pot.dart';
 import 'package:scanapp/models/database_models/stock_systems.dart';
 import 'package:scanapp/models/database_models/user.dart';
 import 'package:scanapp/models/variables_define/colors.dart';
@@ -245,54 +249,48 @@ class ProcessFileProvider extends ChangeNotifier{
     Color aColor =  (isSuccess == "Success")? ColorsOf().finisheItem():ColorsOf().deleteItem();
     Color textColor = (isSuccess == "Success")? ColorsOf().borderContainer():ColorsOf().backGround();
 
-    return WillPopScope(
-      onWillPop: () async{
-        return false;
-      },
-      child: Scaffold(
-
-        backgroundColor: ColorsOf().backGround(),
-        body: Container(
-            color: ColorsOf().backGround(),
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
+    return Scaffold(
+      backgroundColor: ColorsOf().backGround(),
+      body: Container(
+          color: ColorsOf().backGround(),
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          alignment: Alignment.center,
+          child: Container(
             alignment: Alignment.center,
-            child: Container(
-              alignment: Alignment.center,
-              width: 200,
-              height: 200,
-              child: Column(
-                children: [
+            width: 200,
+            height: 200,
+            child: Column(
+              children: [
 
-                  Text(msg, style: TextStyle(fontSize: 16 ,fontWeight: FontWeight.bold, color: ColorsOf().primaryBackGround(),),),
-                  SizedBox(height: 50,),
-                  MaterialButton(
-                    height: 50,
-                    minWidth: 200,
-                    color: aColor ,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    padding: EdgeInsets.all(0),
-                    child: Text("Retournez à la page d'accueil" ,style: TextStyle(color:textColor ),),
-
-
-                    onPressed: ()async{
-                      HomeProvider().changeSelecter(0, context, "/inventoryList");
-                      await MainProvider().getUser();
-                      Navigator.pop(context);
-                      //Navigator.pushNamed(context, "/home");
-                    },
-
-
+                Text(msg, style: TextStyle(fontSize: 16 ,fontWeight: FontWeight.bold, color: ColorsOf().primaryBackGround(),),),
+                SizedBox(height: 50,),
+                MaterialButton(
+                  height: 50,
+                  minWidth: 200,
+                  color: aColor ,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
+                  padding: EdgeInsets.all(0),
+                  child: Text("Retournez à la page d'accueil" ,style: TextStyle(color:textColor ),),
 
-                ],
-              ),
 
+                  onPressed: ()async{
+                    HomeProvider().changeSelecter(0, context, "/inventoryList");
+                    await MainProvider().getUser();
+                    Navigator.pop(context);
+                    //Navigator.pushNamed(context, "/home");
+                  },
+
+
+                ),
+
+              ],
             ),
+
           ),
-      ),
+        ),
     );
   }
 
@@ -324,6 +322,11 @@ class ProcessFileProvider extends ChangeNotifier{
       "StockSystem",
       "Product",
       "Lot",
+
+      "Site",
+      "Company",
+      "Entrepot",
+      "Category"
     ];
 
     List<List<String>> columnSheet = [
@@ -331,7 +334,13 @@ class ProcessFileProvider extends ChangeNotifier{
       ["id","nom","enterpot-id","barcodeemp"],
       ["id","EmplacmentId","ProductId","ProductLotId","Quantity"],
       ["id","code","nom","categoryId","gestionLot","producttype"],
-      ["id","immatriculation","num_serie","num_lot","product_id"]
+      ["id","immatriculation","num_serie","num_lot","product_id"],
+
+      ["id","nom"],
+      ["id","nom","logo","site_id"],
+      ["id","nom","DirectionType","CompanyId","DirectionId"],
+      ["id","nom","code","parentPath","parentId"],
+
     ];
 
 
@@ -589,7 +598,188 @@ class ProcessFileProvider extends ChangeNotifier{
           }
         }
 
+        /*Site */
+        if (excel.tables.keys.contains(filesName[5])) {
+        List<dynamic> firstProductLot;
+        firstProductLot = excel.tables[filesName[5]].rows.first;
+
+        for (var row in excel.tables[filesName[5]].rows) {
+          print(row);
+
+          if (!row.contains(columnSheet[5][0])) {
+            Site site = new Site(
+              id: (firstProductLot.indexOf(columnSheet[5][0]) < 0)
+                  ? null
+                  : row[firstProductLot.indexOf(columnSheet[5][0])],
+
+              nom: (firstProductLot.indexOf(columnSheet[5][1]) < 0) ? null : (row[firstProductLot.indexOf(
+                  columnSheet[5][1])] != null) ? row[firstProductLot.indexOf(
+                  columnSheet[5][1])].toString().replaceAll(
+                  RegExp('[\',\"]'), "''") : null,
+
+            );
+            //await DBProvider.db.checkProductLot(productLot);
+            if(isImporting == true ){
+              await DBProvider.db.newSite(site);
+            }else{
+              if ((await DBProvider.db.checkSite(site)) == null) {
+                await DBProvider.db.newSite(site);
+              }
+            }
+
+          }
+        }
       }
+
+        /* Company */
+        if (excel.tables.keys.contains(filesName[6])) {
+          List<dynamic> firstProductLot;
+          firstProductLot = excel.tables[filesName[6]].rows.first;
+
+          for (var row in excel.tables[filesName[6]].rows) {
+            print(row);
+
+            if (!row.contains(columnSheet[6][0])) {
+              Company company = new Company(
+                id: (firstProductLot.indexOf(columnSheet[6][0]) < 0)
+                    ? null
+                    : row[firstProductLot.indexOf(columnSheet[6][0])],
+
+                nom: (firstProductLot.indexOf(columnSheet[6][1]) <
+                    0) ? null : (row[firstProductLot.indexOf(
+                    columnSheet[6][1])] != null) ? row[firstProductLot.indexOf(
+                    columnSheet[6][1])].toString().replaceAll(
+                    RegExp('[\',\"]'), "''") : null,
+
+                logo: (firstProductLot.indexOf(columnSheet[6][2]) < 0)
+                    ? null
+                    : (row[firstProductLot.indexOf(columnSheet[6][2])] != null)
+                    ? row[firstProductLot.indexOf(columnSheet[6][2])]
+                    .toString()
+                    .replaceAll(RegExp('[\',\"]'), "''")
+                    : null,
+
+                siteId:(firstProductLot.indexOf(columnSheet[6][3]) < 0)
+                    ? null
+                    : row[firstProductLot.indexOf(columnSheet[6][3])],
+              );
+              //await DBProvider.db.checkProductLot(productLot);
+              if(isImporting == true ){
+                await DBProvider.db.newCompany(company);
+              }else{
+                if ((await DBProvider.db.checkCompany(company)) == null) {
+                  await DBProvider.db.newCompany(company);
+                }
+              }
+
+            }
+          }
+        }
+
+        /* StockEntrepot */
+        if (excel.tables.keys.contains(filesName[7])) {
+          List<dynamic> firstProductLot;
+          firstProductLot = excel.tables[filesName[7]].rows.first;
+
+          for (var row in excel.tables[filesName[7]].rows) {
+            print(row);
+
+            if (!row.contains(columnSheet[7][0])) {
+              StockEntrepot stockEntrPot = new StockEntrepot(
+                id: (firstProductLot.indexOf(columnSheet[7][0]) < 0)
+                    ? null
+                    : row[firstProductLot.indexOf(columnSheet[7][0])],
+
+                nom: (firstProductLot.indexOf(columnSheet[7][1]) <
+                    0) ? null : (row[firstProductLot.indexOf(
+                    columnSheet[7][1])] != null) ? row[firstProductLot.indexOf(
+                    columnSheet[7][1])].toString().replaceAll(
+                    RegExp('[\',\"]'), "''") : null,
+
+                directionType:(firstProductLot.indexOf(columnSheet[7][2]) < 0)
+                    ? null
+                    : (row[firstProductLot.indexOf(columnSheet[7][2])] != null)
+                    ? row[firstProductLot.indexOf(columnSheet[7][2])]
+                    .toString()
+                    .replaceAll(RegExp('[\',\"]'), "''")
+                    : null,
+
+                companyId: (firstProductLot.indexOf(columnSheet[7][3]) < 0)
+                    ? null
+                    : row[firstProductLot.indexOf(columnSheet[7][3])],
+
+                directionId: (firstProductLot.indexOf(columnSheet[7][4]) < 0)
+                    ? null
+                    : row[firstProductLot.indexOf(columnSheet[7][4])],
+              );
+              //await DBProvider.db.checkProductLot(productLot);
+              if(isImporting == true ){
+                await DBProvider.db.newStockEntrepot(stockEntrPot);
+              }else{
+                if ((await DBProvider.db.checkStockEntrepot(stockEntrPot)) == null) {
+                  await DBProvider.db.newStockEntrepot(stockEntrPot);
+                }
+              }
+
+            }
+          }
+        }
+
+        /* ProductCategory */
+        if (excel.tables.keys.contains(filesName[8])) {
+          List<dynamic> firstProductLot;
+          firstProductLot = excel.tables[filesName[8]].rows.first;
+
+          for (var row in excel.tables[filesName[8]].rows) {
+            print(row);
+
+            if (!row.contains(columnSheet[8][0])) {
+              ProductCategory categoryProduct = new ProductCategory(
+                id: (firstProductLot.indexOf(columnSheet[8][0]) < 0)
+                    ? null
+                    : row[firstProductLot.indexOf(columnSheet[8][0])],
+
+                categoryName: (firstProductLot.indexOf(columnSheet[8][1]) <
+                    0) ? null : (row[firstProductLot.indexOf(
+                    columnSheet[8][1])] != null) ? row[firstProductLot.indexOf(
+                    columnSheet[8][1])].toString().replaceAll(
+                    RegExp('[\',\"]'), "''") : null,
+
+                categoryCode:(firstProductLot.indexOf(columnSheet[8][2]) < 0)
+                    ? null
+                    : (row[firstProductLot.indexOf(columnSheet[8][2])] != null)
+                    ? row[firstProductLot.indexOf(columnSheet[8][2])]
+                    .toString()
+                    .replaceAll(RegExp('[\',\"]'), "''")
+                    : null,
+
+                parentPath: (firstProductLot.indexOf(columnSheet[8][3]) < 0)
+                    ? null
+                    : (row[firstProductLot.indexOf(columnSheet[8][3])] != null)
+                    ? row[firstProductLot.indexOf(columnSheet[8][3])]
+                    .toString()
+                    .replaceAll(RegExp('[\',\"]'), "''")
+                    : null,
+
+                parentId: (firstProductLot.indexOf(columnSheet[8][4]) < 0)
+                    ? null
+                    : row[firstProductLot.indexOf(columnSheet[8][4])],
+              );
+              //await DBProvider.db.checkProductLot(productLot);
+              if(isImporting == true ){
+                await DBProvider.db.newProductCategory(categoryProduct);
+              }else{
+                if ((await DBProvider.db.checkProductCategory(categoryProduct)) == null) {
+                  await DBProvider.db.newProductCategory(categoryProduct);
+                }
+              }
+
+            }
+          }
+        }
+
+
+    }
     }
 
   
