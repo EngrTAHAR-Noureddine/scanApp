@@ -7,14 +7,18 @@ import 'package:scanapp/view_models/providers/main.dart';
 import 'package:scanapp/view_models/providers/settings.dart';
 import 'package:scanapp/models/custom_expansion_tile.dart' as custom;
 class Settings extends StatelessWidget {
-
+  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Consumer<SettingsProvider>(
         builder: (context, value, child){
-          return Container(
-            color: ColorsOf().backGround(),
-            child: Container(
+          return Scaffold(
+              key: scaffoldKey,
+              backgroundColor: ColorsOf().backGround(),
+              appBar: HomeProvider().customAppBar(context,scaffoldKey),
+              drawer: HomeProvider().customDrawer(context,7),
+              floatingActionButton:HomeProvider().customFAB(context),
+            body: Container(
               padding: EdgeInsets.all(10),
               child: ListView(
                 children: [

@@ -5,20 +5,117 @@ import 'package:scanapp/models/database_models/product_lots.dart';
 import 'package:scanapp/models/variables_define/colors.dart';
 import 'package:scanapp/view_models/providers/home.dart';
 import 'package:scanapp/view_models/providers/search.dart';
-
+import 'package:flutter/services.dart';
 class Search extends StatelessWidget {
-
+  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
-    return WillPopScope (
-      onWillPop: ()async{
-        HomeProvider().setSelector(0);
-        return false;
-      },
-      child: Consumer<SearchProvider>(
-          builder: (context, value, child) {
+    return Consumer<SearchProvider>(
+        builder: (context, value, child) {
 
-            return FutureBuilder(
+          return Scaffold(
+            key: scaffoldKey,
+            backgroundColor: ColorsOf().backGround(),
+            appBar: AppBar(
+              backwardsCompatibility: false,
+              systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: Colors.transparent,
+                statusBarIconBrightness:Theme.of(context).primaryColorBrightness,
+              ),
+
+              brightness: Theme.of(context).primaryColorBrightness,
+
+              backgroundColor: ColorsOf().backGround(),
+              leading: IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: Icon(Icons.arrow_back , color: ColorsOf().primaryBackGround(),),
+              ),
+              elevation: 0,
+              actions: [
+                IconButton(
+                  icon: Icon(
+                    Icons.close,
+                    color: ColorsOf().primaryBackGround(),
+                  ),
+                  onPressed: () => Navigator.pop(context),
+                ),
+                AnimatedContainer(
+                  width:  MediaQuery.of(context).size.width * 0.70,
+                  margin: EdgeInsets.only(right: !HomeProvider().bigger ? 10 : 10),
+                  color: Colors.transparent,
+                  child: TextField(
+                    readOnly: false,
+                    //focusNode: MainProvider().getCurrentFocus(context),
+                    textAlign: TextAlign.left,
+                    style: TextStyle(fontSize: 14, color: ColorsOf().borderContainer()),
+                    maxLines: 1,
+                    maxLength: 100,
+                    showCursor: true,
+
+                    onChanged: (value){
+
+                      SearchProvider().onSearch(value);
+
+                    },
+                    //(value){setSelector(9);SearchProvider().onSearch(value);},
+                    controller: value.searchWord,
+                    autofocus: true,
+                    minLines: 1,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: ColorsOf().primaryBackGround(),
+                              style: BorderStyle.solid,
+                              width: 1
+                          )
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: ColorsOf().primaryBackGround(),
+                              style: BorderStyle.solid,
+                              width: 2
+                          )
+                      ),
+                      focusedErrorBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: ColorsOf().primaryBackGround(),
+                              style: BorderStyle.solid,
+                              width: 1
+                          )
+                      ),
+                      errorBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: ColorsOf().deleteItem(),
+                              style: BorderStyle.solid,
+                              width: 1
+                          )
+                      ),
+                      //isDense: true,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                      alignLabelWithHint: false,
+                      labelText: null,
+
+                      counterStyle: TextStyle(
+                        height: double.minPositive,
+                      ),
+                      counterText: "",
+                      hintText: "Rechercher...",
+                      hintStyle: TextStyle(color: ColorsOf().importField()),
+
+                    ),
+                    toolbarOptions: ToolbarOptions(
+                      cut: true,
+                      copy: true,
+                      selectAll: true,
+                      paste: true,
+                    ),
+                  ),
+                  duration: Duration(milliseconds: 150),
+                ) ,
+              ],
+            ),
+            body: FutureBuilder(
               future: value.getList(),
               builder: (context, snapshot) {
 
@@ -28,9 +125,7 @@ class Search extends StatelessWidget {
 
 
                   if(list.isNotEmpty){
-                    return Scaffold(
-                      backgroundColor: ColorsOf().backGround(),
-                      body: Container(
+                    return  Container(
                         height: MediaQuery.of(context).size.height,
                         width: MediaQuery.of(context).size.width,
                         padding: EdgeInsets.only(top: 0, left: 10, right: 10, bottom: 10),
@@ -120,8 +215,8 @@ class Search extends StatelessWidget {
                                   )
                               );
                             }),
-                      ),
-                    );
+                      );
+
                   }else{
                     return Container(
                       color:ColorsOf().backGround(),
@@ -146,10 +241,10 @@ class Search extends StatelessWidget {
 
 
               }
-            );
+            ),
+          );
 
-          }),
-    );
+        });
 
   }
 }

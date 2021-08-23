@@ -32,13 +32,13 @@ class LogInProvider extends ChangeNotifier{
             if (this.formKey.currentState!.validate()) {
               passwordController.clear();
               _switch = false;
-              HomeProvider().setSelector(0);
+              //HomeProvider().setSelector(null);
               Navigator.pop(context);
               Navigator.push(
                 context,
                 MaterialPageRoute<void>(
                   builder: (BuildContext context) => Home(),
-                  fullscreenDialog: true,
+                 // fullscreenDialog: true,
                 ),
               );
 
@@ -190,13 +190,13 @@ class LogInProvider extends ChangeNotifier{
             if (this.formKey.currentState!.validate()) {
               passwordController.clear();
               _switch = false;
-              HomeProvider().setSelector(0);
+             // HomeProvider().setSelector(null);
                         Navigator.pop(context);
                         Navigator.push(
                           context,
                           MaterialPageRoute<void>(
                             builder: (BuildContext context) => Home(),
-                            fullscreenDialog: true,
+                            //fullscreenDialog: true,
                           ),
                         );
 

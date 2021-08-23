@@ -188,10 +188,26 @@ class ProcessFileProvider extends ChangeNotifier{
 
             if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
              String res =  (snapshot.data == true)?"Success":"Failed";
-              return whenFinishProcess(context, res);
+             Navigator.pop(context);
+             Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (BuildContext context) => whenFinishProcess(context, res),
+                      // fullscreenDialog: true,
+                    ),
+                  );
+             // return whenFinishProcess(context, res);
             }else if(snapshot.connectionState == ConnectionState.done && snapshot.hasError && snapshot.error != null){
               String res = "Failed";
-              return whenFinishProcess(context, res);
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (BuildContext context) => whenFinishProcess(context, res),
+                  // fullscreenDialog: true,
+                ),
+              );
+             // return whenFinishProcess(context, res);
             }
 
             return Container(

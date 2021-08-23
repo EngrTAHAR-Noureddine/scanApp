@@ -41,6 +41,8 @@ class ScannerProvider extends ChangeNotifier{
 */
 /* Provider Functions  */
   void clearVars(){
+    print("inter to the clear var ===** ");
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
     showKeyBoard = false;
     barCode = null;
     didFinished = false;
@@ -193,7 +195,9 @@ class ScannerProvider extends ChangeNotifier{
       alignment: Alignment.center,
       padding: EdgeInsets.only(left: 10, right: 10, ),
       child: TextFormField(
+
         enabled: !didFinished,
+
         onTap: (){
           showKeyBoard = true;
         },
@@ -287,7 +291,12 @@ class ScannerProvider extends ChangeNotifier{
 
     );
   }
+  Widget spaceBetween(){
 
+    //FocusScope.of(context).requestFocus(focusNode);
+   if(!showKeyBoard) SystemChannels.textInput.invokeMethod('TextInput.hide');
+    return SizedBox(height: 10);
+  }
 
   bool _switch = false;
   bool asDefault = false;

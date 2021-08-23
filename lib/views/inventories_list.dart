@@ -11,22 +11,27 @@ import 'package:scanapp/view_models/providers/home.dart';
 import 'package:scanapp/view_models/providers/onGoing_list.dart';
 import 'package:scanapp/view_models/providers/process_on_file.dart';
 import 'package:scanapp/view_models/providers/inventories_list.dart';
+import 'package:scanapp/view_models/providers/search.dart';
 import 'package:scanapp/views/import_new_file.dart';
+import 'package:scanapp/views/onGoingList.dart';
+import 'package:scanapp/views/search.dart';
 
 class InventoryList extends StatelessWidget {
 
+  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
-
-
-  bool isPortrait = false;
   @override
   Widget build(BuildContext context) {
     return  Consumer<InventoryListProvider>(
         builder: (context, value, child) {
 
           return Scaffold(
+            key: scaffoldKey,
             backgroundColor: ColorsOf().backGround(),
-            body: Container(
+            appBar: HomeProvider().customAppBar(context,scaffoldKey),
+            drawer: HomeProvider().customDrawer(context,0),
+            floatingActionButton:HomeProvider().customFAB(context),
+            body:Container(
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
               padding: EdgeInsets.only(top:0, left: 10, right: 10, bottom: 10),
@@ -104,21 +109,21 @@ class InventoryList extends StatelessWidget {
                                               width: 40,
                                               color: Colors.transparent,
                                               child:MaterialButton(
-                                              splashColor: Colors.transparent,
-                                              focusColor: Colors.transparent,
-                                              hoverColor: Colors.transparent,
-                                              highlightColor: Colors.transparent,
-                                              highlightElevation: 0,
-                                              elevation: 0,
-                                              focusElevation: 0,
-                                              hoverElevation: 0,
-                                              minWidth: 40,
-                                              height: 40,
-                                              child: Icon(
-                                              MyFlutterApp.update,
-                                              color:(list[index].status != "finished")?ColorsOf().borderContainer():ColorsOf().importField(),
-                                              size: 25,
-                                              ),
+                                                    splashColor: Colors.transparent,
+                                                    focusColor: Colors.transparent,
+                                                    hoverColor: Colors.transparent,
+                                                    highlightColor: Colors.transparent,
+                                                    highlightElevation: 0,
+                                                    elevation: 0,
+                                                    focusElevation: 0,
+                                                    hoverElevation: 0,
+                                                    minWidth: 40,
+                                                    height: 40,
+                                                    child: Icon(
+                                                              MyFlutterApp.update,
+                                                              color:(list[index].status != "finished")?ColorsOf().borderContainer():ColorsOf().importField(),
+                                                              size: 25,
+                                                                ),
 
 
                                               onPressed:(list[index].status != "finished")? ()=>ProcessFileProvider().showDialogToProcess(context, "update"):null,
@@ -281,7 +286,21 @@ class InventoryList extends StatelessWidget {
                                           hoverElevation: 0,
                                           child: Text("Parcours" , style: TextStyle(fontSize: 20, color:ColorsOf().containerThings()),),
 
-                                          onPressed:(list[index].status == "ongoing")? (){OnGoingListProvider().id =list[index].id;  HomeProvider().setSelector(10); }: null,
+                                          onPressed:(list[index].status == "ongoing")? (){
+
+                                            OnGoingListProvider().id =list[index].id;
+                                             //HomeProvider().setSelector(10);
+                                            Navigator.pop(context);
+                                            Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute<void>(
+                                                              builder: (BuildContext context) => OnGoingListInventory(),
+                                                              // fullscreenDialog: true,
+                                                              ),
+                                               );
+
+
+                                          }: null,
                                         ),
                                       ),
                                     )
@@ -306,7 +325,7 @@ class InventoryList extends StatelessWidget {
 
                 }
               ),
-            ),
+            ) ,
           );
 
         });

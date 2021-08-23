@@ -3,16 +3,21 @@ import 'package:provider/provider.dart';
 import 'package:scanapp/models/database_models/inventories.dart';
 import 'package:scanapp/models/variables_define/colors.dart';
 import 'package:scanapp/view_models/providers/exports_list.dart';
+import 'package:scanapp/view_models/providers/home.dart';
 
 class Export extends StatelessWidget {
-
+  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return  Consumer<ExportProvider>(
         builder: (context, value, child) {
 
           return Scaffold(
+            key: scaffoldKey,
             backgroundColor: ColorsOf().backGround(),
+            appBar: HomeProvider().customAppBar(context,scaffoldKey),
+            drawer: HomeProvider().customDrawer(context,6),
+            floatingActionButton:HomeProvider().customFAB(context),
             body: FutureBuilder(
               future: value.getAllInventory(),
               builder: (context, snapshot) {

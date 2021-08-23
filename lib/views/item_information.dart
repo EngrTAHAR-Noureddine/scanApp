@@ -5,6 +5,7 @@ import 'package:scanapp/data/database.dart';
 import 'package:scanapp/models/database_models/products.dart';
 import 'package:scanapp/models/variables_define/colors.dart';
 import 'package:scanapp/models/variables_define/my_flutter_app_icons.dart';
+import 'package:scanapp/view_models/providers/home.dart';
 
 
 class ItemInfo extends StatelessWidget {
@@ -23,8 +24,11 @@ class ItemInfo extends StatelessWidget {
 
           return Scaffold(
             key: scaffoldKey,
-            resizeToAvoidBottomInset: false,
             backgroundColor: ColorsOf().backGround(),
+            appBar: HomeProvider().customAppBar(context,scaffoldKey),
+            drawer: HomeProvider().customDrawer(context,11),
+            floatingActionButton:HomeProvider().customFAB(context),
+            resizeToAvoidBottomInset: false,
             body: FutureBuilder(
                 future: DBProvider.db.getProduct(idProduct),
                 builder: (context, snapshot) {

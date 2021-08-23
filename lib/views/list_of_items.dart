@@ -7,14 +7,19 @@ import 'package:scanapp/view_models/providers/home.dart';
 import 'package:scanapp/view_models/providers/list_of_items.dart';
 
 class ListItems extends StatelessWidget {
-
+  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return  Consumer<ListItemsProvider>(
         builder: (context, value, child) {
 
           return Scaffold(
+            key: scaffoldKey,
             backgroundColor: ColorsOf().backGround(),
+            appBar: HomeProvider().customAppBar(context,scaffoldKey),
+            drawer: HomeProvider().customDrawer(context,1),
+            floatingActionButton:HomeProvider().customFAB(context),
+
             body: RefreshIndicator(
               onRefresh: ()async{
                 value.setState();

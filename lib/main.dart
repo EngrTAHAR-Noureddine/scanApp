@@ -74,6 +74,7 @@ class MyApp extends StatelessWidget {
                 return Consumer<MainProvider>(
                         builder: (context, value, child) {
                                     return MaterialApp(
+
                                               title: 'Fecom Scanner',
                                               debugShowCheckedModeBanner: false,
                                               theme: ThemeData(
@@ -114,7 +115,7 @@ class MyApp extends StatelessWidget {
                                               themeMode:ThemeMode.system, //MainProvider().themeMode,
                                               home: GetUserInfo(),//LogIn(),
                                               routes: {
-                                                "/home": (context) => Home(),
+                                                "/home": (context) => InventoryList(),
                                                 "/inventoryList": (context) => InventoryList(),
                                                 "/listItems": (context) => ListItems(),
                                                 "/scanner": (context) => Scanner(),
