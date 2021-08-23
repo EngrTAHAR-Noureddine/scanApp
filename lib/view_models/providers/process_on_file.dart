@@ -38,8 +38,6 @@ class ProcessFileProvider extends ChangeNotifier{
   late File file;
 
   Future<void> pickFileExcel(context , bool updating)async{
-   // Navigator.pop(context);
-
       try{
         FilePickerResult? result = await FilePicker.platform.pickFiles(
           type: FileType.custom,
@@ -49,15 +47,9 @@ class ProcessFileProvider extends ChangeNotifier{
         if(result != null) {
           file  = File(result.files.first.path??"");
           print(file.path);
+
           Navigator.pop(context);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => processSaving(context,(updating)?"update":"import"), //Nedjm(),//
-            ),
-          );
-
-
+          await dialogProcess(context,(updating)?"update":"import");
         }
       }catch(e){throw "aucun fichier ";}
 
@@ -175,142 +167,126 @@ class ProcessFileProvider extends ChangeNotifier{
   }
 
 
-  Widget processSaving(context,process){
-
+  Future<void> dialogProcess(context,process)async{
     String meg = (process == "import")?"Importer Fichier.....":"Mettre à jour.....";
+     return await showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return   FutureBuilder(
+              future: (process == "import")?importInDataBase():updateDataBase(),
+              builder: (context, snapshot) {
+                print(snapshot);
 
-    return WillPopScope(
-      onWillPop: () async{
-        return false;
-      },
-      child: Scaffold(
-        backgroundColor: ColorsOf().backGround(),
-        body: FutureBuilder(
-          future: (process == "import")?importInDataBase():updateDataBase(),
-          builder: (context, snapshot) {
-            print(snapshot);
+                if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+                  String titleDialog =  (snapshot.data == true)?"Success":"Failed";
+                  Color backColor =  (snapshot.data == true)? ColorsOf().finisheItem():ColorsOf().deleteItem();
+                  Color textColor = (snapshot.data == true)? ColorsOf().borderContainer():ColorsOf().backGround();
+                  String message = (snapshot.data == true)? "le processus est terminé avec succès":"le processus a échoué";
 
-            if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
-             String res =  (snapshot.data == true)?"Success":"Failed";
-             Navigator.pop(context);
-             Navigator.push(
-                    context,
-                    MaterialPageRoute<void>(
-                      builder: (BuildContext context) => whenFinishProcess(context, res),
-                      // fullscreenDialog: true,
+                    return Center(
+                      child: SingleChildScrollView(
+                        child: AlertDialog(
+                          backgroundColor:backColor,
+                          elevation: 1,
+                          shape: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          content: Text(message, style: TextStyle(color: textColor,fontSize:14,),),
+                          title: Text(titleDialog,style: TextStyle(color: textColor ),),
+                          actions: <Widget>[
+
+                            MaterialButton(
+                              splashColor: Colors.transparent,
+                              focusColor: Colors.transparent,
+                              hoverColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              highlightElevation: 0,
+                              elevation: 0,
+                              focusElevation: 0,
+                              hoverElevation: 0,
+                              child: Text('Annuler',style:TextStyle(color: ColorsOf().importField() )),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+
+                 // return whenFinishProcess(context, res);
+                }else if(snapshot.connectionState == ConnectionState.done && snapshot.hasError && snapshot.error != null){
+                  String titleDialog ="Failed";
+                  Color backColor = ColorsOf().deleteItem();
+                  Color textColor = ColorsOf().backGround();
+                  String message ="le processus a échoué";
+                  return Center(
+                    child: SingleChildScrollView(
+                      child: AlertDialog(
+                        backgroundColor:backColor,
+                        elevation: 1,
+                        shape: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        content: Text(message, style: TextStyle(color: textColor,fontSize:14,),),
+                        title: Text(titleDialog,style: TextStyle(color: textColor ),),
+                        actions: <Widget>[
+
+                          MaterialButton(
+                            splashColor: Colors.transparent,
+                            focusColor: Colors.transparent,
+                            hoverColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            highlightElevation: 0,
+                            elevation: 0,
+                            focusElevation: 0,
+                            hoverElevation: 0,
+                            child: Text('Annuler',style:TextStyle(color: ColorsOf().importField() )),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   );
-             // return whenFinishProcess(context, res);
-            }else if(snapshot.connectionState == ConnectionState.done && snapshot.hasError && snapshot.error != null){
-              String res = "Failed";
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute<void>(
-                  builder: (BuildContext context) => whenFinishProcess(context, res),
-                  // fullscreenDialog: true,
+                  //return whenFinishProcess(context, res);
+                }
+              return Center(
+                child: SingleChildScrollView(
+
+                  child: AlertDialog(
+                    backgroundColor:ColorsOf().backGround(),
+                    elevation: 1,
+                    shape: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    content: Row(
+                      children: [
+                        Expanded(child: Container(
+                            padding: EdgeInsets.all(5),
+                            child: CircularProgressIndicator(color:ColorsOf().primaryBackGround(),))),
+                        SizedBox(width: 10,),
+                        Expanded(
+                            flex: 3,
+                            child: Container(
+                              child: Text(meg, style: TextStyle(color: ColorsOf().primaryBackGround(),fontSize:14,),),
+                            )),
+
+                      ],
+                    ),
+                    //Text("Voulez-vous vraiment "+title.toLowerCase()+" ?", style: TextStyle(color: ColorsOf().containerThings(),fontSize:14,),),
+                    title: Text(process,style: TextStyle(color: ColorsOf().primaryBackGround() ),),
+
+                  ),
                 ),
               );
-             // return whenFinishProcess(context, res);
             }
+          );
 
-            return Container(
-              color: ColorsOf().backGround(),
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              alignment: Alignment.center,
-              child: Container(
-                alignment: Alignment.center,
-                color: Colors.transparent,
-                width: 200,
-                height: 200,
-                child: Column(
-                  children: [
-                    CircleAvatar(
-                        backgroundColor: Colors.transparent,
-                        radius: 50,
-                        child: CircularProgressIndicator(color:ColorsOf().primaryBackGround()  ,backgroundColor: Colors.transparent,)
-                    ),
-                    SizedBox(height: 20,),
-                    Text(meg, style: TextStyle(fontSize: 16 , color: ColorsOf().primaryBackGround(),),)
-                  ],
-                ),
-
-              ),
-            );
-          }
-        ),
-      ),
-    );
+        });
   }
-
-  Widget whenFinishProcess(context,isSuccess){
-    String msg = (isSuccess == "Success")? "le processus est terminé avec succès":"le processus a échoué";
-    Color aColor =  (isSuccess == "Success")? ColorsOf().finisheItem():ColorsOf().deleteItem();
-    Color textColor = (isSuccess == "Success")? ColorsOf().borderContainer():ColorsOf().backGround();
-
-    return Scaffold(
-      backgroundColor: ColorsOf().backGround(),
-      body: Container(
-          color: ColorsOf().backGround(),
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          alignment: Alignment.center,
-          child: Container(
-            alignment: Alignment.center,
-            width: 200,
-            height: 200,
-            child: Column(
-              children: [
-
-                Text(msg, style: TextStyle(fontSize: 16 ,fontWeight: FontWeight.bold, color: ColorsOf().primaryBackGround(),),),
-                SizedBox(height: 50,),
-                MaterialButton(
-                  height: 50,
-                  minWidth: 200,
-                  color: aColor ,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding: EdgeInsets.all(0),
-                  child: Text("Retournez à la page d'accueil" ,style: TextStyle(color:textColor ),),
-
-
-                  onPressed: ()async{
-                    HomeProvider().changeSelecter(0, context, "/inventoryList");
-                    await MainProvider().getUser();
-                    Navigator.pop(context);
-                    //Navigator.pushNamed(context, "/home");
-                  },
-
-
-                ),
-
-              ],
-            ),
-
-          ),
-        ),
-    );
-  }
-
-
-
-/*
-
-  Future<bool> _requestPermission(Permission per) async{
-
-    if(await per.isGranted){
-      return true;
-    }else {
-      var result = await per.request();
-      if(result == PermissionStatus.granted){ return true; }else {return false;}
-    }
-
-  }
-  
-  */
-
 
 
 
@@ -786,9 +762,6 @@ class ProcessFileProvider extends ChangeNotifier{
 
   Future<bool> importInDataBase()async{
 
-
-
-    //bool loading = false;
     String? listing = "Empty";
     int totalProductLots =0;
 
@@ -861,7 +834,6 @@ User? user = await DBProvider.db.getUser(1);
   }
 
   Future<bool> updateDataBase()async{
-    //bool loading = false;
     String listing = "Empty";
 
     int totalProductLots =0;
