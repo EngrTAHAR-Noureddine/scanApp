@@ -147,7 +147,7 @@ class HomeProvider extends ChangeNotifier{
                   if(route!=null){
                     print(route.settings.name);
 
-                    if(route.settings.name != "/home")Navigator.pushNamed(context, "/home");
+                    if(route.settings.name != "/home" && route.settings.name != "/inventoryList")Navigator.pushNamed(context, "/home");
 
                   }
 

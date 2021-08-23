@@ -34,14 +34,15 @@ class LogInProvider extends ChangeNotifier{
               _switch = false;
               //HomeProvider().setSelector(null);
               Navigator.pop(context);
-              Navigator.push(
+              Navigator.pushNamed(context, "/home");
+ /*             Navigator.push(
                 context,
                 MaterialPageRoute<void>(
                   builder: (BuildContext context) => Home(),
                  // fullscreenDialog: true,
                 ),
               );
-
+*/
             }
           }
 
@@ -192,13 +193,15 @@ class LogInProvider extends ChangeNotifier{
               _switch = false;
              // HomeProvider().setSelector(null);
                         Navigator.pop(context);
+                        Navigator.pushNamed(context, "/home");
+                        /*
                         Navigator.push(
                           context,
                           MaterialPageRoute<void>(
                             builder: (BuildContext context) => Home(),
                             //fullscreenDialog: true,
                           ),
-                        );
+                        );*/
 
                     }
           }
