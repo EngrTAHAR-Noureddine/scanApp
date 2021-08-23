@@ -60,12 +60,8 @@ class ProcessFileProvider extends ChangeNotifier{
   //"Renouveler"
   //import - update - reset
   Future<void> showDialogToProcess(BuildContext context,String process) async {
-
     await MainProvider().getUser();
     Inventory? inv = await DBProvider.db.getIncompleteInventory();
-
-
-
     String title;
 
       if(MainProvider().user!.productLotsTable != "Empty"){
@@ -73,10 +69,6 @@ class ProcessFileProvider extends ChangeNotifier{
       }else{
         title = "Importer";
       }
-
-
-
-
 
     return await showDialog(
         barrierDismissible: false,
@@ -757,8 +749,6 @@ class ProcessFileProvider extends ChangeNotifier{
 
     }
     }
-
-  
 
   Future<bool> importInDataBase()async{
 
