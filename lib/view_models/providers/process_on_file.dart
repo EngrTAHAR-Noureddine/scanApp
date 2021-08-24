@@ -203,7 +203,11 @@ class ProcessFileProvider extends ChangeNotifier{
                                 hoverElevation: 0,
                                 child: Text('Annuler',style:TextStyle(color: ColorsOf().importField() )),
                                 onPressed: () {
+
                                   Navigator.of(context).pop();
+                                  Navigator.pop(context);
+                                  Navigator.pushNamed(context, "/home");
+
                                 },
                               ),
                             ],
@@ -241,6 +245,8 @@ class ProcessFileProvider extends ChangeNotifier{
                               child: Text('Annuler',style:TextStyle(color: ColorsOf().importField() )),
                               onPressed: () {
                                 Navigator.of(context).pop();
+                                Navigator.pop(context);
+                                Navigator.pushNamed(context, "/home");
                               },
                             ),
                           ],
@@ -916,9 +922,9 @@ User? user = await DBProvider.db.getUser(1);
     String oldDate = dateTime.toIso8601String();
     Inventory inv = new Inventory(status: "begin", closeDate: oldDate, openingDate: DateTime.now().toIso8601String());
     await DBProvider.db.newInventory(inv);
-    HomeProvider().changeSelecter(0, context, "/inventoryList");
     Navigator.pop(context);
-    HomeProvider().setState();
+    Navigator.pop(context);
+    Navigator.pushNamed(context, "/home");
     //Navigator.pushNamed(context, "/home");
     //notifyListeners();
 
@@ -927,18 +933,15 @@ User? user = await DBProvider.db.getUser(1);
   }
   
   Future<void> resetInventory(context)async{
-    
     Inventory? inv = await DBProvider.db.getIncompleteInventory();
     if(inv != null){
       await DBProvider.db.resetInventory(inv);
-      // print(DateTime.tryParse(inv.openingDate??DateTime.now().toIso8601String()));
-      //  print(inv.status);
+
     }
-    HomeProvider().changeSelecter(0, context, "/inventoryList");
     Navigator.pop(context);
-    HomeProvider().setState();
-    //Navigator.pushNamed(context, "/home");
-    //notifyListeners();
+    Navigator.pop(context);
+    Navigator.pushNamed(context, "/home");
+
   }
 
 
