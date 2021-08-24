@@ -189,19 +189,10 @@ class LogInProvider extends ChangeNotifier{
         onPressed: (){
           if(this.formKey.currentState !=null){
             if (this.formKey.currentState!.validate()) {
-              passwordController.clear();
-              _switch = false;
-             // HomeProvider().setSelector(null);
+                        passwordController.clear();
+                        _switch = false;
                         Navigator.pop(context);
                         Navigator.pushNamed(context, "/home");
-                        /*
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute<void>(
-                            builder: (BuildContext context) => Home(),
-                            //fullscreenDialog: true,
-                          ),
-                        );*/
 
                     }
           }
