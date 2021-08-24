@@ -8,12 +8,17 @@ import 'package:scanapp/view_models/providers/list_of_items.dart';
 import 'package:scanapp/views/item_information.dart';
 
 class ListItems extends StatelessWidget {
+
+  int? id;
+  String? lookingFor;
+  String? chain;
+  ListItems({this.id,this.lookingFor,this.chain});
+
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return  Consumer<ListItemsProvider>(
         builder: (context, value, child) {
-
           return Scaffold(
             key: scaffoldKey,
             backgroundColor: ColorsOf().backGround(),
@@ -27,7 +32,7 @@ class ListItems extends StatelessWidget {
 
               },
               child: FutureBuilder(
-                future: value.getProductLots(),
+                future: value.getProductLots(lookingFor: lookingFor,id: id),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
                     List<ProductLot> list = snapshot.data as List<ProductLot>;
@@ -52,7 +57,7 @@ class ListItems extends StatelessWidget {
                                         flex: 1,
                                         child: Padding(
                                           padding:EdgeInsets.only(left: 5,right: 5),
-                                          child: Text(value.chain??"" , style: TextStyle(color : ColorsOf().importField() ,fontSize: 10 ,fontWeight: FontWeight.normal , fontStyle:FontStyle.italic),),
+                                          child: Text(chain??"" , style: TextStyle(color : ColorsOf().importField() ,fontSize: 10 ,fontWeight: FontWeight.normal , fontStyle:FontStyle.italic),),
                                         ),
                                       ),
 
@@ -216,6 +221,7 @@ class ListItems extends StatelessWidget {
                     return Container(
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height,
+                        alignment: Alignment.center,
                         child: Text("Rechercher..." , style: TextStyle(color: ColorsOf().primaryBackGround(),fontSize: 20),),
 
                         color: ColorsOf().backGround());

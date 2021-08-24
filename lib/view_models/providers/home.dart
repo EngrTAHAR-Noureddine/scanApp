@@ -5,6 +5,7 @@ import 'package:scanapp/models/variables_define/my_flutter_app_icons.dart';
 import 'package:scanapp/view_models/providers/main.dart';
 import 'package:scanapp/view_models/providers/process_on_file.dart';
 import 'package:scanapp/view_models/providers/scanner.dart';
+import 'package:scanapp/view_models/providers/show_company.dart';
 import 'package:scanapp/views/log_in.dart';
 import 'package:scanapp/views/scanner.dart';
 import 'package:scanapp/views/search.dart';
@@ -170,7 +171,7 @@ class HomeProvider extends ChangeNotifier{
                           var route = ModalRoute.of(context);
                           if(route!=null){
                             print(route.settings.name);
-
+                            ShowCompanyProvider().chain = "";
                             if(route.settings.name != "/listItems")Navigator.pushNamed(context, "/listItems");
 
                           }
