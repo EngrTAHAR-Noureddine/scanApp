@@ -38,6 +38,7 @@ dependencies:
   flutter_barcode_scanner: ^2.0.0
   syncfusion_flutter_xlsio: ^19.2.56-beta
   open_file: ^3.2.1
+  device_info: ^2.0.2
 
 dev_dependencies:
   flutter_test:

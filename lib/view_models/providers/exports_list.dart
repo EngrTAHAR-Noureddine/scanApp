@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:syncfusion_flutter_xlsio/xlsio.dart' as xlsio;
 import 'package:flutter/material.dart';
-
+import 'package:device_info/device_info.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -42,24 +42,38 @@ class ExportProvider extends ChangeNotifier{
     try{
       /// get the directory of FecomIt folder  *********************************************************
       if(Platform.isAndroid){  /* Android  */
-        if(await _requestPermission(Permission.manageExternalStorage)){
-          directory = await getExternalStorageDirectory();
-          if(directory!=null){
-            print(directory.path);
+        var androidInfo = await DeviceInfoPlugin().androidInfo;
+        var sdkInt = androidInfo.version.sdkInt;
+        bool? checkPermission;
 
-            List<String> folders = directory.path.split("/");
-            for(int x=1; x<folders.length;x++){
-              String folder = folders[x];
-              if(folder != "Android"){
-                newPath += "/"+folder;
-              }else break;
-            }
-            newPath = newPath+"/FecomIt";
-            directory = Directory(newPath);
+        if(sdkInt!=null){
+          if(sdkInt>29){
+            if(await _requestPermission(Permission.manageExternalStorage)){
+              checkPermission = true;
+            }else checkPermission = false;
+          }else{
+            if(await _requestPermission(Permission.storage)){
+              checkPermission = true;
+            }else checkPermission=false;
+          }
+          if(checkPermission!=null && checkPermission){
+            directory = await getExternalStorageDirectory();
+            if(directory!=null){
+              print(directory.path);
+
+              List<String> folders = directory.path.split("/");
+              for(int x=1; x<folders.length;x++){
+                String folder = folders[x];
+                if(folder != "Android"){
+                  newPath += "/"+folder;
+                }else break;
+              }
+              newPath = newPath+"/FecomIt";
+              directory = Directory(newPath);
 
 
-                newPath = newPath +"/"+fileName;
-                try{
+              newPath = newPath +"/"+fileName;
+              try{
                 file = File(newPath)..createSync(recursive: true);
 
                 if((await file.exists())==true){
@@ -70,50 +84,51 @@ class ExportProvider extends ChangeNotifier{
                     final xlsio.Workbook workbook = xlsio.Workbook();
                     final xlsio.Worksheet sheet = workbook.worksheets[0];
 
-                        int row =1;
-                        final List<Object> firstLine = ['id',
-                          'Id_inventory',
-                          'Id_Produit',
-                          'Id_Emplacement',
-                          'Id_productLot',
-                          'quantity',
-                          'quantitySystem',
-                          'difference',
-                          'quality'];
-                        sheet.importList(firstLine, row, 1, false);
+                    int row =1;
+                    final List<Object> firstLine = ['id',
+                      'Id_inventory',
+                      'Id_Produit',
+                      'Id_Emplacement',
+                      'Id_productLot',
+                      'quantity',
+                      'quantitySystem',
+                      'difference',
+                      'quality'];
+                    sheet.importList(firstLine, row, 1, false);
 
-                        inventoryLines.forEach((element) {
-                          row++;
-                          final List<Object> lineRow = [element.id??"-----",
-                                                          element.inventoryId??"-----",
-                                                          element.productId??"-----",
-                                                          element.emplacementId??"-----",
-                                                          element.productLotId??"-----",
-                                                          element.quantity??"-----",
-                                                          element.quantitySystem??"-----",
-                                                          element.difference??"-----",
-                                                          element.quality??"-----"];
-                          sheet.importList(lineRow, row, 1, false);
-                        });
-                        final List<int> bytes = workbook.saveAsStream();
-                        await file.writeAsBytes(bytes, flush: true);
-                        workbook.dispose();
-                        filePath = file.path;
+                    inventoryLines.forEach((element) {
+                      row++;
+                      final List<Object> lineRow = [element.id??"-----",
+                        element.inventoryId??"-----",
+                        element.productId??"-----",
+                        element.emplacementId??"-----",
+                        element.productLotId??"-----",
+                        element.quantity??"-----",
+                        element.quantitySystem??"-----",
+                        element.difference??"-----",
+                        element.quality??"-----"];
+                      sheet.importList(lineRow, row, 1, false);
+                    });
+                    final List<int> bytes = workbook.saveAsStream();
+                    await file.writeAsBytes(bytes, flush: true);
+                    workbook.dispose();
+                    filePath = file.path;
                     isFinish = true;
-                      } catch (e) {
-                        print(e);
-                      }
+                  } catch (e) {
+                    print(e);
+                  }
 
                 }else {
-                 // throw "Android11";
+                  // throw "Android11";
                 }
 
-                }catch(e){print("here error : "+e.toString());}
+              }catch(e){print("here error : "+e.toString());}
 
+            }
           }
 
+        }
 
-        }//else throw "permission";
       }else print("the platform is not ios");
     }catch(e){ print("catch error : "+e.toString());}
 return isFinish;
@@ -220,6 +235,7 @@ return isFinish;
                               child: Text("Aller à" ,style: TextStyle(color: ColorsOf().borderContainer(),fontWeight: FontWeight.normal),),
 
                               onPressed: () {
+                                Navigator.pop(context);
                                 OpenFile.open(filePath);
                               }
 
