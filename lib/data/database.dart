@@ -388,28 +388,28 @@ class DBProvider {
   }
   Future<List<StocksCounter>> getSiteFromCompany() async {
     final db = await database;
-    var res = await db.rawQuery("SELECT  siteId , COUNT(id) FROM Company GROUP BY siteId");
+    var res = await db.rawQuery("SELECT  siteId AS emplacementId , COUNT(id) FROM Company GROUP BY siteId");
     List<StocksCounter> list =
     res.isNotEmpty ? res.map((c) => StocksCounter.fromMap(c)).toList() : [];
     return list;
   }
   Future<List<StocksCounter>> getCompaniesFromDirection() async {
     final db = await database;
-    var res = await db.rawQuery("SELECT  companyId , COUNT(id) FROM StockEntrepot GROUP BY companyId");
+    var res = await db.rawQuery("SELECT  companyId AS emplacementId , COUNT(id) FROM StockEntrepot GROUP BY companyId");
     List<StocksCounter> list =
     res.isNotEmpty ? res.map((c) => StocksCounter.fromMap(c)).toList() : [];
     return list;
   }
   Future<List<StocksCounter>> getSerivcesFromEmplacement() async {
     final db = await database;
-    var res = await db.rawQuery("SELECT  entrepotId , COUNT(id) FROM Emplacement GROUP BY entrepotId");
+    var res = await db.rawQuery("SELECT  entrepotId AS emplacementId, COUNT(id) FROM Emplacement GROUP BY entrepotId");
     List<StocksCounter> list =
     res.isNotEmpty ? res.map((c) => StocksCounter.fromMap(c)).toList() : [];
     return list;
   }
   Future<List<StocksCounter>> getEmplFromStockSys() async {
     final db = await database;
-    var res = await db.rawQuery("SELECT  emplacementId , COUNT(id) FROM StockSystem GROUP BY emplacementId");
+    var res = await db.rawQuery("SELECT  emplacementId, COUNT(id) FROM StockSystem GROUP BY emplacementId");
     List<StocksCounter> list =
     res.isNotEmpty ? res.map((c) => StocksCounter.fromMap(c)).toList() : [];
     return list;
