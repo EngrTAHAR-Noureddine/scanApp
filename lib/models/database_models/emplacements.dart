@@ -29,13 +29,13 @@ class Emplacement {
     id: json["id"],
     nom: json["nom"],
     entrepotId: json["entrepotId"],
-    barCodeEmp: json["barcodeemp"],
+    barCodeEmp: json["barCodeEmp"],
   );
 
   Map<String, dynamic> toMap() => {
     "id": id,
     "nom": nom,
     "entrepotId": entrepotId,
-    "barcodeemp": barCodeEmp,
+    "barCodeEmp": barCodeEmp,
   };
 }

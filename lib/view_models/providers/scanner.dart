@@ -26,8 +26,10 @@ class ScannerProvider extends ChangeNotifier{
 
   String? barCode;
   bool didFinished = false;
+  String? barCodeEmplacement;
   int? idEmplacement;
   int? idProduct;
+  String? nameService;
   String? nameEmplacement;
   String? quality = "Bon";
   InventoryLine? newLine;
@@ -45,8 +47,10 @@ class ScannerProvider extends ChangeNotifier{
     SystemChannels.textInput.invokeMethod('TextInput.hide');
     showKeyBoard = false;
     barCode = null;
-    didFinished = false;
     idEmplacement = null;
+    nameService = null;
+    didFinished = false;
+    barCodeEmplacement = null;
     idProduct= null;
     nameEmplacement= null;
     quality= null;
@@ -95,8 +99,11 @@ class ScannerProvider extends ChangeNotifier{
      if(emplacement == null) productLot = await DBProvider.db.scanByBarCode(barCode!);
       /**/
      if(emplacement!=null){
+
+       nameService =((await DBProvider.db.getStockEntrepot(emplacement.entrepotId))!=null)? (await DBProvider.db.getStockEntrepot(emplacement.entrepotId))!.directionType : null;
+       barCodeEmplacement = emplacement.barCodeEmp;
        idEmplacement = emplacement.id;
-       nameEmplacement = emplacement.nom;
+       nameEmplacement =(nameService!=null && emplacement.nom!=null)?nameService!+"/"+emplacement.nom! :(nameService!=null)?nameService!+"/-----": emplacement.nom;
        barCode = null;
      }else if(productLot != null){
         findIt = true;

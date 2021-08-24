@@ -309,9 +309,9 @@ class DBProvider {
     if(res.isNotEmpty) company = Company.fromMap(res.first);
     return company;
   }
-  Future<StockEntrepot?> getStockEntrepot(int id) async {
+  Future<StockEntrepot?> getStockEntrepot(int? id) async {
     final db = await database;
-    var res =await  db.query("StockEntrepot", where: "id = ?", whereArgs: [id]);
+    var res = (id!=null)? (await  db.query("StockEntrepot", where: "id = ?", whereArgs: [id])) : [];
     StockEntrepot? stockEntrepot;
     if(res.isNotEmpty) stockEntrepot = StockEntrepot.fromMap(res.first);
     return stockEntrepot;

@@ -516,11 +516,11 @@ class Scanner extends StatelessWidget {
                                                          text: TextSpan(children: [
 
                                                            TextSpan(
-                                                             text:"ID Emplacement : ",
+                                                             text:"Code à Barre Emplacement : ",
                                                              style: TextStyle(color : ColorsOf().primaryBackGround() ,fontSize: 14 ,fontWeight: FontWeight.bold),
                                                            ),
                                                            TextSpan(
-                                                             text:(value.idEmplacement != null)? value.idEmplacement.toString() :"-----",
+                                                             text:value.barCodeEmplacement??"-----",
                                                              style: TextStyle(color : ColorsOf().primaryBackGround() ,fontSize: 14 ,fontWeight: FontWeight.bold),
                                                            ),
 
