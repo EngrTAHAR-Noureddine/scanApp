@@ -339,9 +339,12 @@ class DBProvider {
     if(res.isNotEmpty) one = ProductLot.fromMap(res.first);
     return one;
   }
-  Future<ProductCategory?> getProductCategory(int id) async {
+  Future<ProductCategory?> getProductCategory(int? id) async {
     final db = await database;
-    var res =await  db.query("ProductCategory", where: "id = ?", whereArgs: [id]);
+
+    //var res =await  db.query("ProductCategory", where: "id = ?", whereArgs: [id]);
+    var res = (id !=null) ?  (await db.rawQuery("SELECT * FROM ProductCategory WHERE id = $id")):
+    (await db.rawQuery("SELECT * FROM ProductCategory WHERE id IS null"));
     ProductCategory? one;
     if(res.isNotEmpty) one = ProductCategory.fromMap(res.first);
     return one;
