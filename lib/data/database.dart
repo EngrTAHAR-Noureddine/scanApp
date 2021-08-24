@@ -330,9 +330,11 @@ class DBProvider {
     if(res.isNotEmpty) one = Product.fromMap(res.first);
     return one;
   }
-  Future<ProductLot?> getProductLot(int id) async {
+  Future<ProductLot?> getProductLot(int? id) async {
     final db = await database;
-    var res =await  db.query("ProductLot", where: "id = ?", whereArgs: [id]);
+    //var res =await  db.query("ProductLot", where: "id = ?", whereArgs: [id]);
+    var res = (id !=null) ?  (await db.rawQuery("SELECT * FROM ProductLot WHERE id = $id")):
+    (await db.rawQuery("SELECT * FROM ProductLot WHERE id IS null"));
     ProductLot? one;
     if(res.isNotEmpty) one = ProductLot.fromMap(res.first);
     return one;
@@ -688,6 +690,15 @@ class DBProvider {
     List<Emplacement> list = res.isNotEmpty ? res.map((c) => Emplacement.fromMap(c)).toList() : [];
     return list;
   }
+  Future<List<StockSystem>> getAllStocksByEmplacement(int? idEmplacement) async {
+    final db = await database;
+    var res = (idEmplacement !=null) ?  (await db.rawQuery("SELECT * FROM StockSystem WHERE emplacementId = $idEmplacement")):
+    (await db.rawQuery("SELECT * FROM StockSystem WHERE emplacementId IS null"));
+
+    List<StockSystem> list = res.isNotEmpty ? res.map((c) => StockSystem.fromMap(c)).toList() : [];
+    return list;
+  }
+
 
 
   /*UPdate  **********************************************************************************/
