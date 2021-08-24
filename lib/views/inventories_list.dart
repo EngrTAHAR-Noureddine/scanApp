@@ -289,7 +289,7 @@ class InventoryList extends StatelessWidget {
 
                                             OnGoingListProvider().id =list[index].id;
                                              //HomeProvider().setSelector(10);
-                                            Navigator.pop(context);
+                                            //Navigator.pop(context);
                                             Navigator.push(
                                                     context,
                                                     MaterialPageRoute<void>(
