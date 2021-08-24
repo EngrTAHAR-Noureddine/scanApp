@@ -90,24 +90,24 @@ class DBProvider {
 
           });
           await db.execute("CREATE TABLE Site ("
-              "id INTEGER PRIMARY KEY,"
+              "id INTEGER,"
               "nom TEXT"
               ")");
           await db.execute("CREATE TABLE Company ("
-              "id INTEGER PRIMARY KEY,"
+              "id INTEGER,"
               "nom TEXT,"
               "siteId INTEGER,"
               "logo TEXT"
               ")");
           await db.execute("CREATE TABLE StockEntrepot ("
-              "id INTEGER PRIMARY KEY,"
+              "id INTEGER,"
               "nom TEXT,"
               "companyId INTEGER,"
               "directionType TEXT,"
               "directionId INTEGER"
               ")");
           await db.execute("CREATE TABLE ProductCategory ("
-              "id INTEGER PRIMARY KEY,"
+              "id INTEGER,"
               "categoryName TEXT,"
               "categoryCode TEXT,"
               "parentId INTEGER,"
@@ -115,20 +115,20 @@ class DBProvider {
               ")");
 
           await db.execute("CREATE TABLE StockSystem ("
-              "id INTEGER PRIMARY KEY,"
+              "id INTEGER,"
               "productId INTEGER,"
               "productLotId INTEGER,"
               "emplacementId INTEGER,"
               "quantity INTEGER"
               ")");
           await db.execute("CREATE TABLE Emplacement ("
-              "id INTEGER PRIMARY KEY,"
+              "id INTEGER,"
               "nom TEXT,"
               "entrepotId INTEGER,"
               "barCodeEmp TEXT"
               ")");
           await db.execute("CREATE TABLE Product ("
-              "id INTEGER PRIMARY KEY,"
+              "id INTEGER,"
               "nom TEXT,"
               "productCode TEXT,"
               "categoryId INTEGER,"
@@ -137,7 +137,7 @@ class DBProvider {
               ")");
 
           await db.execute("CREATE TABLE ProductLot ("
-              "id INTEGER PRIMARY KEY,"
+              "id INTEGER,"
               "productId INTEGER,"
               "numLot TEXT,"
               "numSerie TEXT,"
@@ -377,6 +377,8 @@ class DBProvider {
     }
     return list;
   }
+
+
   Future<List<StocksCounter>> getEachEmplacementStocks() async {
     final db = await database;
     var res = await db.rawQuery("SELECT  emplacementId , COUNT(id) FROM InventoryLine GROUP BY emplacementId");
@@ -384,8 +386,34 @@ class DBProvider {
     res.isNotEmpty ? res.map((c) => StocksCounter.fromMap(c)).toList() : [];
     return list;
   }
-
-
+  Future<List<StocksCounter>> getSiteFromCompany() async {
+    final db = await database;
+    var res = await db.rawQuery("SELECT  siteId , COUNT(id) FROM Company GROUP BY siteId");
+    List<StocksCounter> list =
+    res.isNotEmpty ? res.map((c) => StocksCounter.fromMap(c)).toList() : [];
+    return list;
+  }
+  Future<List<StocksCounter>> getCompaniesFromDirection() async {
+    final db = await database;
+    var res = await db.rawQuery("SELECT  companyId , COUNT(id) FROM StockEntrepot GROUP BY companyId");
+    List<StocksCounter> list =
+    res.isNotEmpty ? res.map((c) => StocksCounter.fromMap(c)).toList() : [];
+    return list;
+  }
+  Future<List<StocksCounter>> getSerivcesFromEmplacement() async {
+    final db = await database;
+    var res = await db.rawQuery("SELECT  entrepotId , COUNT(id) FROM Emplacement GROUP BY entrepotId");
+    List<StocksCounter> list =
+    res.isNotEmpty ? res.map((c) => StocksCounter.fromMap(c)).toList() : [];
+    return list;
+  }
+  Future<List<StocksCounter>> getEmplFromStockSys() async {
+    final db = await database;
+    var res = await db.rawQuery("SELECT  emplacementId , COUNT(id) FROM StockSystem GROUP BY emplacementId");
+    List<StocksCounter> list =
+    res.isNotEmpty ? res.map((c) => StocksCounter.fromMap(c)).toList() : [];
+    return list;
+  }
 
   /* get for update database */
   Future<Site?> checkSite(Site check) async {
@@ -551,6 +579,21 @@ class DBProvider {
     res.isNotEmpty ? res.map((c) => StockEntrepot.fromMap(c)).toList() : [];
     return list;
   }
+  Future<List<StockEntrepot>> getAllDirections() async {
+    final db = await database;
+    var res = await db.rawQuery("SELECT * FROM StockEntrepot WHERE directionId IS null");
+    List<StockEntrepot> list =
+    res.isNotEmpty ? res.map((c) => StockEntrepot.fromMap(c)).toList() : [];
+    return list;
+  }
+  Future<List<StockEntrepot>> getAllServicesById(int id) async {
+    final db = await database;
+    var res = await db.rawQuery("SELECT * FROM StockEntrepot WHERE directionId = $id");
+    List<StockEntrepot> list =
+    res.isNotEmpty ? res.map((c) => StockEntrepot.fromMap(c)).toList() : [];
+    return list;
+  }
+
   Future<List<ProductCategory>> getAllProductCategories() async {
     final db = await database;
     var res = await db.rawQuery("SELECT * FROM ProductCategory");
@@ -602,6 +645,50 @@ class DBProvider {
     res.isNotEmpty ? res.map((c) => InventoryLine.fromMap(c)).toList() : [];
     return list;
   }
+
+
+
+  Future<List<Company>> getAllCompaniesBySite(int? idSite) async {
+    final db = await database;
+    var res = (idSite !=null) ? (await db.query("Company", where: "siteId = ?", whereArgs: [idSite]) ) :
+    (await db.rawQuery("SELECT * FROM Company WHERE siteId IS null"));
+    
+    List<Company> list = res.isNotEmpty ? res.map((c) => Company.fromMap(c)).toList() : [];
+    return list;
+  }
+  Future<List<StockEntrepot>> getAllDirectionByCompany(int? idCompany) async {
+    final db = await database;
+    var res = (idCompany !=null) ?  (await db.rawQuery("SELECT * FROM StockEntrepot WHERE companyId = $idCompany and directionId IS null")):
+    (await db.rawQuery("SELECT * FROM StockEntrepot WHERE companyId IS null and directionId IS null"));
+
+    List<StockEntrepot> list = res.isNotEmpty ? res.map((c) => StockEntrepot.fromMap(c)).toList() : [];
+    return list;
+  }
+  Future<List<StockEntrepot>> getAllServiceByDirection(int? idDirection) async {
+    final db = await database;
+    var res = (idDirection !=null) ?  (await db.rawQuery("SELECT * FROM StockEntrepot WHERE directionId = $idDirection")):
+    (await db.rawQuery("SELECT * FROM StockEntrepot WHERE directionId IS null"));
+
+    List<StockEntrepot> list = res.isNotEmpty ? res.map((c) => StockEntrepot.fromMap(c)).toList() : [];
+    return list;
+  }
+  Future<List<StockEntrepot>> getAllServicesByCompany(int? idCompany) async {
+    final db = await database;
+    var res = (idCompany !=null) ?  (await db.rawQuery("SELECT * FROM StockEntrepot WHERE companyId = $idCompany")):
+    (await db.rawQuery("SELECT * FROM StockEntrepot WHERE companyId IS null"));
+
+    List<StockEntrepot> list = res.isNotEmpty ? res.map((c) => StockEntrepot.fromMap(c)).toList() : [];
+    return list;
+  }
+  Future<List<Emplacement>> getAllEmplacementByService(int? idService) async {
+    final db = await database;
+    var res = (idService !=null) ?  (await db.rawQuery("SELECT * FROM Emplacement WHERE entrepotId = $idService")):
+    (await db.rawQuery("SELECT * FROM Emplacement WHERE entrepotId IS null"));
+
+    List<Emplacement> list = res.isNotEmpty ? res.map((c) => Emplacement.fromMap(c)).toList() : [];
+    return list;
+  }
+
 
   /*UPdate  **********************************************************************************/
   updateUser(User newUser) async {
