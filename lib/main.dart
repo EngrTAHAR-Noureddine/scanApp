@@ -13,6 +13,7 @@ import 'package:scanapp/view_models/providers/repport.dart';
 import 'package:scanapp/view_models/providers/scanner.dart';
 import 'package:scanapp/view_models/providers/search.dart';
 import 'package:scanapp/view_models/providers/settings.dart';
+import 'package:scanapp/view_models/providers/show_company.dart';
 import 'package:scanapp/views/exports_list.dart';
 import 'package:scanapp/views/get_user_info.dart';
 import 'package:scanapp/views/home.dart';
@@ -25,6 +26,7 @@ import 'package:scanapp/views/repport.dart';
 import 'package:scanapp/views/scanner.dart';
 import 'package:scanapp/views/search.dart';
 import 'package:scanapp/views/settings.dart';
+import 'package:scanapp/views/show_company.dart';
 
 void main() {
   runApp(MyApp());
@@ -65,8 +67,9 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider<ScannerProvider>(
             create: (context) => ScannerProvider(), ),
           ChangeNotifierProvider<ProcessFileProvider>(
-            create: (context) => ProcessFileProvider(), ),//ItemInfoProvider
-
+            create: (context) => ProcessFileProvider(), ),
+            ChangeNotifierProvider<ShowCompanyProvider>(
+            create: (context) => ShowCompanyProvider(), ),
 
         ],
         child: Builder(
@@ -117,7 +120,7 @@ class MyApp extends StatelessWidget {
                                               routes: {
                                                 "/home": (context) => InventoryList(),
                                                 "/inventoryList": (context) => InventoryList(),
-                                                "/listItems": (context) => ListItems(),
+                                                "/listItems": (context) =>ListOfItems(), //ListItems(),
                                                 "/scanner": (context) => Scanner(),
                                                 "/import": (context) => ImportNewerFile(),
                                                 "/update": (context) => ImportNewerFile(),
