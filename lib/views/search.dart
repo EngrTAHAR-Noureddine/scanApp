@@ -6,6 +6,7 @@ import 'package:scanapp/models/variables_define/colors.dart';
 import 'package:scanapp/view_models/providers/home.dart';
 import 'package:scanapp/view_models/providers/search.dart';
 import 'package:flutter/services.dart';
+import 'package:scanapp/views/item_information.dart';
 class Search extends StatelessWidget {
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
@@ -156,8 +157,9 @@ class Search extends StatelessWidget {
                                         ),
                                         child: Icon(Icons.info, color: ColorsOf().onGoingItem(), size: 30,),
 
-                                        onPressed: ()=>HomeProvider().setSelector(11,list[index].productId),
-
+                                        onPressed:(){
+                                          Navigator.push(context, FadeRoute(page: ItemInfo(idProduct: list[index].productId,)));
+                                        },
                                       ),),
                                     title: RichText(
                                         text: TextSpan(children: [
