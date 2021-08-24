@@ -1,6 +1,4 @@
 import 'dart:io';
-import 'package:scanapp/view_models/providers/home.dart';
-import 'package:scanapp/views/home.dart';
 import 'package:syncfusion_flutter_xlsio/xlsio.dart' as xlsio;
 import 'package:flutter/material.dart';
 
@@ -44,7 +42,7 @@ class ExportProvider extends ChangeNotifier{
     try{
       /// get the directory of FecomIt folder  *********************************************************
       if(Platform.isAndroid){  /* Android  */
-        if(await _requestPermission(Permission.storage)){
+        if(await _requestPermission(Permission.manageExternalStorage)){
           directory = await getExternalStorageDirectory();
           if(directory!=null){
             print(directory.path);
@@ -61,6 +59,7 @@ class ExportProvider extends ChangeNotifier{
 
 
                 newPath = newPath +"/"+fileName;
+                try{
                 file = File(newPath)..createSync(recursive: true);
 
                 if((await file.exists())==true){
@@ -109,6 +108,7 @@ class ExportProvider extends ChangeNotifier{
                  // throw "Android11";
                 }
 
+                }catch(e){print("here error : "+e.toString());}
 
           }
 
@@ -147,119 +147,184 @@ return isFinish;
   return bol;
   }
 
-
-  Widget processSaving(context,int? id){
-
+  Future<void> dialogProcess(context,int? id)async{
     String meg ="Exporter.....";
+    return await showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return   WillPopScope(
+            onWillPop: ()async{
+              return false;
+            },
+            child: FutureBuilder(
+                future:  getInventoryLines(id),
+                builder: (context, snapshot) {
+                  print(snapshot);
 
-    return Scaffold(
-      backgroundColor: ColorsOf().backGround(),
-      body: FutureBuilder(
-          future: getInventoryLines(id),
-          builder: (context, snapshot) {
-            print(snapshot);
+                  if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+                    String titleDialog =  (snapshot.data == true)?"Succès":"Échoué";
+                    IconData icon = (snapshot.data == true)?Icons.check_circle_rounded:Icons.cancel_rounded;
+                    Color backColor =  (snapshot.data == true)? ColorsOf().finisheItem():ColorsOf().deleteItem();
+                    Color textColor = ColorsOf().borderContainer();
+                    String message = (snapshot.data == true)? "le processus est terminé avec succès ":"le processus a échoué";
 
-            if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+                    return Center(
+                      child: SingleChildScrollView(
+                        child: AlertDialog(
+                          backgroundColor:ColorsOf().backGround(),
+                          elevation: 1,
+                          shape: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          content: Row(
+                            children: [
+                              Icon(icon , color: backColor,size: 30,),
+                              SizedBox(width: 20,),
+                              Container(
+                                width: 200,
+                                height: 50,
+                                child: RichText(
+                                    text: TextSpan(children: [
 
+                                      TextSpan(text:message,
+                                        style: TextStyle(color : textColor ,fontSize: 14 ,fontWeight: FontWeight.bold),
+                                      ),
 
-              String res =  (snapshot.data == true)?"Success":"Failed";
-             // Navigator.pop(context);
-              return whenFinishProcess(context, res);
+                                      TextSpan(text:(snapshot.data == true)?"("+filePath+" ) ":"",
+                                        style: TextStyle(color : textColor ,fontSize: 14 ,fontWeight: FontWeight.bold),
+                                      ),
 
-            }else if(snapshot.hasError){
+                                    ])
+                                ),
+                              ),
+                            ],
+                          ),
+                          title: Text(titleDialog,style: TextStyle(color: textColor ),),
+                          actions: <Widget>[
+                            (snapshot.data == true)?  MaterialButton(
+                              splashColor: Colors.transparent,
+                              focusColor: Colors.transparent,
+                              hoverColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              highlightElevation: 0,
+                              elevation: 0,
+                              focusElevation: 0,
+                              hoverElevation: 0,
+                              color:ColorsOf().onGoingItem() ,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(100),
+                                  side: BorderSide(color:ColorsOf().onGoingItem(),width: 1,style: BorderStyle.solid)
+                              ),
+                              padding: EdgeInsets.all(0),
+                              child: Text("Aller à" ,style: TextStyle(color: ColorsOf().borderContainer(),fontWeight: FontWeight.normal),),
 
-              String res = "Failed";
-             // Navigator.pop(context);
-              return whenFinishProcess(context, res);
-            }
-
-            return Container(
-              color: ColorsOf().backGround(),
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              alignment: Alignment.center,
-              child: Container(
-                alignment: Alignment.center,
-                color: Colors.transparent,
-                width: 200,
-                height: 200,
-                child: Column(
-                  children: [
-                    CircleAvatar(
-                        backgroundColor: Colors.transparent,
-                        radius: 50,
-                        child: CircularProgressIndicator(color:ColorsOf().primaryBackGround()  ,backgroundColor: Colors.transparent,)
-                    ),
-                    SizedBox(height: 20,),
-                    Text(meg, style: TextStyle(fontSize: 16 , color: ColorsOf().primaryBackGround(),),)
-                  ],
-                ),
-
-              ),
-            );
-          }
-      ),
-    );
-  }
-
-  Widget whenFinishProcess(context,isSuccess){
-    String msg = (isSuccess == "Success")? "le processus est terminé avec succès":"le processus a échoué";
-    Color aColor =  (isSuccess == "Success")? ColorsOf().finisheItem():ColorsOf().deleteItem();
-    Color textColor = (isSuccess == "Success")? ColorsOf().borderContainer():ColorsOf().backGround();
-
-    String msg2 = (isSuccess == "Success")?"Afiicher le fichier ! ":"Retournez à la page d'accueil";
-
-    return Scaffold(
-
-      backgroundColor: ColorsOf().backGround(),
-      body: Container(
-        color: ColorsOf().backGround(),
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        alignment: Alignment.center,
-        child: Container(
-          alignment: Alignment.center,
-          width: 200,
-          height: 200,
-          child: Column(
-            children: [
-
-              Text(msg, style: TextStyle(fontSize: 16 ,fontWeight: FontWeight.bold, color: ColorsOf().primaryBackGround(),),),
-              SizedBox(height: 50,),
-              MaterialButton(
-                height: 50,
-                minWidth: 200,
-                color: aColor ,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                padding: EdgeInsets.all(0),
-                child: Text(msg2 ,style: TextStyle(color:textColor ),),
+                              onPressed: () {
+                                OpenFile.open(filePath);
+                              }
 
 
-                onPressed: (){
-                  if(isSuccess == "Success"){
-                    OpenFile.open(filePath);
+                            ) : Container(),
+                            MaterialButton(
+                              splashColor: Colors.transparent,
+                              focusColor: Colors.transparent,
+                              hoverColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              highlightElevation: 0,
+                              elevation: 0,
+                              focusElevation: 0,
+                              hoverElevation: 0,
+                              child: Text('Annuler',style:TextStyle(color: ColorsOf().importField() )),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
 
+                    // return whenFinishProcess(context, res);
+                  }else if(snapshot.connectionState == ConnectionState.done && snapshot.hasError && snapshot.error != null){
+                    String titleDialog ="Échoué";
+
+                    Color backColor = ColorsOf().deleteItem();
+                    Color textColor = ColorsOf().borderContainer();
+                    String message ="le processus a échoué";
+                    return Center(
+                      child: SingleChildScrollView(
+                        child: AlertDialog(
+                          backgroundColor:ColorsOf().backGround(),
+                          elevation: 1,
+                          shape: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          content: Row(
+                            children: [
+                              Icon(Icons.cancel_rounded, size: 30,color: backColor,),
+                              SizedBox(width: 20,),
+                              Text(message, style: TextStyle(color: textColor,fontSize:14,),),
+                            ],
+                          ),
+                          title: Text(titleDialog,style: TextStyle(color: textColor ),),
+                          actions: <Widget>[
+
+                            MaterialButton(
+                              splashColor: Colors.transparent,
+                              focusColor: Colors.transparent,
+                              hoverColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              highlightElevation: 0,
+                              elevation: 0,
+                              focusElevation: 0,
+                              hoverElevation: 0,
+                              child: Text('Annuler',style:TextStyle(color: ColorsOf().importField() )),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                    //return whenFinishProcess(context, res);
                   }
-                      else{
-                        HomeProvider().changeSelecter(0, context, "/inventoryList");
-                        Navigator.pop(context);
-                      }
+                  return Center(
+                    child: SingleChildScrollView(
 
+                      child: AlertDialog(
+                        backgroundColor:ColorsOf().backGround(),
+                        elevation: 1,
+                        shape: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        content: Row(
+                          children: [
+                            Expanded(child: Container(
+                                padding: EdgeInsets.all(5),
+                                child: CircularProgressIndicator(color:ColorsOf().primaryBackGround(),))),
+                            SizedBox(width: 10,),
+                            Expanded(
+                                flex: 3,
+                                child: Container(
+                                  child: Text(meg, style: TextStyle(color: ColorsOf().primaryBackGround(),fontSize:14,),),
+                                )),
 
-                },
+                          ],
+                        ),
+                        //Text("Voulez-vous vraiment "+title.toLowerCase()+" ?", style: TextStyle(color: ColorsOf().containerThings(),fontSize:14,),),
+                        title: Text("Exporter Fichier",style: TextStyle(color: ColorsOf().primaryBackGround() ),),
 
+                      ),
+                    ),
+                  );
+                }
+            ),
+          );
 
-              ),
-
-            ],
-          ),
-
-        ),
-      ),
-    );
+        });
   }
+
 
 
 }

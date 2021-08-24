@@ -249,14 +249,15 @@ class InventoryList extends StatelessWidget {
                                                   size: 25,
                                                 ),
 
-                                                onPressed:(list[index].status != "begin")? (){
+                                                onPressed:(list[index].status != "begin")? ()async{
+                                                       return await ExportProvider().dialogProcess(context,list[index].id);
                                                       //  Navigator.pop(context);
-                                                      Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                      builder: (context) => ExportProvider().processSaving(context,list[index].id),
-                                                      ),
-                                                      );
+                                                       /*     Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                            builder: (context) => ExportProvider().processSaving(context,list[index].id),
+                                                            ),
+                                                            );*/
                                                       }:null,
                                               )
                                           ),

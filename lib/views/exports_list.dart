@@ -59,14 +59,15 @@ class Export extends StatelessWidget {
                                           ),
                                           child: Text("Export",style: TextStyle(fontSize: 16, color: ColorsOf().primaryBackGround()),),
 
-                                          onPressed:(){
+                                          onPressed:()async{
                                           //  Navigator.pop(context);
-                                            Navigator.push(
+                                            return await value.dialogProcess(context,list[index].id);
+                                           /* Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) => value.processSaving(context,list[index].id),
                                               ),
-                                            );
+                                            );*/
                                           },//()=>value.processSaving(context,list[index].id),
 
                                         ),),
