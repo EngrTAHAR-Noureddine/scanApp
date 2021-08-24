@@ -74,7 +74,7 @@ class ProcessFileProvider extends ChangeNotifier{
         barrierDismissible: false,
         context: context,
         builder: (context) {
-          return   Center(
+          return  Center(
             child: SingleChildScrollView(
 
               child: AlertDialog(
@@ -165,17 +165,58 @@ class ProcessFileProvider extends ChangeNotifier{
         barrierDismissible: false,
         context: context,
         builder: (context) {
-          return   FutureBuilder(
-              future: (process == "import")?importInDataBase():updateDataBase(),
-              builder: (context, snapshot) {
-                print(snapshot);
+          return   WillPopScope(
+                onWillPop: ()async{
+                  return false;
+                },
+            child: FutureBuilder(
+                future: (process == "import")?importInDataBase():updateDataBase(),
+                builder: (context, snapshot) {
+                  print(snapshot);
 
-                if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
-                  String titleDialog =  (snapshot.data == true)?"Success":"Failed";
-                  Color backColor =  (snapshot.data == true)? ColorsOf().finisheItem():ColorsOf().deleteItem();
-                  Color textColor = (snapshot.data == true)? ColorsOf().borderContainer():ColorsOf().backGround();
-                  String message = (snapshot.data == true)? "le processus est terminé avec succès":"le processus a échoué";
+                  if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+                    String titleDialog =  (snapshot.data == true)?"Success":"Failed";
+                    Color backColor =  (snapshot.data == true)? ColorsOf().finisheItem():ColorsOf().deleteItem();
+                    Color textColor = (snapshot.data == true)? ColorsOf().borderContainer():ColorsOf().backGround();
+                    String message = (snapshot.data == true)? "le processus est terminé avec succès":"le processus a échoué";
 
+                      return Center(
+                        child: SingleChildScrollView(
+                          child: AlertDialog(
+                            backgroundColor:backColor,
+                            elevation: 1,
+                            shape: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            content: Text(message, style: TextStyle(color: textColor,fontSize:14,),),
+                            title: Text(titleDialog,style: TextStyle(color: textColor ),),
+                            actions: <Widget>[
+
+                              MaterialButton(
+                                splashColor: Colors.transparent,
+                                focusColor: Colors.transparent,
+                                hoverColor: Colors.transparent,
+                                highlightColor: Colors.transparent,
+                                highlightElevation: 0,
+                                elevation: 0,
+                                focusElevation: 0,
+                                hoverElevation: 0,
+                                child: Text('Annuler',style:TextStyle(color: ColorsOf().importField() )),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+
+                   // return whenFinishProcess(context, res);
+                  }else if(snapshot.connectionState == ConnectionState.done && snapshot.hasError && snapshot.error != null){
+                    String titleDialog ="Failed";
+                    Color backColor = ColorsOf().deleteItem();
+                    Color textColor = ColorsOf().backGround();
+                    String message ="le processus a échoué";
                     return Center(
                       child: SingleChildScrollView(
                         child: AlertDialog(
@@ -206,75 +247,39 @@ class ProcessFileProvider extends ChangeNotifier{
                         ),
                       ),
                     );
+                    //return whenFinishProcess(context, res);
+                  }
+                return Center(
+                  child: SingleChildScrollView(
 
-                 // return whenFinishProcess(context, res);
-                }else if(snapshot.connectionState == ConnectionState.done && snapshot.hasError && snapshot.error != null){
-                  String titleDialog ="Failed";
-                  Color backColor = ColorsOf().deleteItem();
-                  Color textColor = ColorsOf().backGround();
-                  String message ="le processus a échoué";
-                  return Center(
-                    child: SingleChildScrollView(
-                      child: AlertDialog(
-                        backgroundColor:backColor,
-                        elevation: 1,
-                        shape: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        content: Text(message, style: TextStyle(color: textColor,fontSize:14,),),
-                        title: Text(titleDialog,style: TextStyle(color: textColor ),),
-                        actions: <Widget>[
+                    child: AlertDialog(
+                      backgroundColor:ColorsOf().backGround(),
+                      elevation: 1,
+                      shape: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      content: Row(
+                        children: [
+                          Expanded(child: Container(
+                              padding: EdgeInsets.all(5),
+                              child: CircularProgressIndicator(color:ColorsOf().primaryBackGround(),))),
+                          SizedBox(width: 10,),
+                          Expanded(
+                              flex: 3,
+                              child: Container(
+                                child: Text(meg, style: TextStyle(color: ColorsOf().primaryBackGround(),fontSize:14,),),
+                              )),
 
-                          MaterialButton(
-                            splashColor: Colors.transparent,
-                            focusColor: Colors.transparent,
-                            hoverColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            highlightElevation: 0,
-                            elevation: 0,
-                            focusElevation: 0,
-                            hoverElevation: 0,
-                            child: Text('Annuler',style:TextStyle(color: ColorsOf().importField() )),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
                         ],
                       ),
-                    ),
-                  );
-                  //return whenFinishProcess(context, res);
-                }
-              return Center(
-                child: SingleChildScrollView(
+                      //Text("Voulez-vous vraiment "+title.toLowerCase()+" ?", style: TextStyle(color: ColorsOf().containerThings(),fontSize:14,),),
+                      title: Text(process,style: TextStyle(color: ColorsOf().primaryBackGround() ),),
 
-                  child: AlertDialog(
-                    backgroundColor:ColorsOf().backGround(),
-                    elevation: 1,
-                    shape: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
                     ),
-                    content: Row(
-                      children: [
-                        Expanded(child: Container(
-                            padding: EdgeInsets.all(5),
-                            child: CircularProgressIndicator(color:ColorsOf().primaryBackGround(),))),
-                        SizedBox(width: 10,),
-                        Expanded(
-                            flex: 3,
-                            child: Container(
-                              child: Text(meg, style: TextStyle(color: ColorsOf().primaryBackGround(),fontSize:14,),),
-                            )),
-
-                      ],
-                    ),
-                    //Text("Voulez-vous vraiment "+title.toLowerCase()+" ?", style: TextStyle(color: ColorsOf().containerThings(),fontSize:14,),),
-                    title: Text(process,style: TextStyle(color: ColorsOf().primaryBackGround() ),),
-
                   ),
-                ),
-              );
-            }
+                );
+              }
+            ),
           );
 
         });
@@ -395,10 +400,12 @@ class ProcessFileProvider extends ChangeNotifier{
                     .toString()
                     .replaceAll(RegExp('[\',\"]'), "''")
                     : null,
+
                 entrepotId: (firstEmplacement.indexOf(columnSheet[1][2]) < 0)
                     ? null
                     : row[firstEmplacement.indexOf(columnSheet[1][2])],
-                barCodeEmp: (firstEmplacement.indexOf(columnSheet[1][2]) < 0)
+
+                barCodeEmp: (firstEmplacement.indexOf(columnSheet[1][3]) < 0)
                     ? null
                     : (row[firstEmplacement.indexOf(columnSheet[1][3])] != null)
                     ? row[firstEmplacement.indexOf(columnSheet[1][3])]
@@ -465,8 +472,8 @@ class ProcessFileProvider extends ChangeNotifier{
             print(row);
             if (!row.contains(columnSheet[3][0])) {
               Product product = new Product(
-                id: (firstProduct.indexOf(columnSheet[3][0]) < 0) ? null : row[firstProduct
-                    .indexOf(columnSheet[3][0])],
+
+                id: (firstProduct.indexOf(columnSheet[3][0]) < 0) ? null : row[firstProduct.indexOf(columnSheet[3][0])],
 
                 productCode: (firstProduct.indexOf(columnSheet[3][1]) < 0)
                     ? null
@@ -475,9 +482,7 @@ class ProcessFileProvider extends ChangeNotifier{
                     RegExp('[\',\"]'), "''")
                     : null,
 
-                nom: (firstProduct.indexOf(columnSheet[3][2]) < 0)
-                    ? null
-                    : (row[firstProduct.indexOf(columnSheet[3][2])] != null)
+                nom: (firstProduct.indexOf(columnSheet[3][2]) < 0) ? null : (row[firstProduct.indexOf(columnSheet[3][2])] != null)
                     ? row[firstProduct.indexOf(columnSheet[3][2])].replaceAll("'", "''")
                     : null,
 
