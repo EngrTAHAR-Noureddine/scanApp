@@ -8,7 +8,11 @@ import 'package:scanapp/models/database_models/inventory_lines.dart';
 import 'package:scanapp/models/database_models/product_lots.dart';
 import 'package:scanapp/models/variables_define/colors.dart';
 import 'package:scanapp/models/variables_define/my_flutter_app_icons.dart';
+import 'package:scanapp/view_models/providers/exports_list.dart';
+import 'package:scanapp/view_models/providers/inventories_list.dart';
 import 'package:scanapp/view_models/providers/main.dart';
+import 'package:scanapp/view_models/providers/repport.dart';
+import 'package:scanapp/views/inventories_list.dart';
 
 class ScannerProvider extends ChangeNotifier{
 
@@ -107,9 +111,7 @@ class ScannerProvider extends ChangeNotifier{
        barCode = null;
      }else if(productLot != null){
         findIt = true;
-      //  print("findIt of future : "+findIt.toString());
         idProduct = productLot.productId;
-
         newLine = new InventoryLine(
           difference: 0,
           emplacementId: idEmplacement,
@@ -135,18 +137,20 @@ class ScannerProvider extends ChangeNotifier{
 
 
     }
-  //  print("findIt of future : "+findIt.toString());
+
     return findIt;
   }
 
   Future<void> validation()async{
     _switch = false;
-    //keyBoardToggle(false);
     SystemChannels.textInput.invokeMethod('TextInput.hide');
     if(newLine != null){
       newLine!.quality = quality ?? "Bon";
       if(newLine !=null){
-        await DBProvider.db.newInventoryLine(newLine!);
+        if(await DBProvider.db.checkInventoryLine(newLine!) == null){
+          await DBProvider.db.newInventoryLine(newLine!);
+
+        }
         if(incompleteInventory!=null) {
           incompleteInventory!.status = "ongoing";
           await DBProvider.db.updateInventory(incompleteInventory!);
@@ -158,7 +162,11 @@ class ScannerProvider extends ChangeNotifier{
       barCode = null;
       idProduct = null;
       newLine = null;
+      InventoryListProvider().setState();
+      RepportProvider().notifyListeners();
+      ExportProvider().notifyListeners();
       notifyListeners();
+
     }
   }
 

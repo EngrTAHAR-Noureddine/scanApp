@@ -555,7 +555,25 @@ class DBProvider {
 
     return someth;
   }
+  Future<InventoryLine?> checkInventoryLine(InventoryLine check) async {
+    final db = await database;
+    List<dynamic> myVaribles =[
+      (check.productId == null)?"IS null ":"= '${check.productId}'",
+      (check.productLotId == null)?"IS null ":"= '${check.productLotId}'",
+      (check.emplacementId == null)?"IS null ":"= '${check.emplacementId}'",
+      (check.inventoryId == null)?"IS null ":"= '${check.inventoryId}'",
+      (check.quality == null)?"IS null ":"= '${check.quality}'",
+      (check.quantity == null)?"IS null ":"= '${check.quantity}'",
+      (check.difference == null)?"IS null ":"= '${check.difference}'",
+      (check.quantitySystem == null)?"IS null ":"= '${check.quantitySystem}'",
+    ];
+    var res = await db.rawQuery("SELECT * FROM InventoryLine WHERE productId ${myVaribles[0]} and productLotId ${myVaribles[1]} and emplacementId ${myVaribles[2]} and inventoryId ${myVaribles[3]} and quality ${myVaribles[4]} and quantity ${myVaribles[5]} and difference ${myVaribles[6]} and quantitySystem ${myVaribles[7]}");
+    InventoryLine? someth;
 
+    if(res.isNotEmpty) someth = InventoryLine.fromMap(res.first);
+
+    return someth;
+  }
 
   /* *************************************** */
 
@@ -724,7 +742,7 @@ class DBProvider {
     inv.openingDate = DateTime.now().toIso8601String();
     inv.closeDate = DateTime(2000,1,1).toIso8601String();
     inv.status = "begin";
-
+    await updateInventory(inv);
     db.delete("InventoryLine", where: "inventoryId = ?", whereArgs: [inv.id]);
 
   }
