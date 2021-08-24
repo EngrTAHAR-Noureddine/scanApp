@@ -171,10 +171,10 @@ class ListItems extends StatelessWidget {
                                             title: RichText(
                                                 text: TextSpan(children: [
 
-                                                  TextSpan(text:"ID : ",
+                                                  TextSpan(text:"Code à barre : ",
                                                     style: TextStyle(color : ColorsOf().profilField() ,fontSize: 14 ,fontWeight: FontWeight.bold),
                                                   ),
-                                                  TextSpan(text:(list[index].id!=null)?list[index].id.toString():"-----",
+                                                  TextSpan(text:(list[index].numLot!=null)?list[index].numLot.toString():"-----",
                                                     style: TextStyle(color : ColorsOf().backGround() ,fontSize: 14 ,fontWeight: FontWeight.bold),
                                                   ),
 
@@ -191,10 +191,10 @@ class ListItems extends StatelessWidget {
                                                     child: RichText(
                                                         text: TextSpan(children: [
 
-                                                          TextSpan(text:"Code à Barre : ",
+                                                          TextSpan(text:"Némuro de série : ",
                                                             style: TextStyle(color : ColorsOf().profilField() ,fontSize: 12 ,fontWeight: FontWeight.bold),
                                                           ),
-                                                          TextSpan(text:list[index].numLot??"-----",
+                                                          TextSpan(text:list[index].numSerie??"-----",
                                                             style: TextStyle(color : ColorsOf().backGround() ,fontSize: 12 ,fontWeight: FontWeight.normal),
                                                           ),
 
@@ -207,10 +207,10 @@ class ListItems extends StatelessWidget {
                                                     child: RichText(
                                                         text: TextSpan(children: [
 
-                                                          TextSpan(text:"ID de Produit : ",
+                                                          TextSpan(text:"Immatriculation : ",
                                                             style: TextStyle(color : ColorsOf().profilField() ,fontSize: 12 ,fontWeight: FontWeight.bold),
                                                           ),
-                                                          TextSpan(text:list[index].numSerie??"-----",
+                                                          TextSpan(text:list[index].immatriculation??"-----",
                                                             style: TextStyle(color : ColorsOf().backGround() ,fontSize: 12 ,fontWeight: FontWeight.normal),
                                                           ),
 

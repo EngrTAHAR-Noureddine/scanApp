@@ -104,7 +104,10 @@ class ItemInfo extends StatelessWidget {
                                                 borderRadius: BorderRadius.all(Radius.circular(10)),
                                                 side: BorderSide(color:Colors.transparent ,width: 0,style: BorderStyle.solid)
                                             ),
+                                            //contentPadding: EdgeInsets.all(0),
+                                            dense: true,
                                             leading: RichText(
+
                                                 text: TextSpan(children: [
 
                                                   TextSpan(text:"Code de Produit : ",
@@ -131,6 +134,7 @@ class ItemInfo extends StatelessWidget {
                                         ),
                                         Container(
                                           child: ListTile(
+                                            dense: true,
                                             shape: RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.all(Radius.circular(10)),
                                                 side: BorderSide(color:Colors.transparent ,width: 0,style: BorderStyle.solid)
@@ -160,6 +164,7 @@ class ItemInfo extends StatelessWidget {
                                         ),
                                         Container(
                                           child: ListTile(
+                                            dense: true,
                                             shape: RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.all(Radius.circular(10)),
                                                 side: BorderSide(color:Colors.transparent ,width: 0,style: BorderStyle.solid)
@@ -192,6 +197,7 @@ class ItemInfo extends StatelessWidget {
                                         Container(
 
                                           child: ListTile(
+                                            dense: true,
                                             shape: RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.all(Radius.circular(10)),
                                                 side: BorderSide(color:Colors.transparent ,width: 0,style: BorderStyle.solid)
@@ -222,6 +228,7 @@ class ItemInfo extends StatelessWidget {
                                         ),
                                         Container(
                                           child: ListTile(
+                                            dense: true,
                                             shape: RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.all(Radius.circular(10)),
                                                 side: BorderSide(color:Colors.transparent ,width: 0,style: BorderStyle.solid)
