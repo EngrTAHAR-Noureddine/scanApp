@@ -171,7 +171,6 @@ class HomeProvider extends ChangeNotifier{
                           var route = ModalRoute.of(context);
                           if(route!=null){
                             print(route.settings.name);
-                            ShowCompanyProvider().chain = "";
                             if(route.settings.name != "/listItems")Navigator.pushNamed(context, "/listItems");
 
                           }

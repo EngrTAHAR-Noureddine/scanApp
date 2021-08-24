@@ -23,10 +23,57 @@ class ShowCompanyProvider extends ChangeNotifier{
   ShowCompanyProvider._();
   factory ShowCompanyProvider() => _instance ??=ShowCompanyProvider._();
 
-  String chain = "";
+  static String chain = "";
+  String previous = "";
   String localWidget = "Site";
 
-  setState(){notifyListeners();}
+  setBack(){
+    /* if(value.previous.isNotEmpty) value.localWidget = value.previous; //else value.localWidget = "Site";
+    if(chain==null)chain = "";
+
+    List<String> o = chain.split(">");
+    int i = o.indexWhere((item)=> item.contains(previous));
+    if (i >= 0) {
+      o.removeRange(i, o.length);
+      // if (o.isNotEmpty && i > 1) value.previous = o[i - 1].replaceAll(RegExp(r'\([^)]*\)'), ""); else value.previous = "";
+
+    }//else value.previous = o.last.replaceAll(RegExp(r'\([^)]*\)'), "");
+
+    if(o.length == 0)previous ="";
+    //if(value.previous.isNotEmpty) value.localWidget = value.previous; else
+    localWidget = "Site";
+
+    chain = "";
+    chain= o.join(">");
+
+
+    print("When back ==> chain : "+chain+" And local = "+localWidget + " And Previous = " +previous);
+*/
+    if(previous.isNotEmpty) localWidget =previous; else localWidget = "Site";
+
+    if(chain==null)chain = "";
+    List<String> o = chain.split(">");
+    int i = o.indexWhere((item)=> item.contains(localWidget));
+    if (i >= 0) {o.removeRange(i, o.length);if (i > 1) previous = o[i - 1].replaceAll(RegExp(r'\([^)]*\)'), "");}else previous = o.last.replaceAll(RegExp(r'\([^)]*\)'), "");
+    chain = "";
+    chain= o.join(">");
+
+    /*switch(previous){
+      case "Company": previous = "Site"; break;
+      case "Direction": previous = "Company"; break;
+      case "Service": previous = "Direction"; break;
+      case "Bureau": previous = "Service"; break;
+      default: previous = ""; break;
+    }*/
+
+    print("When back ==> chain : "+chain+" And local = "+localWidget + " And Previous = " +previous);
+  }
+
+  setState(){
+
+    notifyListeners();
+
+  }
 
   Future<List<Item>> figureSites(User user)async{
     List<Item> itemSite = <Item>[];
