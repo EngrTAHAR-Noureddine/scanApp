@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:scanapp/models/database_models/inventory_lines.dart';
+import 'package:scanapp/models/database_models/product_lots.dart';
 import 'package:scanapp/models/variables_define/colors.dart';
 import 'package:scanapp/view_models/providers/home.dart';
 import 'package:scanapp/view_models/providers/onGoing_list.dart';
@@ -31,7 +31,7 @@ class OnGoingListInventory extends StatelessWidget {
 
 
                     if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
-                      List<InventoryLine> list = snapshot.data as List<InventoryLine>;
+                      List<ProductLot> list = snapshot.data as List<ProductLot>;
 
 
                       if(list.isNotEmpty){
@@ -76,10 +76,10 @@ class OnGoingListInventory extends StatelessWidget {
                                         title: RichText(
                                             text: TextSpan(children: [
 
-                                              TextSpan(text:"ID : ",
+                                              TextSpan(text:"Code à barre : ",
                                                 style: TextStyle(color : ColorsOf().profilField() ,fontSize: 14 ,fontWeight: FontWeight.bold),
                                               ),
-                                              TextSpan(text:(list[index].id!=null)?list[index].id.toString():"-----",
+                                              TextSpan(text:(list[index].numLot!=null)?list[index].numLot.toString():"-----",
                                                 style: TextStyle(color : ColorsOf().backGround() ,fontSize: 14 ,fontWeight: FontWeight.bold),
                                               ),
 
@@ -96,10 +96,10 @@ class OnGoingListInventory extends StatelessWidget {
                                                 child: RichText(
                                                     text: TextSpan(children: [
 
-                                                      TextSpan(text:"Id Inventaire : ",
+                                                      TextSpan(text:"Numéro de série : ",
                                                         style: TextStyle(color : ColorsOf().profilField() ,fontSize: 12 ,fontWeight: FontWeight.bold),
                                                       ),
-                                                      TextSpan(text:(list[index].inventoryId!=null)?list[index].inventoryId.toString():"-----",
+                                                      TextSpan(text:(list[index].numSerie!=null)?list[index].numSerie:"-----",
                                                         style: TextStyle(color : ColorsOf().backGround() ,fontSize: 12 ,fontWeight: FontWeight.normal),
                                                       ),
 
@@ -112,10 +112,10 @@ class OnGoingListInventory extends StatelessWidget {
                                                 child: RichText(
                                                     text: TextSpan(children: [
 
-                                                      TextSpan(text:"ID d'Emplacement : ",
+                                                      TextSpan(text:"Immatriculation : ",
                                                         style: TextStyle(color : ColorsOf().profilField() ,fontSize: 12 ,fontWeight: FontWeight.bold),
                                                       ),
-                                                      TextSpan(text:(list[index].emplacementId!=null)?list[index].emplacementId.toString():"-----",
+                                                      TextSpan(text:(list[index].immatriculation!=null)?list[index].immatriculation:"-----",
                                                         style: TextStyle(color : ColorsOf().backGround() ,fontSize: 12 ,fontWeight: FontWeight.normal),
                                                       ),
 
