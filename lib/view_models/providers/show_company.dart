@@ -23,7 +23,7 @@ class ShowCompanyProvider extends ChangeNotifier{
   ShowCompanyProvider._();
   factory ShowCompanyProvider() => _instance ??=ShowCompanyProvider._();
 
-  String chain = ">";
+  String chain = "";
   String localWidget = "Site";
 
   setState(){notifyListeners();}
@@ -229,13 +229,25 @@ class ShowCompanyProvider extends ChangeNotifier{
     if(user != null){
       switch(lookingFor){
         case "company" : items = await fetchCompany(user,id);
-                            if(items.isEmpty)continue nextDirection;else break;
-        nextDirection:case "direction" : items = await fetchDirection(user,id);
-                            if(items.isEmpty)continue nextService;else break;
-        nextService: case "service" :  items = await fetchService(user,id);
-                            if(items.isEmpty)continue nextEmplacement;else break;
-        nextEmplacement: case "emplacement" : items = await fetchEmplacement(user,id);
-                            if(items.isEmpty)continue nextDefault;else break;
+                            if(items.isEmpty)continue nextFailed;else break;
+       case "direction" : items = await fetchDirection(user,id);
+                            if(items.isEmpty)continue nextFailed;else break;
+        case "service" :  items = await fetchService(user,id);
+                            if(items.isEmpty)continue nextFailed;else break;
+        case "emplacement" : items = await fetchEmplacement(user,id);
+                            if(items.isEmpty)continue nextFailed;else break;
+
+        nextFailed: case "failed":
+          items = await figureCompanies(user);
+          if(items.isEmpty){
+            items = await figureDirections(user);
+            if(items.isEmpty){
+              items = await figureEmplacements(user);
+            }
+          }
+
+          if(items.isEmpty)continue nextDefault;else break;
+
         nextDefault: default : items =[]; break;
       }
     }else items=[];
