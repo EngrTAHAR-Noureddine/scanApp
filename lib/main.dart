@@ -13,7 +13,6 @@ import 'package:scanapp/view_models/providers/repport.dart';
 import 'package:scanapp/view_models/providers/scanner.dart';
 import 'package:scanapp/view_models/providers/search.dart';
 import 'package:scanapp/view_models/providers/settings.dart';
-import 'package:scanapp/view_models/providers/show_company.dart';
 import 'package:scanapp/views/exports_list.dart';
 import 'package:scanapp/views/get_user_info.dart';
 import 'package:scanapp/views/home.dart';
@@ -23,10 +22,13 @@ import 'package:scanapp/views/list_of_items.dart';
 import 'package:scanapp/views/log_in.dart';
 import 'package:scanapp/views/onGoingList.dart';
 import 'package:scanapp/views/repport.dart';
+import 'package:scanapp/views/route_pages/company_page.dart';
+import 'package:scanapp/views/route_pages/direction_page.dart';
+import 'package:scanapp/views/route_pages/emplacement_page.dart';
+import 'package:scanapp/views/route_pages/site_page.dart';
 import 'package:scanapp/views/scanner.dart';
 import 'package:scanapp/views/search.dart';
 import 'package:scanapp/views/settings.dart';
-import 'package:scanapp/views/show_company.dart';
 
 void main() {
   runApp(MyApp());
@@ -68,8 +70,6 @@ class MyApp extends StatelessWidget {
             create: (context) => ScannerProvider(), ),
           ChangeNotifierProvider<ProcessFileProvider>(
             create: (context) => ProcessFileProvider(), ),
-            ChangeNotifierProvider<ShowCompanyProvider>(
-            create: (context) => ShowCompanyProvider(), ),
 
         ],
         child: Builder(
@@ -120,7 +120,7 @@ class MyApp extends StatelessWidget {
                                               routes: {
                                                 "/home": (context) => InventoryList(),
                                                 "/inventoryList": (context) => InventoryList(),
-                                                "/listItems": (context) =>ListOfItems(), //ListItems(),
+                                                "/listItems": (context) =>ListSites(), //ListItems(),
                                                 "/scanner": (context) => Scanner(),
                                                 "/import": (context) => ImportNewerFile(),
                                                 "/update": (context) => ImportNewerFile(),
@@ -130,6 +130,12 @@ class MyApp extends StatelessWidget {
                                                 "/logout": (context) => LogIn(),
                                                 "/search": (context) => Search(),
                                                 "/onGoingList": (context) => OnGoingListInventory(),
+
+                                                "Site":(context) => ListSites(),
+                                                "Entreprise":(context)=>ListCompanies(),
+                                                "Direction":(context)=>ListDirection(),
+                                                "Service":(context)=>ListDirection(),
+                                                "Bureau":(context)=>ListEmplacement(),
 
                                               },
                                                          );
