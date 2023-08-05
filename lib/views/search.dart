@@ -18,13 +18,13 @@ class Search extends StatelessWidget {
             key: scaffoldKey,
             backgroundColor: ColorsOf().backGround(),
             appBar: AppBar(
-              backwardsCompatibility: false,
+              // backwardsCompatibility: false,
               systemOverlayStyle: SystemUiOverlayStyle(
                 statusBarColor: Colors.transparent,
                 statusBarIconBrightness:Theme.of(context).primaryColorBrightness,
               ),
 
-              brightness: Theme.of(context).primaryColorBrightness,
+              // brightness: Theme.of(context).primaryColorBrightness,
 
               backgroundColor: ColorsOf().backGround(),
               leading: IconButton(

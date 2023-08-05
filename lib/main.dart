@@ -83,7 +83,7 @@ class MyApp extends StatelessWidget {
                                               theme: ThemeData(
                                                 primaryColorBrightness: Brightness.dark,
                                                 brightness: Brightness.dark,
-                                                accentColorBrightness:Brightness.dark,
+                                                // accentColorBrightness:Brightness.dark,
                                                 primarySwatch:MaterialColor(0xFFFF9500,const <int, Color>{
                                                   50: const Color(0xFFFF9500 ),//10%
                                                   100: const Color(0xFFFF9500),//20%
@@ -100,7 +100,7 @@ class MyApp extends StatelessWidget {
                                               darkTheme: ThemeData(
                                                 primaryColorBrightness: Brightness.light,
                                                 brightness: Brightness.light,
-                                                accentColorBrightness:Brightness.light,
+                                                // accentColorBrightness:Brightness.light,
                                                 primarySwatch:MaterialColor(0xFF242426,const <int, Color>{
                                                   50: const Color(0xFF242426 ),//10%
                                                   100: const Color(0xFF242426),//20%

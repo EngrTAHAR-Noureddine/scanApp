@@ -80,13 +80,13 @@ class HomeProvider extends ChangeNotifier{
 
   AppBar customAppBar(context,scaffoldKey){
      return AppBar(
-       backwardsCompatibility: false,
+       // backwardsCompatibility: false,
        systemOverlayStyle: SystemUiOverlayStyle(
          statusBarColor: Colors.transparent,
          statusBarIconBrightness:Theme.of(context).primaryColorBrightness,
        ),
 
-       brightness: Theme.of(context).primaryColorBrightness,
+       // brightness: Theme.of(context).primaryColorBrightness,
 
        backgroundColor: ColorsOf().backGround(),
        leading: IconButton(
